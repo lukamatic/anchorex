@@ -1,17 +1,18 @@
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Signup from './components/Signup';
-import Welcome from './components/Welcome';
+import { useState } from 'react';
+import AuthContext from './context/auth-context';
+import MyRouter from './components/MyRouter';
+import LocalStorageUtil from './utils/local-storage-util';
 
 function App() {
+  const storage = new LocalStorageUtil();
+  const [userRole, setUserRole] = useState(storage.getUserRole());
+
   return (
-    <Router>
-      <Route path='/' exact>
-        <Welcome />
-      </Route>
-      <Route path='/signup'>
-        <Signup />
-      </Route>
-    </Router>
+    <AuthContext.Provider
+      value={{ userRole: userRole, setUserRole: setUserRole }}
+    >
+      <MyRouter />
+    </AuthContext.Provider>
   );
 }
 

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './Login';
 import Navbar from './navbar/Navbar';
 import Signup from './Signup';
@@ -8,15 +8,17 @@ const MyRouter = () => {
   return (
     <Router>
       <Navbar />
-      <Route path='/' exact>
-        <Welcome />
-      </Route>
-      <Route path='/login'>
-        <Login />
-      </Route>
-      <Route path='/signup'>
-        <Signup />
-      </Route>
+      <Switch>
+        <Route path='/' exact>
+          <Welcome />
+        </Route>
+        <Route path='/login'>
+          <Login />
+        </Route>
+        <Route path='/signup'>
+          <Signup />
+        </Route>
+      </Switch>
     </Router>
   );
 };

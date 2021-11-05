@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className='flex flex-col items-end sticky top-0'>
+    <div className='flex flex-col items-end sticky top-0 z-10'>
       <div className='w-screen flex flex-row justify-between items-center bg-blue-500 text-white pl-4 pr-4 py-1 flex-wrap'>
         <LogoLink />
         {userRole === UserRole.UNDEFINED ? (

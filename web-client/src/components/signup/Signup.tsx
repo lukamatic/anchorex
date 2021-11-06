@@ -215,12 +215,12 @@ const Signup = () => {
 
   const isInputValid = () => {
     if (
-      firstNameErrorText &&
-      lastNameErrorText &&
-      emailErrorText &&
-      phoneNumberErrorText &&
-      dateOfBirthErrorText &&
-      passwordErrorText &&
+      firstNameErrorText ||
+      lastNameErrorText ||
+      emailErrorText ||
+      phoneNumberErrorText ||
+      dateOfBirthErrorText ||
+      passwordErrorText ||
       confirmPasswordErrorText
     ) {
       return false;

@@ -5,6 +5,6 @@ export default class EmailRegexError implements Error {
 
   constructor() {
     this.name = 'EmailRegexError';
-    this.message = 'Invalid email.';
+    this.message = 'Invalid email address format.';
   }
 }

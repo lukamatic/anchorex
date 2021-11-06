@@ -8,11 +8,13 @@ function App() {
   const [userRole, setUserRole] = useState(storage.getUserRole());
 
   return (
-    <AuthContext.Provider
-      value={{ userRole: userRole, setUserRole: setUserRole }}
-    >
-      <MyRouter />
-    </AuthContext.Provider>
+    <div className='flex flex-col min-h-screen'>
+      <AuthContext.Provider
+        value={{ userRole: userRole, setUserRole: setUserRole }}
+      >
+        <MyRouter />
+      </AuthContext.Provider>
+    </div>
   );
 }
 

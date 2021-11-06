@@ -14,7 +14,11 @@ const Menu = (props: { toggleMenu: () => void }) => {
 
   const renderMenuLinks = () => {
     return menuLinks.map((menuLink) => (
-      <Link to={menuLink.pathname} onClick={props.toggleMenu}>
+      <Link
+        key={menuLink.pathname}
+        to={menuLink.pathname}
+        onClick={props.toggleMenu}
+      >
         <div className='w-full px-3 py-2 border-gray-100 border-b-2 text-center hover:bg-gray-100'>
           {menuLink.text}
         </div>
@@ -30,9 +34,9 @@ const Menu = (props: { toggleMenu: () => void }) => {
   };
 
   return (
-    <div className='absolute flex flex-row'>
+    <div className='flex flex-row absolute top-0 w-screen'>
       <div
-        className='bg-black opacity-70 w-screen'
+        className='bg-black opacity-70 flex-grow'
         onClick={props.toggleMenu}
       ></div>
       <div className='w-56 md:w-72 h-screen bg-white'>

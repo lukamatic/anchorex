@@ -12,7 +12,17 @@
       hover:bg-blue-400 hover:border-blue-400
       active:bg-blue-600 active:border-blue-600;
   }
+
+  .input {
+    @apply border-2 border-gray-400 rounded py-1 px-2
+    focus:outline-none focus:border-blue-400;
+  }
 }
 
 @layer utilities {
+  @variants responsive {
+    .w-500px {
+      width: 500px;
+    }
+  }
 }

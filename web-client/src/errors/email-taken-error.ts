@@ -1,4 +1,4 @@
-export default class UsernameTakenError implements Error {
+export default class EmailTakenError implements Error {
   name: string;
   message: string;
   stack?: string | undefined;

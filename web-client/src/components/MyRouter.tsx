@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Calendar from './calendar/Calendar';
 import Login from './Login';
 import Navbar from './navbar/Navbar';
 import Signup from './signup/Signup';
@@ -21,6 +22,9 @@ const MyRouter = () => {
         </Route>
         <Route path='/signup/:choice'>
           <Signup />
+        </Route>
+        <Route path='/calendar'>
+          <Calendar />
         </Route>
       </Switch>
     </Router>

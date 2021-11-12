@@ -14,7 +14,7 @@
   }
 
   .input {
-    @apply border-2 border-gray-400 rounded py-1 px-2
+    @apply border-2 border-gray-400 h-9 py-1 px-2 rounded
     focus:outline-none focus:border-blue-400;
   }
 }

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import FishingLessons from './fishing-lessons/FishingLessons';
 import Login from './Login';
 import Navbar from './navbar/Navbar';
 import Signup from './signup/Signup';
@@ -21,6 +22,9 @@ const MyRouter = () => {
         </Route>
         <Route path='/signup/:choice'>
           <Signup />
+        </Route>
+        <Route path='/fishingLessons'>
+          <FishingLessons />
         </Route>
       </Switch>
     </Router>

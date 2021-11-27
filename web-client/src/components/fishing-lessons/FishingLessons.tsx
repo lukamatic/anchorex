@@ -1,5 +1,5 @@
 import { ReservationEntityType } from '../../model/reservation-entity-type.enum';
-import ReservationEnities from '../reservation-entities/ReservationEnities';
+import ReservationEntities from '../reservation-entities/ReservationEnities';
 
 const FishingLessons = () => {
   const lessons = [
@@ -8,7 +8,7 @@ const FishingLessons = () => {
   ];
 
   return (
-    <ReservationEnities
+    <ReservationEntities
       reservationEntityType={ReservationEntityType.FISHING_LESSON}
       entities={lessons}
     />

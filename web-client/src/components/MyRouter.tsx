@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Calendar from './calendar/Calendar';
+import FishingLessons from './fishing-lessons/FishingLessons';
 import Login from './Login';
 import Navbar from './navbar/Navbar';
 import Signup from './signup/Signup';
@@ -25,6 +26,9 @@ const MyRouter = () => {
         </Route>
         <Route path='/calendar'>
           <Calendar />
+        </Route>
+        <Route path='/fishingLessons'>
+          <FishingLessons />
         </Route>
       </Switch>
     </Router>

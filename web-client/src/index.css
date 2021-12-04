@@ -8,7 +8,7 @@
 @layer components {
   .btnBlueWhite {
     @apply bg-blue-500 text-white font-bold border-2 border-blue-500
-      py-2 px-4 rounded cursor-pointer
+      py-1 px-3 rounded cursor-pointer
       hover:bg-blue-400 hover:border-blue-400
       active:bg-blue-600 active:border-blue-600;
   }
@@ -23,6 +23,10 @@
   @variants responsive {
     .w-500px {
       width: 500px;
+    }
+
+    .w-700px {
+      width: 700px;
     }
   }
 }

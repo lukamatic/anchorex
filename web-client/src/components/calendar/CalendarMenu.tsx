@@ -1,5 +1,5 @@
 import { CalendarMode } from '../../model/calendar-mode.enum';
-import CalendarUtil from '../../utils/calendar/calendar-util';
+import { calendarUtil } from '../../utils/calendar/calendar-util';
 import { months } from '../../utils/calendar/months';
 
 const CalendarMenu = (props: {
@@ -11,12 +11,11 @@ const CalendarMenu = (props: {
   onMonthChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   onDayChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
-  const calendar = new CalendarUtil();
-  const years = calendar.generateYears(2021, 2030);
-  const days = calendar.generateDays(props.year, props.month);
+  const years = calendarUtil.generateYears(2021, 2030);
+  const days = calendarUtil.generateDaysInMonth(props.year, props.month);
 
   return (
-    <div className='flex flex-col bg-gray-100 flex-wrap items-start text-lg px-8 pt-8 shadow-lg'>
+    <div className='flex flex-col border-b-2 md:border-l-2 flex-wrap items-start text-lg px-8 py-8 shadow-lg w-full md:w-auto'>
       {/* Mode selection */}
       <div className='flex items-center py-1'>
         <p className='mt-1 w-20 whitespace-nowrap'>Mode:</p>

@@ -1,10 +1,16 @@
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import AuthContext from "../../context/auth-context";
 
-const ReservationEntityDisplay = () => {
+const ReservationEntityDisplayImages = () => {
   const authContext = useContext(AuthContext);
   const params: { id: string } = useParams();
+  const ent1 = require("./../../images/ent1.jpg");
+  const ent2 = require("./../../images/ent2.jpg");
+  const ent3 = require("./../../images/ent3.jpg");
+  const ext1 = require("./../../images/ext1.jpg");
+  const ext2 = require("./../../images/ext2.jpg");
+  const ext3 = require("./../../images/ext3.jpg");
 
   return (
     <div>
@@ -14,8 +20,8 @@ const ReservationEntityDisplay = () => {
             <ul className="ml-4">
               <Link to={"/reservationEntities/" + params.id}>
                 <li
-                  className="mb-2 px-4 py-4 text-black-100 flex flex-row bg-gray-300 border-gray-300 hover:text-black   
-            hover:bg-gray-300  hover:font-bold rounded rounded-lg"
+                  className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   
+                hover:bg-gray-300  hover:font-bold rounded rounded-lg"
                 >
                   <span>
                     <svg
@@ -39,7 +45,7 @@ const ReservationEntityDisplay = () => {
               </Link>
 
               <Link to={"/reservationEntitiesImages/" + params.id}>
-                <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
+                <li className="mb-2 px-4 py-4 text-black-100 flex flex-row bg-gray-300 border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +63,7 @@ const ReservationEntityDisplay = () => {
                       <path d="M20.4 14.5L16 10 4 20" />
                     </svg>
                   </span>
-                  <span className="ml-2">Images</span>
+                    <span className="ml-2">Images</span>
                 </li>
               </Link>
               <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
@@ -89,6 +95,7 @@ const ReservationEntityDisplay = () => {
                   <span className="ml-2">Calendar</span>
               </li>
               <Link to={"/reservationEntitiesPricelist/" + params.id}>
+
               <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                 <span>
                   <svg
@@ -109,7 +116,6 @@ const ReservationEntityDisplay = () => {
                   <span className="ml-2">Pricelist</span>
               </li>
               </Link>
-              
               <Link to={"/reservationEntitiesRules/" + params.id}>
               <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                 <span>
@@ -132,98 +138,32 @@ const ReservationEntityDisplay = () => {
                   <span className="ml-2">Conduct rules</span>
               </li>
               </Link>
-
             </ul>
           </div>
         </nav>
       </div>
-      <div className="w-full mt-12 mx-auto max-w-xl">
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-              Full Name
-            </label>
-          </div>
-          <div className="md:w-2/3">
-            <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-              id="inline-full-name"
-              type="text"
-              disabled
-            ></input>
-          </div>
+      <div className="container grid grid-cols-3 gap-2 mx-auto w-full mt-12 ml-96 max-w-4xl">
+        <div className="w-full rounded">
+          <img src={ext1.default} alt="image" />
         </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-              Address
-            </label>
-          </div>
-          <div className="md:w-2/3">
-            <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-              id="inline-password"
-            />
-          </div>
+        <div className="w-full rounded">
+          <img src={ext2.default} alt="image" />
         </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
-              Rooms available
-            </label>
-          </div>
-          <select className="block appearance-none w-full bg-white border ml-2 border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-            <option>Single room</option>
-            <option>Double room</option>
-            <option>Four-bed room</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
-          </div>
+        <div className="w-full rounded">
+          <img src={ext3.default} alt="image" />
         </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
-              Promo description
-            </label>
-          </div>
-          <textarea className="block appearance-none w-full bg-white border  border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"></textarea>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
-          </div>
+        <div className="w-full rounded">
+          <img src={ent1.default} alt="image" />
         </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
-              Additional service
-            </label>
-          </div>
-          <textarea className="block appearance-none w-full bg-white border  border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"></textarea>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
-          </div>
+        <div className="w-full rounded">
+          <img src={ent2.default} alt="image" />
+        </div>
+        <div className="w-full rounded">
+          <img src={ent3.default} alt="image" />
         </div>
       </div>
     </div>
   );
 };
 
-export default ReservationEntityDisplay;
+export default ReservationEntityDisplayImages;

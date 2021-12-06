@@ -4,7 +4,7 @@ import { ReservationEntityType } from '../../model/reservation-entity-type.enum'
 import Search from '../Search';
 import ReservationEntityDropdown from './ReservationEntityDropdown';
 
-const ReservationEnities = (props: {
+const ReservationEntities = (props: {
   reservationEntityType: ReservationEntityType;
   entities: ReservationEntity[];
 }) => {
@@ -20,6 +20,7 @@ const ReservationEnities = (props: {
         return '';
     }
   };
+  
 
   return (
     <div className='flex flex-col flex-grow bg-gray-100 items-center'>
@@ -55,4 +56,4 @@ const ReservationEnities = (props: {
   );
 };
 
-export default ReservationEnities;
+export default ReservationEntities;

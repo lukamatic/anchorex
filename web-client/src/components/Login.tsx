@@ -9,7 +9,7 @@ const Login = () => {
   const storage = new LocalStorageUtil();
   const history = useHistory();
 
-  const logIn = () => {
+  const logInAsInstructor = () => {
     //TODO: send login request
     const userRole = UserRole.INSTRUCTOR; // for testing only
     authContext.setUserRole(userRole);
@@ -17,10 +17,20 @@ const Login = () => {
     history.push('/');
   };
 
+  const logInAsLodgeOwner = () => {
+    const userRole = UserRole.LOGDE_OWNER; // for testing only
+    authContext.setUserRole(userRole);
+    storage.setUserRole(userRole);
+    history.push('/');
+  };
+
   return (
     <div>
-      <button className='btnBlueWhite m-5' onClick={logIn}>
-        Log in
+      <button className='btnBlueWhite m-5' onClick={logInAsInstructor}> 
+        Log in as instructor
+      </button>
+      <button className='btnBlueWhite m-5' onClick={logInAsLodgeOwner}> 
+        Log in as lodge owner
       </button>
     </div>
   );

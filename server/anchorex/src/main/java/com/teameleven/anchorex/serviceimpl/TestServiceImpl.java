@@ -20,11 +20,13 @@ public class TestServiceImpl implements TestService {
     @Override
     public Test create(Test test) throws Exception {
         Test savedTest = null;
+
         try {
             savedTest = testRepository.save(test);
         } catch (DataIntegrityViolationException e) {
             throw new TestNameTakenException();
         }
+
         return savedTest;
     }
 
@@ -35,7 +37,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test findOneById(Long id) {
-        return testRepository.findById(id).get();
+        return testRepository.findById(id).orElse(null);
     }
 
     @Override

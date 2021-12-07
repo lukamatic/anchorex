@@ -47,7 +47,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test update(Test test) throws Exception {
-        Test testToUpdate = findOneById(test.getId());
+        var testToUpdate = findOneById(test.getId());
         testToUpdate.setName(test.getName());
         return testRepository.save(testToUpdate);
     }

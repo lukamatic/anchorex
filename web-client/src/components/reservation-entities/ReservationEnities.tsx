@@ -11,7 +11,7 @@ const ReservationEntities = (props: {
   const addNewEntityButtonText = () => {
     switch (props.reservationEntityType) {
       case ReservationEntityType.LODGE:
-        return 'Add new logde';
+        return 'Add new lodge';
       case ReservationEntityType.SHIP:
         return 'Add new ship';
       case ReservationEntityType.FISHING_LESSON:
@@ -48,9 +48,10 @@ const ReservationEntities = (props: {
             ))}
           </ul>
         </div>
-        <button className='btnBlueWhite mt-6 md: px-5'>
+        <Link className='btnBlueWhite mt-6 md: px-5' to={'/reservationNewEntity'}> 
           {addNewEntityButtonText()}
-        </button>
+        </Link>
+        
       </div>
     </div>
   );

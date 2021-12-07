@@ -3,13 +3,14 @@ import FishingLessons from './fishing-lessons/FishingLessons';
 import Lodges from './lodges/Lodges';
 import Login from './Login';
 import Navbar from './navbar/Navbar';
-import ReservationEntityDisplay from './reservation-entities/ReservationEntity';
-import ReservationEntityDisplayImages from './reservation-entities/ReservationEntityDisplayImages';
-import ReservationEntityDisplayPricelist from './reservation-entities/ReservationEntityDisplayPricelist';
-import ReservationEntityDisplayRules from './reservation-entities/ReservationEntityDisplayRules';
+import ReservationEntityDisplay from './display-entity/ReservationEntity';
+import ReservationEntityDisplayImages from './display-entity/ReservationEntityDisplayImages';
+import ReservationEntityDisplayPricelist from './display-entity/ReservationEntityDisplayPricelist';
+import ReservationEntityDisplayRules from './display-entity/ReservationEntityDisplayRules';
 import Signup from './signup/Signup';
 import SignupChoice from './signup/SignupChoice';
 import Welcome from './Welcome';
+import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
 
 const MyRouter = () => {
   return (
@@ -43,8 +44,11 @@ const MyRouter = () => {
         <Route path = '/reservationEntitiesPriceList/:id'>
           <ReservationEntityDisplayPricelist/>
         </Route>
-        <Route path ='/reservationEntitiesRules/:id'>
+        <Route path = '/reservationEntitiesRules/:id'>
           <ReservationEntityDisplayRules/>
+        </Route>
+        <Route path = '/reservationNewEntity'>
+          <ReservationNewEntity/>
         </Route>
       </Switch>
     </Router>

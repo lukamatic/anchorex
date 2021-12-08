@@ -3,6 +3,8 @@ package com.teameleven.anchorex.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
+import com.teameleven.anchorex.dto.CreateTestDto;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -28,6 +30,10 @@ public class Test {
         this.id = id;
         this.name = name;
         this.deleted = deleted;
+    }
+
+    public Test(CreateTestDto createTestDto) {
+        this.name = createTestDto.getName();
     }
 
     public Long getId() {

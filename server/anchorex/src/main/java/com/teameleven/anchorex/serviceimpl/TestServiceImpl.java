@@ -1,11 +1,15 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.Test;
+import com.teameleven.anchorex.dto.CreateTestDto;
+import com.teameleven.anchorex.dto.UpdateTestDto;
 import com.teameleven.anchorex.exceptions.TestNameTakenException;
 import com.teameleven.anchorex.repository.TestRepository;
 import com.teameleven.anchorex.service.TestService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 
@@ -18,10 +22,11 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Test create(Test test) throws Exception {
+    public Test create(CreateTestDto createTestDto) throws Exception {
         Test savedTest = null;
 
         try {
+            var test = new Test(createTestDto);
             savedTest = testRepository.save(test);
         } catch (DataIntegrityViolationException e) {
             throw new TestNameTakenException();
@@ -46,9 +51,15 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Test update(Test test) throws Exception {
-        var testToUpdate = findOneById(test.getId());
-        testToUpdate.setName(test.getName());
+    public Test update(UpdateTestDto updateTestDto) throws Exception {
+        var testToUpdate = findOneById(updateTestDto.getId());
+
+        if (testToUpdate == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format("Test with id %d doesn't exist.", updateTestDto.getId()));
+        }
+
+        testToUpdate.setName(updateTestDto.getName());
         return testRepository.save(testToUpdate);
     }
 

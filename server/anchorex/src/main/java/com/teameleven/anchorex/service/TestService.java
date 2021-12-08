@@ -1,12 +1,14 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Test;
+import com.teameleven.anchorex.dto.CreateTestDto;
+import com.teameleven.anchorex.dto.UpdateTestDto;
 
 import java.util.Collection;
 
 public interface TestService {
 
-    Test create(Test test) throws Exception;
+    Test create(CreateTestDto createTestDto) throws Exception;
 
     Collection<Test> findAll();
 
@@ -14,7 +16,7 @@ public interface TestService {
 
     Test findOneByName(String name);
 
-    Test update(Test test) throws Exception;
+    Test update(UpdateTestDto updateTestDto) throws Exception;
 
     void delete(Long id);
 }

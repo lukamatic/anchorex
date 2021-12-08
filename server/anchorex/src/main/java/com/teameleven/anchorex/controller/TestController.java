@@ -1,7 +1,9 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Test;
+import com.teameleven.anchorex.dto.CreateTestDto;
 import com.teameleven.anchorex.dto.TestDto;
+import com.teameleven.anchorex.dto.UpdateTestDto;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.TestService;
 
@@ -25,8 +27,8 @@ public class TestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TestDto> create(@Valid @RequestBody Test test) throws Exception {
-        var savedTest = testService.create(test);
+    public ResponseEntity<TestDto> create(@Valid @RequestBody CreateTestDto createTestDto) throws Exception {
+        var savedTest = testService.create(createTestDto);
         var testDto = TestMapper.TestToTestDto(savedTest);
         return new ResponseEntity<>(testDto, HttpStatus.CREATED);
     }
@@ -65,16 +67,8 @@ public class TestController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TestDto> update(@RequestBody Test test) throws Exception {
-        Test updatedTest = null;
-
-        try {
-            updatedTest = testService.update(test);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Test with id %d doesn't exist.", test.getId()));
-        }
-
+    public ResponseEntity<TestDto> update(@Valid @RequestBody UpdateTestDto updateTestDto) throws Exception {
+        var updatedTest = testService.update(updateTestDto);
         var testDto = TestMapper.TestToTestDto(updatedTest);
         return new ResponseEntity<>(testDto, HttpStatus.OK);
     }

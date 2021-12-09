@@ -1,7 +1,7 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Test;
-import com.teameleven.anchorex.dto.TestDto;
+import com.teameleven.anchorex.dto.test.TestDto;
 
 import java.util.ArrayList;
 import java.util.Collection;

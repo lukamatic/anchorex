@@ -2,6 +2,8 @@ package com.teameleven.anchorex.domain;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -9,6 +11,7 @@ import com.teameleven.anchorex.dto.user.CreateUserDto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 /*
@@ -24,7 +27,7 @@ public class User implements UserDetails {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-	private Collection<Role> roles;
+	private Set<Role> roles;
 
 	@Column(unique = true)
 	private String email;
@@ -59,9 +62,10 @@ public class User implements UserDetails {
 	public User() {
 	}
 
-	public User(Long id, String email, String password, String firstName, String lastName, String address, String city,
-			String country, String phoneNumber, String biography) {
+	public User(Long id, HashSet<Role> roles, String email, String password, String firstName, String lastName,
+			String address, String city, String country, String phoneNumber, String biography) {
 		this.id = id;
+		this.roles = roles;
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
@@ -74,7 +78,7 @@ public class User implements UserDetails {
 	}
 
 	public User(CreateUserDto createUserDto) {
-		this.roles.add(createUserDto.getRole());
+		this.roles = new HashSet<Role>();
 		this.email = createUserDto.getEmail();
 		this.password = createUserDto.getPassword();
 		this.firstName = createUserDto.getFirstName();
@@ -98,7 +102,7 @@ public class User implements UserDetails {
 		return this.roles;
 	}
 
-	public void setRoles(Collection<Role> roles) {
+	public void setRoles(HashSet<Role> roles) {
 		this.roles = roles;
 	}
 
@@ -210,5 +214,9 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public void encodePassword() {
+		this.password = new BCryptPasswordEncoder().encode(this.password);
 	}
 }

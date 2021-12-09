@@ -1,37 +1,47 @@
 package com.teameleven.anchorex.dto.user;
 
-import com.teameleven.anchorex.domain.Role;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class CreateUserDto {
-	private Role role;
-	private String username;
-	private String password;
-	private String firstName;
-	private String lastName;
+	@NotNull(message = "Role is required.")
+	private String role;
+
+	@NotEmpty(message = "Email is required.")
 	private String email;
+
+	@NotEmpty(message = "Password is required.")
+	private String password;
+
+	@NotEmpty(message = "First name is required.")
+	private String firstName;
+
+	@NotEmpty(message = "Last name is required.")
+	private String lastName;
+
+	@NotEmpty(message = "Address is required.")
 	private String address;
+
+	@NotEmpty(message = "City is required.")
 	private String city;
+
+	@NotEmpty(message = "Country is required.")
 	private String country;
+
+	@NotEmpty(message = "Phone number is required.")
 	private String phoneNumber;
+
 	private String biography;
 
 	public CreateUserDto() {
 	}
 
-	public Role getRole() {
+	public String getRole() {
 		return this.role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
-	}
-
-	public String getCreateUserDtoname() {
-		return this.username;
-	}
-
-	public void setCreateUserDtoname(String username) {
-		this.username = username;
 	}
 
 	public String getPassword() {

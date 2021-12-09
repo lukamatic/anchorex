@@ -1,11 +1,15 @@
 import { UserRole } from '../model/user-role.enum';
 
 export default interface CreateUserDto {
-  firstName: string;
-  lastName: string;
   email: string;
   userRole: UserRole;
   password: string;
-  dateOfBirth: string;
-  profileDescription: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  country: string;
+  phoneNumber: string;
+  signupExplanation: string;
+  biography: string;
 }

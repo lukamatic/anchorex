@@ -24,25 +24,26 @@ const Signup = () => {
   );
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [profileDescription, setProfileDescription] = useState('');
+  const [signupExplanation, setSignupExplanation] = useState('');
+  const [biography, setBiography] = useState('');
 
   const [firstNameErrorText, setFirstNameErrorText] = useState('');
   const [lastNameErrorText, setLastNameErrorText] = useState('');
   const [emailErrorText, setEmailErrorText] = useState('');
-  const [dateOfBirthErrorText, setDateOfBirthErrorText] = useState('');
   const [passwordErrorText, setPasswordErrorText] = useState('');
   const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('');
   const [addressErrorText, setAddressErrorText] = useState('');
   const [cityErrorText, setCityErrorText] = useState('');
   const [countryErrorText, setCountryErrorText] = useState('');
   const [phoneNumberErrorText, setPhoneNumberErrorText] = useState('');
+  const [signupExplanationErrorText, setSignupExplanationErrorText] =
+    useState('');
   const [errorLabelText, setErrorText] = useState('');
 
   const firstNameChangeHandler = (
@@ -153,22 +154,10 @@ const Signup = () => {
     }
   };
 
-  const dateOfBirthChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
+  const signupExplanationChangeHandler = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    const value = event.target.value;
-    setDateOfBirth(value);
-    setDateOfBirthErrorText('');
-
-    if (!value) {
-      return;
-    }
-
-    try {
-      signupValidation.validateDateOfBirth(value);
-    } catch (error: any) {
-      setDateOfBirthErrorText(error.message);
-    }
+    setSignupExplanation(event.target.value);
   };
 
   const passwordChangeHandler = (
@@ -207,10 +196,10 @@ const Signup = () => {
     }
   };
 
-  const profileDescriptionChangeHandler = (
+  const biographyChangeHandler = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setProfileDescription(event.target.value);
+    setBiography(event.target.value);
   };
 
   const isInputValid = () => {
@@ -219,7 +208,7 @@ const Signup = () => {
       lastNameErrorText ||
       emailErrorText ||
       phoneNumberErrorText ||
-      dateOfBirthErrorText ||
+      (params.choice === 'service' && signupExplanationErrorText) ||
       passwordErrorText ||
       confirmPasswordErrorText
     ) {
@@ -254,8 +243,8 @@ const Signup = () => {
       setPhoneNumberErrorText('This field is required.');
     }
 
-    if (!dateOfBirth) {
-      setDateOfBirthErrorText('This field is required.');
+    if (params.choice === 'service' && !signupExplanation) {
+      setSignupExplanationErrorText('This field is required.');
     }
 
     if (!password) {
@@ -274,7 +263,7 @@ const Signup = () => {
       !city ||
       !country ||
       !phoneNumber ||
-      !dateOfBirth ||
+      (params.choice === 'service' && !signupExplanation) ||
       !password ||
       !confirmPassword
     ) {
@@ -293,8 +282,12 @@ const Signup = () => {
         password: password,
         firstName: firstName,
         lastName: lastName,
-        dateOfBirth: dateOfBirth,
-        profileDescription: profileDescription,
+        address: address,
+        city: city,
+        country: country,
+        phoneNumber: phoneNumber,
+        signupExplanation: signupExplanation,
+        biography: biography,
       };
       console.log(createUserDto);
     } else {
@@ -369,10 +362,7 @@ const Signup = () => {
               onChange={phoneNumberChangeHandler}
             />
             <SignupError text={phoneNumberErrorText} />
-          </div>
-        </div>
-        <div className='flex flex-col items-center'>
-          <div className='flex flex-col flex-grow text-lg px-8 py-6 md:w-500px'>
+
             {params.choice === 'service' && (
               <div className='flex flex-wrap items-center mb-8'>
                 <p className='mt-1 w-44 whitespace-nowrap'>
@@ -388,18 +378,25 @@ const Signup = () => {
                 </select>
               </div>
             )}
+          </div>
+        </div>
+        <div className='flex flex-col items-center'>
+          <div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>
+            {params.choice === 'service' && (
+              <div>
+                <div className='flex flex-wrap items-center mb-3'>
+                  <p className='my-1'>Signup explanation:</p>
+                  <textarea
+                    className='input resize-none w-full h-40'
+                    maxLength={150}
+                    placeholder='Say something about why you are joining Anchorex'
+                    onChange={signupExplanationChangeHandler}
+                  />
+                </div>
 
-            <div className='flex flex-wrap items-center'>
-              <p className='my-1 w-44 whitespace-nowrap'>Date of birth:</p>
-              <input
-                className='input bg-white'
-                type='date'
-                onChange={dateOfBirthChangeHandler}
-                defaultValue='1990-01-01'
-                max='2010-12-31'
-              />
-            </div>
-            <SignupError text={dateOfBirthErrorText} />
+                <SignupError text={confirmPasswordErrorText} />
+              </div>
+            )}
 
             <SignupInput
               type='password'
@@ -426,7 +423,7 @@ const Signup = () => {
                 className='input resize-none w-full h-40'
                 maxLength={150}
                 placeholder='Say something about yourself'
-                onChange={profileDescriptionChangeHandler}
+                onChange={biographyChangeHandler}
               />
             </div>
           </div>

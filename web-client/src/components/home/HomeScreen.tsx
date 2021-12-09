@@ -1,9 +1,15 @@
 import { cloneElement } from 'react';
+import SearchWithSelect from '../common/SearchWithSelect';
 import CoachingIcon from './button-icons/CoachingIcon';
 import FishingIcon from './button-icons/FishingIcon';
 import HouseIcon from './button-icons/HouseIcon';
 import './Home.css';
 const HomeScreen = () => {
+	const authorized = true;
+	const user = {
+		firstName: 'Petar',
+		lastName: 'Obradovic',
+	};
 	const buttons = [
 		{
 			title: 'Fishing lessons',
@@ -30,6 +36,33 @@ const HomeScreen = () => {
 			data: [{ name: 'Lesson 1', description: 'Description....', images: [require('./../../images/ent1.jpg')] }],
 		},
 	];
+	const authorizedButtons = [
+		{
+			title: 'Bookings',
+			logo: <FishingIcon height={70} />,
+			callback: () => {},
+		},
+		{
+			title: 'History',
+			logo: <FishingIcon height={70} />,
+			callback: () => {},
+		},
+		{
+			title: 'Penalties',
+			logo: <FishingIcon height={70} />,
+			callback: () => {},
+		},
+		{
+			title: 'Reports',
+			logo: <FishingIcon height={70} />,
+			callback: () => {},
+		},
+		{
+			title: 'Promotions',
+			logo: <FishingIcon height={70} />,
+			callback: () => {},
+		},
+	];
 
 	const homeButton = (type: any) => (
 		<a className='bg-blue-100 w-full h-36 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/4 flex items-center justify-center transition-transform duration-120 transform hover:scale-125' href={`#${type.title.toLowerCase()}`}>
@@ -39,18 +72,41 @@ const HomeScreen = () => {
 			</div>
 		</a>
 	);
+	const authorizedButton = (type: any) => (
+		<a className='bg-white w-full h-36 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/6 flex items-center justify-center transition-transform duration-120 transform hover:scale-110' href={`#${type.title.toLowerCase()}`}>
+			<div className='justify-center w-full flex flex-col flex-1'>
+				<div className='flex-1 mx-auto'>{type?.logo && cloneElement(type?.logo)}</div>
+				<span className='font-gray-700 text-xl text-center  w-full'>{type.title}</span>
+			</div>
+		</a>
+	);
 	return (
 		<div className='w-full flex bg-blue-50 flex-1 flex-col'>
-			<div className='p-12'>
+			<div className='px-12 pt-12  pb-5'>
 				<div className=''></div>
-				<div className='text-center py-3 mb-12'>
-					<h1 className='subpixel-antialiased text-3xl font-bold text-gray-700'>Lake Bookings</h1>
-					<h3 className='subpixel-antialiased font-semibold text-gray-700'>Online Bookings for the finest Fishing Lakes, jump in and explore.</h3>
-				</div>
+				{authorized && (
+					<div className='text-center py-3 mb-12'>
+						<h1 className='subpixel-antialiased text-3xl font-bold text-gray-700'>Hi, {user.firstName}</h1>
+						<h3 className='subpixel-antialiased font-semibold text-gray-700'>Online Bookings for the finest Fishing Lakes, jump in and explore.</h3>
+					</div>
+				)}
+				{!authorized && (
+					<div className='text-center py-3 mb-12'>
+						<h1 className='subpixel-antialiased text-3xl font-bold text-gray-700'>Lake Bookings</h1>
+						<h3 className='subpixel-antialiased font-semibold text-gray-700'>Online Bookings for the finest Fishing Lakes, jump in and explore.</h3>
+					</div>
+				)}
 				<div className='flex flex-col justify-around flex-1 md:flex-row'>{buttons.map((button, i) => homeButton(button))}</div>
+				{authorized && <div className='flex flex-col justify-around flex-1 md:flex-row'>{authorizedButtons.map((button, i) => authorizedButton(button))}</div>}
 			</div>
 			<div className='max-w-7xl self-center w-full'>
+				{/* <div className='px-10 py-5'>
+					<div>
+						<SearchWithSelect />
+					</div>
+				</div> */}
 				{buttons.map((section, i) => {
+					const emptyList = !section?.data?.length;
 					return (
 						<div className='w-full mx-auto my-1 flex-1 p-3 rounded pt-12' id={`${section.title.toLowerCase()}`}>
 							<div className='border border-b border-t-0 border-r-0 border-l-0 pb-1 border-gray-300'>
@@ -58,7 +114,7 @@ const HomeScreen = () => {
 								<h3 className='font-normal text-base text-gray-500'>{section.description}</h3>
 							</div>
 							<div className='flex flex-col md:flex-row  flex-wrap '>
-								{section.data.map((item, i) => {
+								{section?.data?.splice(0, 3)?.map((item, i) => {
 									return (
 										<div className='w-1/3 px-4 py-2'>
 											<button className='p-3 rounded-lg w-full bg-white mt-24 shadow-md hover:shadow-2xl transition-transform duration-150 transform hover:scale-105'>
@@ -74,6 +130,11 @@ const HomeScreen = () => {
 									);
 								})}
 							</div>
+							{!emptyList && (
+								<div className='flex justify-end'>
+									<button className='text-gray-700'>Open full list</button>
+								</div>
+							)}
 						</div>
 					);
 				})}

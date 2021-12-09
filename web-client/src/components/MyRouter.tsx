@@ -12,6 +12,7 @@ import SignupChoice from './signup/SignupChoice';
 import Welcome from './Welcome';
 import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
 import HomeScreen from './home/HomeScreen';
+import ClientHomeScreen from './home/ClientHomeScreen';
 
 const MyRouter = () => {
 	return (
@@ -20,6 +21,9 @@ const MyRouter = () => {
 			<Switch>
 				<Route path='/' exact>
 					<HomeScreen />
+				</Route>
+				<Route path='/clientHome' exact>
+					<ClientHomeScreen />
 				</Route>
 				<Route path='/login'>
 					<Login />

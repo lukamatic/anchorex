@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import AuthContext from "../../context/auth-context";
 import CreateUserDto from "../../dtos/create-user.dto";
@@ -15,9 +15,23 @@ const ReservationNewEntity = () => {
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
   const [conductRules, setConductRules] = useState("");
-  const [oneBedRooms, setOneBedRooms] = useState("");
+  const [singleBedRooms, setOneBedRooms] = useState("");
   const [doubleBedRooms, setDoubleBedRooms] = useState("");
   const [fourBedRooms, setFourBedRooms] = useState("");
+  const [additionalService, setAdditionalService] = useState("");
+
+  const[singleBedRoomsFullAcc, setSingleBedRoomsFullAcc] = useState("")
+  const[doubleBedRoomsFullAcc, setDoubleBedRoomsFullAcc] = useState("")
+  const[fourBedRoomsFullAcc, setFourBedRoomsFullAcc] = useState("")
+
+  const[singleBedRoomsSemiAcc, setSingleBedRoomsSemiAcc] = useState("")
+  const[doubleBedRoomsSemiAcc, setDoubleBedRoomsSemiAcc] = useState("")
+  const[fourBedRoomsSemiAcc, setFourBedRoomsSemiAcc] = useState("")
+
+  const[singleBedRoomsBB, setSingleBedRoomsBB] = useState("")
+  const[doubleBedRoomsBB, setDoubleBedRoomsBB] = useState("")
+  const[fourBedRoomsBB, setFourBedRoomsBB] = useState("")
+  
 
   const [nameErrorText, setNameErrorText] = useState("");
   const [descriptionErrorText, setDescriptionErrorText] = useState("");
@@ -73,13 +87,11 @@ const ReservationNewEntity = () => {
   ) => {
     const value = event.target.value;
     setOneBedRooms(value);
-    if (Number(value) < 0) {
+    var roomNumber = Number(value);
+    if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setOneBedRoomsErrorText("Invalid input!");
     } else {
       setOneBedRoomsErrorText("");
-    }
-    if (!value) {
-      return;
     }
   };
 
@@ -88,13 +100,11 @@ const ReservationNewEntity = () => {
   ) => {
     const value = event.target.value;
     setDoubleBedRooms(value);
-    if (Number(value) < 0) {
+    var roomNumber = Number(value);
+    if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setDoubleBedRoomsErrorText("Invalid input!");
     } else {
       setDoubleBedRoomsErrorText("");
-    }
-    if (!value) {
-      return;
     }
   };
 
@@ -103,15 +113,83 @@ const ReservationNewEntity = () => {
   ) => {
     const value = event.target.value;
     setFourBedRooms(value);
-    if (Number(value) < 0) {
+    var roomNumber = Number(value);
+    if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setFourBedRoomsErrorText("Invalid input!");
     } else {
       setFourBedRoomsErrorText("");
     }
-    if (!value) {
-      return;
-    }
   };
+
+  const additonalServiceChangeHandler = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    setAdditionalService(value);
+  };
+
+  const singleBedRoomsFullAccChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setSingleBedRoomsFullAcc(value)
+  }
+
+  const doubleBedRoomFullAccChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setDoubleBedRoomsFullAcc(value)
+  }
+
+  const fourBedRoomFullAccChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setFourBedRoomsFullAcc(value)
+  }
+
+  const singleBedRoomsSemiAccChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setSingleBedRoomsSemiAcc(value)
+  }
+
+  const doubleBedRoomSemiAccChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setDoubleBedRoomsSemiAcc(value)
+  }
+
+  const fourBedRoomSemiAccChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setFourBedRoomsSemiAcc(value)
+  }
+
+  const singleBedRoomsBBChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setSingleBedRoomsBB(value)
+  }
+
+  const doubleBedRoomBBChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setDoubleBedRoomsBB(value)
+  }
+
+  const fourBedRoomBBChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setFourBedRoomsBB(value)
+  }
 
   const isInputValid = () => {
     if (
@@ -138,7 +216,7 @@ const ReservationNewEntity = () => {
       setDescriptionErrorText("This field is required.");
     }
 
-    if (!oneBedRooms) {
+    if (!singleBedRooms) {
       setOneBedRooms("This field is required.");
     }
 
@@ -153,15 +231,16 @@ const ReservationNewEntity = () => {
     if (!conductRules) {
       setRulesErrorText("This field is required.");
     }
+    
 
     if (
       !name ||
       !address ||
       !description ||
-      !oneBedRooms ||
+      !singleBedRooms ||
       !doubleBedRooms ||
       !fourBedRooms ||
-      !conductRules
+      !conductRules 
     ) {
       return false;
     }
@@ -169,9 +248,11 @@ const ReservationNewEntity = () => {
     return true;
   };
 
-  const createAccount = async () => {
-    if((!isInputValid())){
-      setErrorText('Please fill out required fields correctly.');
+  const createEntity = async () => {
+    if (!isInputValid()) {
+      setErrorText("Please fill out required fields correctly.");
+    } else {
+      setErrorText("");
     }
   };
 
@@ -179,7 +260,7 @@ const ReservationNewEntity = () => {
     <div className="flex flex-col flex-grow bg-gray-100 items-center p-5">
       <div className="flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white">
         <div className="flex flex-col items-center">
-          <div className="flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px">
+          <div className="flex flex-col mt-2 flex-grow text-lg px-8 pt-5 md:w-500px">
             <SignupInput
               type="text"
               text="Name:"
@@ -198,7 +279,7 @@ const ReservationNewEntity = () => {
             />
             <SignupError text={addressErrorText} />
 
-            <div className="flex flex-wrap items-center mb-3">
+            <div className="flex flex-wrap mt-4 items-center mb-3">
               <p className="my-1">Promo description:</p>
               <p className="ml-2 text-gray-500"></p>
               <textarea
@@ -209,12 +290,9 @@ const ReservationNewEntity = () => {
                 name="description"
               />
             </div>
-          </div>
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="flex flex-col flex-grow text-lg px-8 py-6 md:w-500px">
+            <SignupError text={descriptionErrorText} />
             <SignupInput
-              text="One-room"
+              text="Single-room"
               type="number"
               name="oneBedRooms"
               placeholder="Enter room number"
@@ -240,7 +318,108 @@ const ReservationNewEntity = () => {
             />
             <SignupError text={fourBedRoomsErrorText} />
 
-            <div className="flex flex-wrap items-center mb-3">
+            <div className="flex flex-wrap items-center">
+              <p className="my-1 w-44 whitespace-nowrap space-x-28">
+                <label>Room type</label>
+                <label>Full accomodation</label>
+                <label>Semi accomodation</label>
+                <label>BB</label>
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center">
+              <p className="my-1 w-44 whitespace-nowrap space-x-16">
+                <label>Single-bed room</label>
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={singleBedRoomsFullAccChangeHandler}
+                  
+                />
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={singleBedRoomsSemiAccChangeHandler}
+                />
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={singleBedRoomsBBChangeHandler}
+                />
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center">
+              <p className="my-1 w-44 whitespace-nowrap space-x-16">
+                <label>Double-bed room</label>
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={doubleBedRoomFullAccChangeHandler}
+                />
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={doubleBedRoomSemiAccChangeHandler}
+                />
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={doubleBedRoomBBChangeHandler}
+                />
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center">
+              <p className="my-1 w-44 whitespace-nowrap space-x-16">
+                <label>Four-bed room</label>
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={fourBedRoomFullAccChangeHandler}
+                />
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={fourBedRoomSemiAccChangeHandler}
+                />
+                <input
+                  className="input flex-grow md:w-44"
+                  type="number"
+                  placeholder="Price per day ($)"
+                  min="1"
+                  step="1"
+                  onChange={fourBedRoomBBChangeHandler}
+                />
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="flex flex-col -mt-8 flex-grow text-lg px-8 py-6 md:w-500px">
+          <div className="flex flex-wrap items-center mb-3">
               <p className="my-1">Rules of conduct:</p>
               <p className="ml-2 text-gray-500"></p>
               <textarea
@@ -251,14 +430,33 @@ const ReservationNewEntity = () => {
                 onChange={rulesChangeHandler}
               />
             </div>
+            <div className="flex flex-wrap items-center mb-3">
+              <p className="my-1">Additional services:</p>
+              <p className="ml-2 text-gray-500">(optional)</p>
+              <textarea
+                className="input resize-none w-full h-40"
+                maxLength={150}
+                placeholder="Say something about yourself"
+                name="additionalService"
+                onChange={additonalServiceChangeHandler}
+              />
+            </div>
+            <div className='flex flex-wrap items-center'>
+            <form action="/action_page.php" >
+            <input type="file" name="image" accept="image/*"/>
+            </form>
+            </div>
+            
+            
+            <SignupError text={rulesErrorText} />
           </div>
         </div>
       </div>
 
       <div className="flex flex-col justify-center my-5">
         <SignupError text={errorLabelText} />
-        <button className="btnBlueWhite w-72" onClick={createAccount}>
-          Create account
+        <button className="btnBlueWhite w-72" onClick={createEntity}>
+          Create entity
         </button>
       </div>
     </div>

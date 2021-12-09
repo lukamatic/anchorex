@@ -11,6 +11,7 @@ import Signup from './signup/Signup';
 import SignupChoice from './signup/SignupChoice';
 import Welcome from './Welcome';
 import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
+import ReservationEntityAction from './display-entity/ReservationEntityAction';
 
 const MyRouter = () => {
   return (
@@ -49,6 +50,9 @@ const MyRouter = () => {
         </Route>
         <Route path = '/reservationNewEntity'>
           <ReservationNewEntity/>
+        </Route>
+        <Route path = '/reservationEntitiesAction/:id'>
+          <ReservationEntityAction/>
         </Route>
       </Switch>
     </Router>

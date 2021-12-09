@@ -6,6 +6,34 @@ const ReservationEntityDisplay = () => {
   const authContext = useContext(AuthContext);
   const params: { id: string } = useParams();
 
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [description, setDescription] = useState("");
+  const [additionalService, setAdditionalService] = useState("");
+
+  const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setName(value);
+  };
+
+  const addresChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setAddress(value);
+  };
+
+  const descriptionChangeHandler = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    setDescription(value);
+  };
+
+  const additionalServiceChangeHandler = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const value = event.target.value;
+    setAdditionalService(value);
+  };
   return (
     <div>
       <div>
@@ -60,6 +88,7 @@ const ReservationEntityDisplay = () => {
                   <span className="ml-2">Images</span>
                 </li>
               </Link>
+              <Link to={"/reservationEntitiesAction/" + params.id}>
               <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                 <span>
                   <svg
@@ -86,53 +115,53 @@ const ReservationEntityDisplay = () => {
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
                 </span>
-                  <span className="ml-2">Calendar</span>
-              </li>
-              <Link to={"/reservationEntitiesPricelist/" + params.id}>
-              <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#FFFFFF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                  </svg>
-                </span>
-                  <span className="ml-2">Pricelist</span>
+                <span className="ml-2">Quick reservations</span>
               </li>
               </Link>
-              
-              <Link to={"/reservationEntitiesRules/" + params.id}>
-              <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#FFFFFF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                  </svg>
-                </span>
-                  <span className="ml-2">Conduct rules</span>
-              </li>
+              <Link to={"/reservationEntitiesPricelist/" + params.id}>
+                <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="12" y1="1" x2="12" y2="23"></line>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                  </span>
+                  <span className="ml-2">Pricelist</span>
+                </li>
               </Link>
 
+              <Link to={"/reservationEntitiesRules/" + params.id}>
+                <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                  </span>
+                  <span className="ml-2">Conduct rules</span>
+                </li>
+              </Link>
             </ul>
           </div>
         </nav>
@@ -149,7 +178,8 @@ const ReservationEntityDisplay = () => {
               className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
               id="inline-full-name"
               type="text"
-              disabled
+              name="name"
+              onChange={nameChangeHandler}
             ></input>
           </div>
         </div>
@@ -163,6 +193,8 @@ const ReservationEntityDisplay = () => {
             <input
               className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
               id="inline-password"
+              name="address"
+              onChange={addresChangeHandler}
             />
           </div>
         </div>
@@ -193,8 +225,12 @@ const ReservationEntityDisplay = () => {
               Promo description
             </label>
           </div>
-          <textarea className="block appearance-none w-full bg-white border  border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"></textarea>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <textarea
+            name="description"
+            onChange={descriptionChangeHandler}
+            className="block readonly appearance-none w-full bg-white border  border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 ">
             <svg
               className="fill-current h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +246,11 @@ const ReservationEntityDisplay = () => {
               Additional service
             </label>
           </div>
-          <textarea className="block appearance-none w-full bg-white border  border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"></textarea>
+          <textarea
+            onChange={additionalServiceChangeHandler}
+            name="additionalService"
+            className="block readonly appearance-none w-full bg-white border  border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline readonly"
+          ></textarea>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg
               className="fill-current h-4 w-4"
@@ -220,6 +260,11 @@ const ReservationEntityDisplay = () => {
               <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
             </svg>
           </div>
+        </div>
+        <div>
+        <button className="btnBlueWhite w-72 ml-60">
+          Submit changes
+        </button>
         </div>
       </div>
     </div>

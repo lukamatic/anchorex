@@ -1,9 +1,9 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Test;
-import com.teameleven.anchorex.dto.CreateTestDto;
-import com.teameleven.anchorex.dto.TestDto;
-import com.teameleven.anchorex.dto.UpdateTestDto;
+import com.teameleven.anchorex.dto.test.CreateTestDto;
+import com.teameleven.anchorex.dto.test.TestDto;
+import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.TestService;
 

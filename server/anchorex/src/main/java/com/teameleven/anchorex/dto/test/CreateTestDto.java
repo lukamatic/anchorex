@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto;
+package com.teameleven.anchorex.dto.test;
 
 import javax.validation.constraints.NotEmpty;
 

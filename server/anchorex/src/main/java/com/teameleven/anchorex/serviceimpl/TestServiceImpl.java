@@ -1,8 +1,8 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.Test;
-import com.teameleven.anchorex.dto.CreateTestDto;
-import com.teameleven.anchorex.dto.UpdateTestDto;
+import com.teameleven.anchorex.dto.test.CreateTestDto;
+import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.exceptions.TestNameTakenException;
 import com.teameleven.anchorex.repository.TestRepository;
 import com.teameleven.anchorex.service.TestService;

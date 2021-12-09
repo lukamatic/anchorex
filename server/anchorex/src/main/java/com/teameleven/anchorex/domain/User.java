@@ -2,22 +2,20 @@ package com.teameleven.anchorex.domain;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.List;
 
 import javax.persistence.*;
 
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 /*
-@SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
-*/
+ * @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
+ * 
+ * @Where(clause = "deleted = false")
+ */
 @Table(name = "users")
 public class User implements UserDetails {
 	@Id
@@ -25,9 +23,7 @@ public class User implements UserDetails {
 	private Long id;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role",
-			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
 	@Column(unique = true)
@@ -63,7 +59,8 @@ public class User implements UserDetails {
 	public User() {
 	}
 
-	public User(Long id, String email, String password, String firstName, String lastName, String address, String city, String country, String phoneNumber, String biography) {
+	public User(Long id, String email, String password, String firstName, String lastName, String address, String city,
+			String country, String phoneNumber, String biography) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
@@ -187,14 +184,12 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		return roles;
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return email;
 	}
 
 	@Override

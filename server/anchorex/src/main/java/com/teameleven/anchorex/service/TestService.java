@@ -1,8 +1,8 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Test;
-import com.teameleven.anchorex.dto.CreateTestDto;
-import com.teameleven.anchorex.dto.UpdateTestDto;
+import com.teameleven.anchorex.dto.test.CreateTestDto;
+import com.teameleven.anchorex.dto.test.UpdateTestDto;
 
 import java.util.Collection;
 

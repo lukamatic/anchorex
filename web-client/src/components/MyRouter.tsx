@@ -13,6 +13,7 @@ import Welcome from './Welcome';
 import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
 import HomeScreen from './home/HomeScreen';
 import ClientHomeScreen from './home/ClientHomeScreen';
+import ListScreen from './display-list/ListScreen';
 
 const MyRouter = () => {
 	return (
@@ -22,8 +23,8 @@ const MyRouter = () => {
 				<Route path='/' exact>
 					<HomeScreen />
 				</Route>
-				<Route path='/clientHome' exact>
-					<ClientHomeScreen />
+				<Route path='/listScreen/:type'>
+					<ListScreen />
 				</Route>
 				<Route path='/login'>
 					<Login />

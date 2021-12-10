@@ -66,6 +66,7 @@ const ReservationEntityDisplayImages = () => {
                     <span className="ml-2">Images</span>
                 </li>
               </Link>
+              <Link to={"/reservationEntitiesAction/" + params.id}>
               <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                 <span>
                   <svg
@@ -92,8 +93,9 @@ const ReservationEntityDisplayImages = () => {
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
                 </span>
-                  <span className="ml-2">Calendar</span>
+                <span className="ml-2">Quick reservations</span>
               </li>
+              </Link>
               <Link to={"/reservationEntitiesPricelist/" + params.id}>
 
               <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
@@ -143,6 +145,7 @@ const ReservationEntityDisplayImages = () => {
         </nav>
       </div>
       <div className="container grid grid-cols-3 gap-2 mx-auto w-full mt-12 ml-96 max-w-4xl">
+     
         <div className="w-full rounded">
           <img src={ext1.default} alt="image" />
         </div>

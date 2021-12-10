@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto;
+package com.teameleven.anchorex.dto.test;
 
 public class TestDto {
     private Long id;

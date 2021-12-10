@@ -11,8 +11,8 @@ import Signup from './signup/Signup';
 import SignupChoice from './signup/SignupChoice';
 import Welcome from './Welcome';
 import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
+import ReservationEntityAction from './display-entity/ReservationEntityAction';
 import HomeScreen from './home/HomeScreen';
-import ClientHomeScreen from './home/ClientHomeScreen';
 import ListScreen from './display-list/ListScreen';
 
 const MyRouter = () => {
@@ -55,6 +55,9 @@ const MyRouter = () => {
 				</Route>
 				<Route path='/reservationNewEntity'>
 					<ReservationNewEntity />
+				</Route>
+				<Route path='/reservationEntitiesAction/:id'>
+					<ReservationEntityAction />
 				</Route>
 			</Switch>
 		</Router>

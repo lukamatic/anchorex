@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+}
+
+@layer components {
+  .btnBlueWhite {
+    @apply bg-blue-500 text-white font-bold border-2 border-blue-500
+      py-1 px-3 rounded cursor-pointer
+      hover:bg-blue-400 hover:border-blue-400
+      active:bg-blue-600 active:border-blue-600;
+  }
+
+  .input {
+    @apply border-2 border-gray-400 rounded py-1 px-2
+    focus:outline-none focus:border-blue-400;
+  }
+}
+
+@layer utilities {
+  @variants responsive {
+    .w-500px {
+      width: 500px;
+    }
+
+    .right{
+      margin-left: 300px;
+  }
+  
+  .info-data-images{
+      display: flex;
+  }
+  
+  .card-image{
+      display: inline-flex;
+      margin-left: 30px;
+      margin-top: 20px;
+      height: 204px;
+      width: 204px;
+      border-style: solid;
+      border-width: 2px;
+      border-radius: 3px;
+      border-color: #2f5e3d;
+  }
+  
+  .card-image img{
+      height: 200px;
+      width: 200px;
+      border-radius: 3px;
+      object-fit: fill;
+  }
+   
+  .w-700px {
+      width: 700px;
+    }
+
+  
+  .w-1300px{
+      width: 1300px;
+    }
+
+      
+
+
+  }
+
+
+}

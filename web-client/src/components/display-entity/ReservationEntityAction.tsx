@@ -122,7 +122,7 @@ const ReservationEntityAction = () => {
                       <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                   </span>
-                  <span className="ml-2">Quick reservations</span>
+                  <span className="ml-2">Quick reservation</span>
                 </li>
                 <Link to={"/reservationEntitiesPricelist/" + params.id}>
                   <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">

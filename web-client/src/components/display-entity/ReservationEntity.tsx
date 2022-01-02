@@ -16,22 +16,20 @@ const ReservationEntityDisplay = () => {
   const [currentService, setCurrentService] = useState("");
   const [rendered, setRendered] = useState(false);
 
-  const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setName(value);
-  };
+	const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setName(value);
+	};
 
-  const addresChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setAddress(value);
-  };
+	const addresChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setAddress(value);
+	};
 
-  const descriptionChangeHandler = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const value = event.target.value;
-    setDescription(value);
-  };
+	const descriptionChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		const value = event.target.value;
+		setDescription(value);
+	};
 
   const additionalServiceChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -99,9 +97,9 @@ const ReservationEntityDisplay = () => {
                     </svg>
                   </span>
 
-                  <span className="ml-2">Home</span>
-                </li>
-              </Link>
+									<span className='ml-2'>Home</span>
+								</li>
+							</Link>
 
               <Link to={"/reservationEntitiesImages/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">

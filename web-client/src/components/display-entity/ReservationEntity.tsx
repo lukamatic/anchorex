@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import AuthContext from "../../context/auth-context";
-import LocalStorageUtil from "../../utils/local-storage-util";
 
 const ReservationEntityDisplay = () => {
   const authContext = useContext(AuthContext);
@@ -42,13 +41,13 @@ const ReservationEntityDisplay = () => {
     if (!rendered) {
       const newServices = [];
       setRendered(true);
-      if (currentService.length != 0) {
+      if (currentService.length !== 0) {
         newServices.push(currentService);
         setAdditionalService(newServices);
       }
     } else {
       const newServices = [...additionalService];
-      if (currentService.length != 0 && !newServices.includes(currentService)) {
+      if (currentService.length !== 0 && !newServices.includes(currentService)) {
         newServices.push(currentService);
         setAdditionalService(newServices);
       }
@@ -59,7 +58,7 @@ const ReservationEntityDisplay = () => {
     (service: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
       const newServices = [...additionalService];
       for (let i = 0; i <= newServices.length; i++) {
-        if (newServices[i] == service) {
+        if (newServices[i] === service) {
           newServices.splice(i, 1);
         }
       }
@@ -209,7 +208,7 @@ const ReservationEntityDisplay = () => {
             </label>
           </div>
           <div className="md:w-2/3">
-            {userRole == "LODGE_OWNER" ? (
+            {userRole === "LODGE_OWNER" ? (
               <input
                 className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
                 id="inline-full-name"
@@ -235,7 +234,7 @@ const ReservationEntityDisplay = () => {
             </label>
           </div>
           <div className="md:w-2/3">
-            {userRole == "LODGE_OWNER" ? (
+            {userRole === "LODGE_OWNER" ? (
               <input
                 className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
                 id="inline-password"
@@ -279,7 +278,7 @@ const ReservationEntityDisplay = () => {
               Promo description
             </label>
           </div>
-          {userRole == "LODGE_OWNER" ? (
+          {userRole === "LODGE_OWNER" ? (
             <textarea
               name="description"
               onChange={descriptionChangeHandler}
@@ -314,7 +313,7 @@ const ReservationEntityDisplay = () => {
             name="additionalService"
             className="block readonly appearance-none w-full bg-white border  border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline readonly"
           ></input>
-          {userRole == "LODGE_OWNER" ? (
+          {userRole === "LODGE_OWNER" ? (
             <button className="btnBlueWhite w-16 ml-8" onClick={addNewService}>
               Add
             </button>
@@ -338,7 +337,7 @@ const ReservationEntityDisplay = () => {
               <li key={d}>
                 {d}
                 {!additionalService.includes("") ? (
-                  userRole == "LODGE_OWNER" ? (
+                  userRole === "LODGE_OWNER" ? (
                     <button
                       className="btnBlueWhite w-12 h-8 ml-8"
                       onClick={removeService(d)}
@@ -366,7 +365,7 @@ const ReservationEntityDisplay = () => {
             ))}
           </ul>
         </div>
-        {userRole == "LODGE_OWNER" ? (
+        {userRole === "LODGE_OWNER" ? (
           <div>
             <button className="btnBlueWhite w-72 ml-60" onClick={changeEntity}>
               Submit changes

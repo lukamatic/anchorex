@@ -9,7 +9,6 @@ import ReservationEntityDisplayPricelist from './display-entity/ReservationEntit
 import ReservationEntityDisplayRules from './display-entity/ReservationEntityDisplayRules';
 import Signup from './signup/Signup';
 import SignupChoice from './signup/SignupChoice';
-import Welcome from './Welcome';
 import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
 import ReservationEntityAction from './display-entity/ReservationEntityAction';
 import HomeScreen from './home/HomeScreen';

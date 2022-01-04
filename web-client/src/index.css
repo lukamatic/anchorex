@@ -13,6 +13,13 @@
       active:bg-blue-600 active:border-blue-600;
   }
 
+  .btnWhiteBlue {
+    @apply bg-white text-blue-500 font-bold border-2 border-blue-500
+      py-1 px-3 rounded cursor-pointer
+      hover:text-blue-400 hover:border-blue-400
+      active:text-blue-600 active:border-blue-600;
+  }
+
   .input {
     @apply border-2 border-gray-400 rounded py-1 px-2
     focus:outline-none focus:border-blue-400;
@@ -25,15 +32,15 @@
       width: 500px;
     }
 
-    .right{
+    .right {
       margin-left: 300px;
-  }
-  
-  .info-data-images{
+    }
+
+    .info-data-images {
       display: flex;
-  }
-  
-  .card-image{
+    }
+
+    .card-image {
       display: inline-flex;
       margin-left: 30px;
       margin-top: 20px;
@@ -43,28 +50,21 @@
       border-width: 2px;
       border-radius: 3px;
       border-color: #2f5e3d;
-  }
-  
-  .card-image img{
+    }
+
+    .card-image img {
       height: 200px;
       width: 200px;
       border-radius: 3px;
       object-fit: fill;
-  }
-   
-  .w-700px {
+    }
+
+    .w-700px {
       width: 700px;
     }
 
-  
-  .w-1300px{
+    .w-1300px {
       width: 1300px;
     }
-
-      
-
-
   }
-
-
 }

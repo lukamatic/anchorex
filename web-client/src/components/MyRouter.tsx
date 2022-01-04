@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import FishingLessons from './fishing-lessons/FishingLessons';
 import Lodges from './lodges/Lodges';
-import Login from './Login';
+import Login from './login/Login';
 import Navbar from './navbar/Navbar';
 import ReservationEntityDisplay from './display-entity/ReservationEntity';
 import ReservationEntityDisplayImages from './display-entity/ReservationEntityDisplayImages';
@@ -13,6 +13,7 @@ import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
 import ReservationEntityAction from './display-entity/ReservationEntityAction';
 import HomeScreen from './home/HomeScreen';
 import ListScreen from './display-list/ListScreen';
+import Verification from './login/Verification';
 
 const MyRouter = () => {
 	return (
@@ -21,6 +22,9 @@ const MyRouter = () => {
 			<Switch>
 				<Route path='/' exact>
 					<HomeScreen />
+				</Route>
+				<Route path='/verification'>
+					<Verification />
 				</Route>
 				<Route path='/listScreen/:type'>
 					<ListScreen />

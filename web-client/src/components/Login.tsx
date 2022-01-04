@@ -21,7 +21,7 @@ const Login = () => {
     const userRole = UserRole.LOGDE_OWNER; // for testing only
     authContext.setUserRole(userRole);
     storage.setUserRole(userRole);
-    history.push('/');
+    history.push('/lodges');
   };
 
   return (

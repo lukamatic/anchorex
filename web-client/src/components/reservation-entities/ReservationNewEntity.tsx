@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import axios from 'axios';
 import SignupInput from "../signup/SignupInput";
 import SignupError from "../signup/SignupErrorLabel";
+import { useHistory } from "react-router-dom";
 
 const ReservationNewEntity = () => {
- 
+  const history = useHistory();
+
   const [ownerId, setOwnerId] = useState(3);
   const [name, setEntityName] = useState("");
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
   const [conductRules, setConductRules] = useState([""]);
-  const [singleBedRooms, setOneBedRooms] = useState("");
-  const [doubleBedRooms, setDoubleBedRooms] = useState("");
-  const [fourBedRooms, setFourBedRooms] = useState("");
+  const [singleBedroomNumber, setSingleBedroomNumber] = useState("");
+  const [doubleBedroomNumber, setDoubleBedroomNumber] = useState("");
+  const [fourBedroomNumber, setFourBedroomNumber] = useState("");
   const [lodgePrice, setLodgePrice] = useState("");
   const [additionalServices, setAdditionalService] = useState([""]);
   const [additionalServicePrices, setAdditionalServicePrices] = useState([0]);
@@ -77,7 +79,7 @@ const ReservationNewEntity = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setOneBedRooms(value);
+    setSingleBedroomNumber(value);
     var roomNumber = Number(value);
     if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setOneBedRoomsErrorText("Invalid input!");
@@ -90,7 +92,7 @@ const ReservationNewEntity = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setDoubleBedRooms(value);
+    setDoubleBedroomNumber(value);
     var roomNumber = Number(value);
     if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setDoubleBedRoomsErrorText("Invalid input!");
@@ -103,7 +105,7 @@ const ReservationNewEntity = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setFourBedRooms(value);
+    setFourBedroomNumber(value);
     var roomNumber = Number(value);
     if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setFourBedRoomsErrorText("Invalid input!");
@@ -166,16 +168,16 @@ const ReservationNewEntity = () => {
       setDescriptionErrorText("This field is required.");
     }
 
-    if (!singleBedRooms) {
-      setOneBedRooms("This field is required.");
+    if (!singleBedroomNumber) {
+      setSingleBedroomNumber("This field is required.");
     }
 
-    if (!doubleBedRooms) {
-      setDoubleBedRooms("This field is required.");
+    if (!doubleBedroomNumber) {
+      setDoubleBedroomNumber("This field is required.");
     }
 
-    if (!fourBedRooms) {
-      setFourBedRooms("This field is required.");
+    if (!fourBedroomNumber) {
+      setFourBedroomNumber("This field is required.");
     }
 
     if (!conductRules) {
@@ -186,9 +188,9 @@ const ReservationNewEntity = () => {
       !name ||
       !address ||
       !description ||
-      !singleBedRooms ||
-      !doubleBedRooms ||
-      !fourBedRooms ||
+      !singleBedroomNumber ||
+      !doubleBedroomNumber ||
+      !fourBedroomNumber ||
       !conductRules
     ) {
       return false;
@@ -272,28 +274,41 @@ const ReservationNewEntity = () => {
       setErrorText("Please fill out required fields correctly.");
     } else {
       setErrorText("");
-      var rules = ""
+      var rulesOfConduct = ""
       for(let i = 0; i < conductRules.length; i++){
-        rules += "#";
-        rules += conductRules[i];
+        rulesOfConduct += "#";
+        rulesOfConduct += conductRules[i];
+      }
+      const services =[]
+      for(let i = 0; i < additionalServices.length; i++){
+        var info = additionalServices[i]
+        var price = additionalServicePrices[i]
+        services[i] = {
+          info,
+          price
+        }
       }
       const newLodge = {
         ownerId,
         name,
         description,
-        rules,
+        rulesOfConduct,
         lodgePrice,
-        singleBedRooms,
-        doubleBedRooms,
-        fourBedRooms
+        singleBedroomNumber,
+        doubleBedroomNumber,
+        fourBedroomNumber,
+        services
       }
-      axios.post("http://localhost:8088/reservationEntity/createLodge", newLodge, {
+      axios.post("reservationEntity/createLodge", newLodge, {
         headers: {
-            'Content-Type': 'application/json',
-        },      
+            Accept : 'application/json',
+            'Content-type': 'application/json',
+            'Authorization':"Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw" 
+        }     
     })  
       .then(response => {
         window.alert('Poslato')
+        history.push('/lodges');
       })
       .catch((error)=>{
         window.alert(error.response.toString())
@@ -343,7 +358,7 @@ const ReservationNewEntity = () => {
             <SignupInput
               text="Single-room"
               type="number"
-              name="oneBedRooms"
+              name="singleBedroomNumber"
               placeholder="Enter room number"
               onChange={oneBedRoomChangeHandler}
             />
@@ -352,7 +367,7 @@ const ReservationNewEntity = () => {
             <SignupInput
               text="Double-room"
               type="number"
-              name="doubleBedRooms"
+              name="doubleBedroomNumber"
               placeholder="Enter room number"
               onChange={doubleBedRoomChangeHandler}
             />
@@ -361,7 +376,7 @@ const ReservationNewEntity = () => {
             <SignupInput
               text="Four-room"
               type="number"
-              name="fourBedRooms"
+              name="fourBedroomNumber"
               placeholder="Enter room number"
               onChange={fourBedRoomChangeHandler}
             />

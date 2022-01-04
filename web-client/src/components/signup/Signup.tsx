@@ -20,7 +20,7 @@ const Signup = () => {
 
   const [email, setEmail] = useState('');
   const [userRole, setUserRole] = useState(
-    params.choice === 'client' ? UserRole.CLIENT : UserRole.LOGDE_OWNER
+    params.choice === 'client' ? UserRole.CLIENT : UserRole.LODGE_OWNER
   );
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -145,7 +145,7 @@ const Signup = () => {
   ) => {
     switch (event.target.value) {
       case 'LODGE_OWNER':
-        return setUserRole(UserRole.LOGDE_OWNER);
+        return setUserRole(UserRole.LODGE_OWNER);
       case 'SHIP_OWNER':
         return setUserRole(UserRole.SHIP_OWNER);
       case 'INSTRUCTOR':

@@ -8,6 +8,7 @@ import com.teameleven.anchorex.dto.LoginDto;
 import com.teameleven.anchorex.dto.UserTokenState;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 
+import com.teameleven.anchorex.response.LoginResponse;
 import com.teameleven.anchorex.service.UserService;
 import com.teameleven.anchorex.util.TokenUtils;
 
@@ -45,7 +46,7 @@ public class AuthController {
 	// Prvi endpoint koji pogadja korisnik kada se loguje.
 	// Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
 	@PostMapping("/login")
-	public ResponseEntity<UserTokenState> createAuthenticationToken(
+	public ResponseEntity<LoginResponse> createAuthenticationToken(
 			@RequestBody LoginDto authenticationRequest, HttpServletResponse response) {
 		// Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
 		// AuthenticationException
@@ -60,8 +61,11 @@ public class AuthController {
 		User user = (User) authentication.getPrincipal();
 		String jwt = tokenUtils.generateToken(user.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
+		var accessToken = new UserTokenState(jwt, expiresIn);
 
-		// Vrati token kao odgovor na uspesnu autentifikaciju
-		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+		String userRole = user.getRoles().iterator().next().getName();
+		var loginResponse = new LoginResponse(accessToken, userRole);
+
+		return ResponseEntity.ok(loginResponse);
 	}
 }

@@ -1,11 +1,13 @@
-import { UserRole } from '../model/user-role.enum';
+import { UserRole } from '../../model/user-role.enum';
 import { LocalStorageItem } from './local-storage-item.enum';
 
-export default class LocalStorageUtil {
+class LocalStorageUtil {
   public getUserRole(): UserRole {
     const userRoleStr = localStorage.getItem('user_role');
     return userRoleStr
-      ? UserRole[userRoleStr as keyof typeof UserRole]
+      ? UserRole[
+          userRoleStr.substring(5, userRoleStr.length) as keyof typeof UserRole
+        ]
       : UserRole.UNDEFINED;
   }
 
@@ -17,3 +19,6 @@ export default class LocalStorageUtil {
     localStorage.setItem(LocalStorageItem.ACCESS_TOKEN, value);
   }
 }
+
+const localStorageUtil = new LocalStorageUtil();
+export default localStorageUtil;

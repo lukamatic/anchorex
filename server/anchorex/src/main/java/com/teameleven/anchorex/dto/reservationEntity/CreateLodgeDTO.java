@@ -1,16 +1,27 @@
 package com.teameleven.anchorex.dto.reservationEntity;
 
+import java.util.Set;
+
 public class CreateLodgeDTO {
     private Long ownerId;
     private String name;
     private String description;
     private String rulesOfConduct;
-    private double price;
+    private double lodgePrice;
     private Integer singleBedroomNumber;
     private Integer doubleBedroomNumber;
     private Integer fourBedroomNumber;
+    private Set<AdditionalServiceDTO> services;
 
     public CreateLodgeDTO() {
+    }
+
+    public Set<AdditionalServiceDTO> getServices() {
+        return services;
+    }
+
+    public void setServices(Set<AdditionalServiceDTO> services) {
+        this.services = services;
     }
 
     public Long getOwnerId() {
@@ -45,12 +56,12 @@ public class CreateLodgeDTO {
         this.rulesOfConduct = rulesOfConduct;
     }
 
-    public double getPrice() {
-        return price;
+    public double getLodgePrice() {
+        return lodgePrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setLodgePrice(double lodgePrice) {
+        this.lodgePrice = lodgePrice;
     }
 
     public Integer getSingleBedroomNumber() {

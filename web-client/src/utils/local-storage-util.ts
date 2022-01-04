@@ -1,4 +1,5 @@
 import { UserRole } from '../model/user-role.enum';
+import { LocalStorageItem } from './local-storage-item.enum';
 
 export default class LocalStorageUtil {
   public getUserRole(): UserRole {
@@ -12,13 +13,7 @@ export default class LocalStorageUtil {
     localStorage.setItem('user_role', userRole);
   }
 
-  public getUserToken(): (string| null) {
-    const userToken = localStorage.getItem('user_token');
-    return userToken;
+  public setAccessToken(value: string): void {
+    localStorage.setItem(LocalStorageItem.ACCESS_TOKEN, value);
   }
-
-  public setUserToken(token: string): void {
-    localStorage.setItem('user_token', token);
-  }
-
 }

@@ -7,6 +7,7 @@ import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.repository.UserRepository;
+import com.teameleven.anchorex.service.AuthService;
 import com.teameleven.anchorex.service.RoleService;
 import com.teameleven.anchorex.service.UserService;
 
@@ -20,10 +21,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleService roleService;
+	private final AuthService authService;
 
-	public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
+	public UserServiceImpl(UserRepository userRepository, RoleService roleService, AuthService authService) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
+		this.authService = authService;
 	}
 
 	@Override
@@ -36,6 +39,9 @@ public class UserServiceImpl implements UserService {
 			user.getRoles().add(role);
 			user.encodePassword();
 			savedUser = userRepository.save(user);
+			if (savedUser.isClient()) {
+				this.authService.sendVerificationMail(savedUser.getEmail());
+			}
 		} catch (DataIntegrityViolationException e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					"An account with entered email address already exists.");

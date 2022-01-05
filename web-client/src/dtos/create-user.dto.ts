@@ -4,8 +4,12 @@ export default interface CreateUserDto {
   firstName: string;
   lastName: string;
   email: string;
-  userRole: UserRole;
+  role: UserRole;
   password: string;
-  dateOfBirth: string;
-  profileDescription: string;
+  // dateOfBirth: string;
+  biography: string;
+  country: string;
+  phoneNumber: string;
+  city: string;
+  address: string;
 }

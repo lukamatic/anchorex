@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserRole } from '../../model/user-role.enum';
-import LocalStorageUtil from '../../utils/local-storage-util';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import LogoLink from './LogoLink';
 import Menu from './Menu';
 import MenuToggleButton from './MenuToggleButton';
 
 const Navbar = () => {
-  const storage = new LocalStorageUtil();
-  const userRole = storage.getUserRole();
+  const userRole = localStorageUtil.getUserRole();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {

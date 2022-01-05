@@ -3,6 +3,8 @@ import { useHistory, useParams } from 'react-router';
 import AuthContext from '../../context/auth-context';
 import CreateUserDto from '../../dtos/create-user.dto';
 import { UserRole } from '../../model/user-role.enum';
+import { singUpAsync } from '../../server/service';
+import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import SignupValidation from '../../validations/signup-validation';
 import SignupError from './SignupErrorLabel';
 import SignupInput from './SignupInput';
@@ -20,7 +22,7 @@ const Signup = () => {
 
   const [email, setEmail] = useState('');
   const [userRole, setUserRole] = useState(
-    params.choice === 'client' ? UserRole.CLIENT : UserRole.LOGDE_OWNER
+    params.choice === 'client' ? UserRole.CLIENT : UserRole.LODGE_OWNER
   );
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -146,7 +148,7 @@ const Signup = () => {
   ) => {
     switch (event.target.value) {
       case 'LODGE_OWNER':
-        return setUserRole(UserRole.LOGDE_OWNER);
+        return setUserRole(UserRole.LODGE_OWNER);
       case 'SHIP_OWNER':
         return setUserRole(UserRole.SHIP_OWNER);
       case 'INSTRUCTOR':
@@ -277,7 +279,7 @@ const Signup = () => {
     if (isInputValid()) {
       setErrorText('');
       const createUserDto: CreateUserDto = {
-        userRole: userRole,
+        role: userRole,
         email: email,
         password: password,
         firstName: firstName,
@@ -286,17 +288,20 @@ const Signup = () => {
         city: city,
         country: country,
         phoneNumber: phoneNumber,
-        signupExplanation: signupExplanation,
         biography: biography,
+        signupExplanation: signupExplanation,
       };
-      console.log(createUserDto);
+      const resp = await singUpAsync(createUserDto);
+      if (resp.status === HttpStatusCode.CREATED) {
+        alert('Email is sent. Please check your inbox!');
+      }
     } else {
       setErrorText('Please fill out required fields correctly.');
     }
   };
 
   return (
-    <div className='flex flex-col flex-grow bg-gray-100 items-center p-5'>
+    <div className='flex flex-col flex-grow bg-blue-50 items-center p-5'>
       <div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white'>
         <div className='flex flex-col items-center'>
           <div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>

@@ -8,9 +8,8 @@ const ReservationEntityAction = () => {
   
     const [actionStartDate, setActionStartDate] = useState("");
     const [actionEndDate, setActionEndDate] = useState("");
-    const [reservationStartDate, setReservationStartDate] = useState("");
-    const [reservationEndDate, setReservationEndDate] = useState("");
     const [price, setPrice] = useState("");
+    const [personNumber, setPersonNumber] = useState("");
     const [additionalService, setAdditionalService] = useState("");
   
     const actionStartDateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,16 +21,6 @@ const ReservationEntityAction = () => {
       const value = event.target.value;
       setActionEndDate(value);
     };
-
-    const reservationStartDateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setReservationStartDate(value);
-      };
-    
-      const reservationEndDateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setReservationEndDate(value);
-      };
   
     const priceChangeHandler = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -39,6 +28,13 @@ const ReservationEntityAction = () => {
       const value = event.target.value;
       setPrice(value);
     };
+
+    const personNumberChangeHandler = (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const value = event.target.value;
+      setPersonNumber(value);
+    }
   
     const additionalServiceChangeHandler = (
       event: React.ChangeEvent<HTMLTextAreaElement>
@@ -126,7 +122,7 @@ const ReservationEntityAction = () => {
                       <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                   </span>
-                  <span className="ml-2">Quick reservations</span>
+                  <span className="ml-2">Quick reservation</span>
                 </li>
                 <Link to={"/reservationEntitiesPricelist/" + params.id}>
                   <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
@@ -209,49 +205,24 @@ const ReservationEntityAction = () => {
               />
             </div>
           </div>
-          <div className="md:flex md:items-center mb-6">
-            <div className="md:w-1/3">
-              <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                Reservation start date
-              </label>
-            </div>
-            <div className="md:w-2/3">
-              <input
-                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                id="inline-full-name"
-                type="date"
-                name="reservationStartDate"
-                onChange={reservationStartDateChangeHandler}
-              ></input>
-            </div>
-          </div>
-          <div className="md:flex md:items-center mb-6">
-            <div className="md:w-1/3">
-              <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-                Reservation end date
-              </label>
-            </div>
-            <div className="md:w-2/3">
-              <input
-                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                id="inline-password"
-                name="reservationEndDate"
-                type="date"
-                onChange={reservationEndDateChangeHandler}
-              />
-            </div>
-          </div>
+         
           <div className="md:flex md:items-center mb-6">
             <div className="md:w-1/3">
               <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
-                Rooms available
+                Max person number
               </label>
             </div>
-            <select className="block appearance-none w-full bg-white border ml-2 border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-              <option>Single room</option>
-              <option>Double room</option>
-              <option>Four-bed room</option>
-            </select>
+            <div className="md:w-2/3">
+            <input
+              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+              id="inline-full-name"
+              type="number"
+              min="1"
+              step="1"
+              name="personNumber"
+              onChange={personNumberChangeHandler}
+            ></input>
+          </div>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg
                 className="fill-current h-4 w-4"
@@ -295,7 +266,7 @@ const ReservationEntityAction = () => {
               className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
               id="inline-full-name"
               type="number"
-              min="1"
+              min="1.00"
               name="price"
               onChange={priceChangeHandler}
             ></input>

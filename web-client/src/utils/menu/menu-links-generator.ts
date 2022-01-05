@@ -15,7 +15,7 @@ export class MenuLinksGenerator {
         return ClientMenuLinks;
       case UserRole.INSTRUCTOR:
         return InstructorMenuLinks;
-      case UserRole.LOGDE_OWNER:
+      case UserRole.LODGE_OWNER:
         return LodgeOwnerMenuLinks;
       case UserRole.SHIP_OWNER:
         return ShipOwnerMenuLinks;

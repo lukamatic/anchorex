@@ -88,7 +88,7 @@ const ReservationEntityDisplayPricelist = () => {
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
                 </span>
-                <span className="ml-2">Quick reservations</span>
+                <span className="ml-2">Quick reservation</span>
               </li>
               </Link>
               

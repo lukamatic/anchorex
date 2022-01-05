@@ -1,46 +1,38 @@
-import React, { useContext, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import AuthContext from "../../context/auth-context";
-import CreateUserDto from "../../dtos/create-user.dto";
-import { UserRole } from "../../model/user-role.enum";
-import SignupValidation from "../../validations/signup-validation";
+import React, { useState } from "react";
+import axios from 'axios';
 import SignupInput from "../signup/SignupInput";
 import SignupError from "../signup/SignupErrorLabel";
+import { useHistory } from "react-router-dom";
 
 const ReservationNewEntity = () => {
-  const params: { choice: string } = useParams();
-  const signupValidation = new SignupValidation();
+  const history = useHistory();
 
+  const [ownerId, setOwnerId] = useState(3);
   const [name, setEntityName] = useState("");
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
-  const [conductRules, setConductRules] = useState("");
-  const [singleBedRooms, setOneBedRooms] = useState("");
-  const [doubleBedRooms, setDoubleBedRooms] = useState("");
-  const [fourBedRooms, setFourBedRooms] = useState("");
-  const [additionalService, setAdditionalService] = useState("");
+  const [conductRules, setConductRules] = useState([""]);
+  const [singleBedroomNumber, setSingleBedroomNumber] = useState("");
+  const [doubleBedroomNumber, setDoubleBedroomNumber] = useState("");
+  const [fourBedroomNumber, setFourBedroomNumber] = useState("");
+  const [lodgePrice, setLodgePrice] = useState("");
+  const [additionalServices, setAdditionalService] = useState([""]);
+  const [additionalServicePrices, setAdditionalServicePrices] = useState([0]);
+  const [currentService, setCurrentService] = useState("");
+  const [currentPrice, setCurrentPrice] = useState(0);
+  const [currentRule, setCurrentRule] = useState("");
 
-  const[singleBedRoomsFullAcc, setSingleBedRoomsFullAcc] = useState("")
-  const[doubleBedRoomsFullAcc, setDoubleBedRoomsFullAcc] = useState("")
-  const[fourBedRoomsFullAcc, setFourBedRoomsFullAcc] = useState("")
-
-  const[singleBedRoomsSemiAcc, setSingleBedRoomsSemiAcc] = useState("")
-  const[doubleBedRoomsSemiAcc, setDoubleBedRoomsSemiAcc] = useState("")
-  const[fourBedRoomsSemiAcc, setFourBedRoomsSemiAcc] = useState("")
-
-  const[singleBedRoomsBB, setSingleBedRoomsBB] = useState("")
-  const[doubleBedRoomsBB, setDoubleBedRoomsBB] = useState("")
-  const[fourBedRoomsBB, setFourBedRoomsBB] = useState("")
-  
-
+  const [rendered, setRendered] = useState(false);
+  const [renderedRule, setRenderedRule] = useState(false);
   const [nameErrorText, setNameErrorText] = useState("");
   const [descriptionErrorText, setDescriptionErrorText] = useState("");
   const [rulesErrorText, setRulesErrorText] = useState("");
   const [addressErrorText, setAddressErrorText] = useState("");
   const [errorLabelText, setErrorText] = useState("");
-  const [oneBedRoomsErrorText, setOneBedRoomsErrorText] = useState("");
+  const [singleBedRoomsErrorText, setOneBedRoomsErrorText] = useState("");
   const [doubleBedRoomsErrorText, setDoubleBedRoomsErrorText] = useState("");
   const [fourBedRoomsErrorText, setFourBedRoomsErrorText] = useState("");
+  const [lodgePriceErrorText, setLodgePriceErrorText] = useState("");
 
   const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -63,11 +55,12 @@ const ReservationNewEntity = () => {
   };
 
   const rulesChangeHandler = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setConductRules(value);
+    setCurrentRule(value.trim());
     setRulesErrorText("");
+    console.log(conductRules)
     if (!value) {
       return;
     }
@@ -86,7 +79,7 @@ const ReservationNewEntity = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setOneBedRooms(value);
+    setSingleBedroomNumber(value);
     var roomNumber = Number(value);
     if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setOneBedRoomsErrorText("Invalid input!");
@@ -99,7 +92,7 @@ const ReservationNewEntity = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setDoubleBedRooms(value);
+    setDoubleBedroomNumber(value);
     var roomNumber = Number(value);
     if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setDoubleBedRoomsErrorText("Invalid input!");
@@ -112,7 +105,7 @@ const ReservationNewEntity = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setFourBedRooms(value);
+    setFourBedroomNumber(value);
     var roomNumber = Number(value);
     if (roomNumber < 0 || !Number.isInteger(roomNumber)) {
       setFourBedRoomsErrorText("Invalid input!");
@@ -121,81 +114,40 @@ const ReservationNewEntity = () => {
     }
   };
 
-  const additonalServiceChangeHandler = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+  const lodgePriceChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setAdditionalService(value);
+    setLodgePrice(value);
+    var price = Number(value);
+    if (price < 0) {
+      setLodgePriceErrorText("Invalid input!");
+    } else {
+      setLodgePriceErrorText("");
+    }
   };
 
-  const singleBedRoomsFullAccChangeHandler = (
+  const additonalServiceChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setSingleBedRoomsFullAcc(value)
-  }
+    setCurrentService(value.trim());
+    console.log(additionalServices);
+  };
 
-  const doubleBedRoomFullAccChangeHandler = (
+  const additionalServicePriceChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setDoubleBedRoomsFullAcc(value)
-  }
-
-  const fourBedRoomFullAccChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setFourBedRoomsFullAcc(value)
-  }
-
-  const singleBedRoomsSemiAccChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setSingleBedRoomsSemiAcc(value)
-  }
-
-  const doubleBedRoomSemiAccChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setDoubleBedRoomsSemiAcc(value)
-  }
-
-  const fourBedRoomSemiAccChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setFourBedRoomsSemiAcc(value)
-  }
-
-  const singleBedRoomsBBChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setSingleBedRoomsBB(value)
-  }
-
-  const doubleBedRoomBBChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setDoubleBedRoomsBB(value)
-  }
-
-  const fourBedRoomBBChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setFourBedRoomsBB(value)
-  }
+    setCurrentPrice(Number(value));
+    console.log(additionalServicePrices);
+  };
 
   const isInputValid = () => {
     if (
       nameErrorText ||
       addressErrorText ||
-      oneBedRoomsErrorText ||
+      singleBedRoomsErrorText ||
       doubleBedRoomsErrorText ||
       fourBedRoomsErrorText ||
       descriptionErrorText ||
@@ -216,31 +168,30 @@ const ReservationNewEntity = () => {
       setDescriptionErrorText("This field is required.");
     }
 
-    if (!singleBedRooms) {
-      setOneBedRooms("This field is required.");
+    if (!singleBedroomNumber) {
+      setSingleBedroomNumber("This field is required.");
     }
 
-    if (!doubleBedRooms) {
-      setDoubleBedRooms("This field is required.");
+    if (!doubleBedroomNumber) {
+      setDoubleBedroomNumber("This field is required.");
     }
 
-    if (!fourBedRooms) {
-      setFourBedRooms("This field is required.");
+    if (!fourBedroomNumber) {
+      setFourBedroomNumber("This field is required.");
     }
 
     if (!conductRules) {
       setRulesErrorText("This field is required.");
     }
-    
 
     if (
       !name ||
       !address ||
       !description ||
-      !singleBedRooms ||
-      !doubleBedRooms ||
-      !fourBedRooms ||
-      !conductRules 
+      !singleBedroomNumber ||
+      !doubleBedroomNumber ||
+      !fourBedroomNumber ||
+      !conductRules
     ) {
       return false;
     }
@@ -248,12 +199,125 @@ const ReservationNewEntity = () => {
     return true;
   };
 
+  const addNewRule = (event: React.MouseEvent<HTMLButtonElement>) =>{
+    if(!renderedRule){
+      const newRules = [];
+      if(currentRule.length !== 0){
+        setRenderedRule(true);
+        newRules.push(currentRule);
+        setConductRules(newRules);
+      }
+    }
+    else{
+      const newRules = [...conductRules];
+      if(currentRule.length > 0 && !newRules.includes(currentRule)){
+        newRules.push(currentRule)
+        setConductRules(newRules)
+      }
+    }
+  }
+
+  const addNewService = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!rendered) {
+      const newPrices = [];
+      const newServices = [];
+      if (currentService.length !== 0 && currentPrice > 0) {
+        setRendered(true);
+        newServices.push(currentService);
+        newPrices.push(currentPrice);
+        setAdditionalServicePrices(newPrices);
+        setAdditionalService(newServices);
+      }
+    } else {
+      const newServices = [...additionalServices];
+      const newPrices = [...additionalServicePrices];
+      if (
+        currentPrice > 0 &&
+        currentService.length !== 0 &&
+        !newServices.includes(currentService)
+      ) {
+        newServices.push(currentService);
+        newPrices.push(currentPrice);
+        setAdditionalServicePrices(newPrices);
+        setAdditionalService(newServices);
+      }
+    }
+  };
+
+  const removeService =
+    (service: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      const newServices = [...additionalServices];
+      const newPrices = [...additionalServicePrices];
+      for (let i = 0; i <= newServices.length; i++) {
+        if (newServices[i] === service) {
+          newServices.splice(i, 1);
+          newPrices.splice(i,1)
+        }
+      }
+      setAdditionalService(newServices);
+      setAdditionalServicePrices(newPrices);
+    };
+
+  const removeRule = (rule: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    const newRules = [...conductRules];
+    for(let i = 0; i <= newRules.length; i++){
+      if(conductRules[i] === rule){
+        newRules.splice(i, 1);
+      }
+    }
+    setConductRules(newRules)
+  }
+
+
   const createEntity = async () => {
     if (!isInputValid()) {
       setErrorText("Please fill out required fields correctly.");
     } else {
       setErrorText("");
+      var rulesOfConduct = ""
+      for(let i = 0; i < conductRules.length; i++){
+        rulesOfConduct += "#";
+        rulesOfConduct += conductRules[i];
+      }
+      const services =[]
+      for(let i = 0; i < additionalServices.length; i++){
+        var info = additionalServices[i]
+        var price = additionalServicePrices[i]
+        services[i] = {
+          info,
+          price
+        }
+      }
+      const newLodge = {
+        ownerId,
+        name,
+        description,
+        rulesOfConduct,
+        lodgePrice,
+        singleBedroomNumber,
+        doubleBedroomNumber,
+        fourBedroomNumber,
+        services
+      }
+      axios.post("reservationEntity/createLodge", newLodge, {
+        headers: {
+            Accept : 'application/json',
+            'Content-type': 'application/json',
+            'Authorization':"Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw" 
+        }     
+    })  
+      .then(response => {
+        window.alert('Poslato')
+        history.push('/lodges');
+      })
+      .catch((error)=>{
+        window.alert(error.response.toString())
+      })
     }
+    
+
+
+
   };
 
   return (
@@ -294,16 +358,16 @@ const ReservationNewEntity = () => {
             <SignupInput
               text="Single-room"
               type="number"
-              name="oneBedRooms"
+              name="singleBedroomNumber"
               placeholder="Enter room number"
               onChange={oneBedRoomChangeHandler}
             />
-            <SignupError text={oneBedRoomsErrorText} />
+            <SignupError text={singleBedRoomsErrorText} />
 
             <SignupInput
               text="Double-room"
               type="number"
-              name="doubleBedRooms"
+              name="doubleBedroomNumber"
               placeholder="Enter room number"
               onChange={doubleBedRoomChangeHandler}
             />
@@ -312,143 +376,125 @@ const ReservationNewEntity = () => {
             <SignupInput
               text="Four-room"
               type="number"
-              name="fourBedRooms"
+              name="fourBedroomNumber"
               placeholder="Enter room number"
               onChange={fourBedRoomChangeHandler}
             />
             <SignupError text={fourBedRoomsErrorText} />
-
-            <div className="flex flex-wrap items-center">
-              <p className="my-1 w-44 whitespace-nowrap space-x-28">
-                <label>Room type</label>
-                <label>Full accomodation</label>
-                <label>Semi accomodation</label>
-                <label>BB</label>
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center">
-              <p className="my-1 w-44 whitespace-nowrap space-x-16">
-                <label>Single-bed room</label>
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={singleBedRoomsFullAccChangeHandler}
-                  
-                />
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={singleBedRoomsSemiAccChangeHandler}
-                />
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={singleBedRoomsBBChangeHandler}
-                />
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center">
-              <p className="my-1 w-44 whitespace-nowrap space-x-16">
-                <label>Double-bed room</label>
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={doubleBedRoomFullAccChangeHandler}
-                />
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={doubleBedRoomSemiAccChangeHandler}
-                />
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={doubleBedRoomBBChangeHandler}
-                />
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center">
-              <p className="my-1 w-44 whitespace-nowrap space-x-16">
-                <label>Four-bed room</label>
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={fourBedRoomFullAccChangeHandler}
-                />
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={fourBedRoomSemiAccChangeHandler}
-                />
-                <input
-                  className="input flex-grow md:w-44"
-                  type="number"
-                  placeholder="Price per day ($)"
-                  min="1"
-                  step="1"
-                  onChange={fourBedRoomBBChangeHandler}
-                />
-              </p>
-            </div>
+            <SignupInput
+              text="Price"
+              type="number"
+              name="lodgePrice"
+              placeholder="Enter price per day"
+              onChange={lodgePriceChangeHandler}
+            />
+            <SignupError text={lodgePriceErrorText} />
           </div>
         </div>
         <div className="flex flex-col items-center">
           <div className="flex flex-col -mt-8 flex-grow text-lg px-8 py-6 md:w-500px">
-          <div className="flex flex-wrap items-center mb-3">
+            <div className="flex flex-wrap items-center mb-3">
               <p className="my-1">Rules of conduct:</p>
               <p className="ml-2 text-gray-500"></p>
-              <textarea
-                className="input resize-none w-full h-40"
-                maxLength={150}
+              <input
+                className="input resize-none w-full mb-4"
                 placeholder="List rules of conduct"
                 name="conductRules"
                 onChange={rulesChangeHandler}
               />
+              <button
+              className="btnBlueWhite w-52 ml-32 mb-4"
+              onClick={addNewRule}
+              >
+              Add
+              </button>
+              <div className="flex flex-wrap items-center mb-3">
+              <ul>
+                {conductRules.map((c,i) => (
+                  <li key={c}>
+                    Conduct rule:{c}
+                    {!conductRules.includes("") ? (
+                      <button
+                        className="btnBlueWhite w-12 h-8 ml-8"
+                        onClick={removeRule(c)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
             </div>
             <div className="flex flex-wrap items-center mb-3">
               <p className="my-1">Additional services:</p>
               <p className="ml-2 text-gray-500">(optional)</p>
-              <textarea
-                className="input resize-none w-full h-40"
-                maxLength={150}
-                placeholder="Say something about yourself"
-                name="additionalService"
+              <input
+                className="input resize-none w-52 h-10  mb-4"
+                placeholder="Add service name"
+                name="additionalServices"
                 onChange={additonalServiceChangeHandler}
               />
+              <input
+                className="input resize-none w-52 h-10 ml-4 mb-4"
+                placeholder="Add service price"
+                name="additionalService"
+                type="number"
+                min="0.1"
+                step="0.1"
+                onChange={additionalServicePriceChangeHandler}
+              />
+              <button
+                className="btnBlueWhite w-52 ml-32"
+                onClick={addNewService}
+              >
+                Add
+              </button>
             </div>
-            <div className='flex flex-wrap items-center'>
-            <form action="/action_page.php" >
-            <input type="file" name="image" accept="image/*"/>
-            </form>
+            <div className="flex flex-wrap items-center mb-3">
+              <ul>
+                {additionalServices.map((d,i) => (
+                  <li key={d}>
+                    Service name:{d} , Price:{" "}
+                    {additionalServicePrices[i]}$
+                    {!additionalServices.includes("") ? (
+                      <button
+                        className="btnBlueWhite w-12 h-8 ml-8"
+                        onClick={removeService(d)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
-            
-            
-            <SignupError text={rulesErrorText} />
           </div>
         </div>
       </div>

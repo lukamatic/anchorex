@@ -1,14 +1,23 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { ReservationEntityType } from '../../model/reservation-entity-type.enum';
 import ReservationEntities from '../reservation-entities/ReservationEnities';
-import ReservationEntityDisplay from '../display-entity/ReservationEntity';
 const Lodges = () => {
-  const lodges = [
-    { id: 1, name: 'Lodge 1', description: 'The best lodge in Novi Sad', 
-    enterierImage:'', exterierImage:'',
-    dateReservationStart:'12-12-2020', dateReservationEnd:'12-15-2020',
-    additionalInfo:'Nove posteljine svakog jutra'},
-    { id: 2, name: 'Lodge 2' },
-  ];
+  const [lodges, setLodges] = useState([])
+
+  
+  useEffect(() => {
+    axios.get("reservationEntity/lodges",{
+      headers:{
+        Accept : 'application/json',
+        'Content-type': 'application/json',
+        'Authorization':"Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw" 
+      }
+    }).then((response) => {
+      setLodges(response.data)
+    })
+
+  },[])
 
   return (
     <ReservationEntities

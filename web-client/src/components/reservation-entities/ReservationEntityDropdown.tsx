@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const ReservationEntityDropdown = (props: { entityId: number }) => {
@@ -17,9 +18,19 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
     hidePopup();
   };
 
-  const remove = () => {
-    console.log('remove');
+  const remove = (id:number) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    axios.delete("reservationEntity/deleteLodge/" + id,{
+    headers:{
+       Accept : 'application/json',
+      'Content-type': 'application/json',
+      'Access-Control-Allow-Credentials': 'true',
+      'Authorization':"Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw" 
+    }
+  }).then((response) => {
+    console.log('Obrisano!')
     hidePopup();
+    window.location.reload()
+  })
   };
 
   const onBlur = (event: React.FocusEvent<HTMLButtonElement, Element>) => {
@@ -72,7 +83,7 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
           </button>
           <button
             className='p-1 hover:bg-blue-400 hover:text-white rounded-b-md'
-            onClick={remove}
+            onClick={remove(props.entityId)}
             id={'dropdown-remove-' + props.entityId}
           >
             Remove

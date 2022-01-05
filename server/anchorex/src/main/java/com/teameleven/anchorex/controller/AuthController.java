@@ -15,6 +15,7 @@ import com.teameleven.anchorex.util.TokenUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,13 +49,17 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> createAuthenticationToken(
 			@RequestBody LoginDto authenticationRequest, HttpServletResponse response) {
-		// Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
-		// AuthenticationException
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-				authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 
-		// Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
-		// kontekst
+		Authentication authentication = null;
+		try {
+			// Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
+			// AuthenticationException
+			authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+		} catch (DisabledException exception) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		} // Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
+			// kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// Kreiraj token za tog korisnika

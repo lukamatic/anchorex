@@ -58,12 +58,14 @@ public class User implements UserDetails {
 
 	@Column
 	private Timestamp lastPasswordResetDate;
+	@Column
+	private boolean enabled;
 
 	public User() {
 	}
 
 	public User(Long id, HashSet<Role> roles, String email, String password, String firstName, String lastName,
-			String address, String city, String country, String phoneNumber, String biography) {
+			String address, String city, String country, String phoneNumber, String biography, boolean enabled) {
 		this.id = id;
 		this.roles = roles;
 		this.email = email;
@@ -75,6 +77,7 @@ public class User implements UserDetails {
 		this.country = country;
 		this.phoneNumber = phoneNumber;
 		this.biography = biography;
+		this.enabled = enabled;
 	}
 
 	public User(CreateUserDto createUserDto) {
@@ -88,6 +91,7 @@ public class User implements UserDetails {
 		this.country = createUserDto.getCountry();
 		this.phoneNumber = createUserDto.getPhoneNumber();
 		this.biography = createUserDto.getBiography();
+		this.enabled = false;
 	}
 
 	public Long getId() {
@@ -178,6 +182,10 @@ public class User implements UserDetails {
 		this.biography = biography;
 	}
 
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public Timestamp getLastPasswordResetDate() {
 		return this.lastPasswordResetDate;
 	}
@@ -213,10 +221,19 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return this.enabled;
 	}
 
 	public void encodePassword() {
 		this.password = new BCryptPasswordEncoder().encode(this.password);
+	}
+
+	public boolean isClient() {
+		for (var role : roles) {
+			if (role.getName().equals("ROLE_CLIENT")) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

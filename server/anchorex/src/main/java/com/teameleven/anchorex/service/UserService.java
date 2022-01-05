@@ -15,6 +15,7 @@ public interface UserService {
 	User findOneById(Long id);
 
 	User update(UpdateUserDto updateUserDto) throws Exception;
+	User update(User user) throws Exception;
 
 	void delete(Long id);
 }

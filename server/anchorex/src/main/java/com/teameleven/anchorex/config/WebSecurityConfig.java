@@ -95,6 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests().antMatchers("/api/auth/**").permitAll() // /api/auth/**
 				.antMatchers("/h2-console/**").permitAll() // /h2-console/** ako se koristi H2 baza)
 				.antMatchers("/api/tests").permitAll() // /api/foo
+				.antMatchers("/api/validateToken").permitAll() // /api/foo
 
 				// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama
 				// kontrolera, moze se iskoristiti hasRole() metoda da se ogranici

@@ -10,7 +10,7 @@ import YearlyCalendar from './yearly-calendar/YearlyCalendar';
 const Calendar = () => {
   const eventFilter = new EventFilter();
 
-  const [mode, setMode] = useState(CalendarMode.MONTHLY);
+  const [mode, setMode] = useState(CalendarMode.YEARLY);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
   const [day, setDay] = useState(new Date().getDate());
@@ -23,13 +23,22 @@ const Calendar = () => {
     });
     const event3 = new CalendarEvent(new Date(2022, 1, 2), { client: 'Mira' });
     const event4 = new CalendarEvent(new Date(2022, 2, 13), {
-      client: 'Djoka',
+      client: 'Sava',
     });
     const event5 = new CalendarEvent(new Date(2022, 2, 23), {
-      client: 'Djoka',
+      client: 'Sima',
     });
     const event6 = new CalendarEvent(new Date(2022, 0, 10), {
       client: 'Tanja',
+    });
+    const event7 = new CalendarEvent(new Date(2022, 0, 10), {
+      client: 'Jovica',
+    });
+    const event8 = new CalendarEvent(new Date(2022, 0, 10), {
+      client: 'Dara',
+    });
+    const event9 = new CalendarEvent(new Date(2022, 0, 11), {
+      client: 'Mica',
     });
     events.push(event1);
     events.push(event2);
@@ -37,6 +46,9 @@ const Calendar = () => {
     events.push(event4);
     events.push(event5);
     events.push(event6);
+    events.push(event7);
+    events.push(event8);
+    events.push(event9);
   }, []);
 
   const onModeChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -77,7 +89,7 @@ const Calendar = () => {
           <MonthlyCalendar
             year={year}
             month={month}
-            events={eventFilter.getEventsInMonth(events, month)}
+            events={eventFilter.getEventsInMonth(events, month, year)}
           />
         )}
         {mode === CalendarMode.YEARLY && (

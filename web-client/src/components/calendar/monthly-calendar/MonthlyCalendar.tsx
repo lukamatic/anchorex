@@ -22,7 +22,12 @@ const MonthlyCalendar = (props: {
       <div className='flex flex-col flex-grow'>
         {weeks.map((week, index) => {
           return (
-            <MonthlyCalendarDatesInWeek key={index} week={week} index={index} />
+            <MonthlyCalendarDatesInWeek
+              key={index}
+              week={week}
+              index={index}
+              events={props.events}
+            />
           );
         })}
       </div>

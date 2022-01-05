@@ -18,12 +18,16 @@ export default class EventFilter {
 
   public getEventsInMonth = (
     events: CalendarEvent[],
-    month: number
+    month: number,
+    year: number
   ): CalendarEvent[] => {
     const eventsInMonth: CalendarEvent[] = [];
 
     events.map((event) => {
-      if (event.date.getMonth() === month) {
+      if (
+        event.date.getMonth() === month &&
+        event.date.getFullYear() === year
+      ) {
         eventsInMonth.push(event);
       }
     });

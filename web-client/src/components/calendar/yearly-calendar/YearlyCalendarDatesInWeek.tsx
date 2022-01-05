@@ -1,6 +1,6 @@
 import CalendarEvent from '../../../model/calendar-event';
 import EventFilter from '../../../utils/calendar/event-filter';
-import EventDateButton from './EventDateButton';
+import YearlyEventButton from './YearlyEventButton';
 
 const YearlyCalendarDatesInWeek = (props: {
   month: number;
@@ -16,7 +16,7 @@ const YearlyCalendarDatesInWeek = (props: {
     if (eventsForDate.length === 0) {
       return <p className='text-center w-full'>{date.getDate()}</p>;
     } else {
-      return <EventDateButton date={date} events={eventsForDate} />;
+      return <YearlyEventButton date={date} events={eventsForDate} />;
     }
   };
 

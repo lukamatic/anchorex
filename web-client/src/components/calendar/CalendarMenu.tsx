@@ -11,7 +11,7 @@ const CalendarMenu = (props: {
   onMonthChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   onDayChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }) => {
-  const years = calendarUtil.generateYears(2021, 2030);
+  const years = calendarUtil.generateYears(2022, 2030);
   const days = calendarUtil.generateDaysInMonth(props.year, props.month);
 
   return (

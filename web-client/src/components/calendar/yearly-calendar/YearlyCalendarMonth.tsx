@@ -14,7 +14,13 @@ const YearlyCalendarMonth = (props: { year: number; month: number }) => {
       <YearlyCalendarDaysInWeek />
       <div>
         {weeks.map((week, index) => {
-          return <YearlyCalendarDatesInWeek week={week} index={index} />;
+          return (
+            <YearlyCalendarDatesInWeek
+              month={props.month}
+              week={week}
+              weekIndex={index}
+            />
+          );
         })}
       </div>
     </div>

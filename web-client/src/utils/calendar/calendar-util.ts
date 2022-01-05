@@ -55,8 +55,8 @@ class CalendarUtil {
       const previousMonthYear = month === 0 ? year - 1 : year;
       const previousMonth = month === 0 ? 11 : month - 1;
       const previousMonthDates = this.generateDatesInMonth(
-        previousMonth,
-        previousMonthYear
+        previousMonthYear,
+        previousMonth
       ).reverse();
 
       for (let i = 0; i <= emptyDaysInFirstWeek; i++) {
@@ -66,7 +66,7 @@ class CalendarUtil {
 
     const nextMonthYear = month === 11 ? year + 1 : year;
     const nextMonth = month === 11 ? 0 : month + 1;
-    const nextMonthDates = this.generateDatesInMonth(nextMonth, nextMonthYear);
+    const nextMonthDates = this.generateDatesInMonth(nextMonthYear, nextMonth);
 
     const nonEmptyDaysInFifthWeek = weeks[4].filter((date) => {
       return Object.keys(date).length === 0;

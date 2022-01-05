@@ -16,4 +16,7 @@ export default class LocalStorageUtil {
   public setAccessToken(value: string): void {
     localStorage.setItem(LocalStorageItem.ACCESS_TOKEN, value);
   }
+  public getAccessToken(): string|null {
+    return localStorage.getItem(LocalStorageItem.ACCESS_TOKEN);
+  }
 }

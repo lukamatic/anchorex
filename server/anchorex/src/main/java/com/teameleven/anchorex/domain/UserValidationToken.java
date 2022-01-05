@@ -20,6 +20,7 @@ public class UserValidationToken {
         this.token = token;
         this.userId = userId;
     }
+    public UserValidationToken(){}
 
     public String getToken() {
         return token;

@@ -42,12 +42,12 @@ public class AuthServiceImpl implements AuthService {
                 "\n" +
                 "<div> Your username is <b>" + user.getUsername() + "</b></div>\n" +
                 "<div> Please click the following link to verify your email address:</div>\n" +
-                "<div> <a href=\"" + token+ "\">Verify your email<a/></div>\n" +
+                "<div> <a href=\"" + verificationUrl+ "\">Verify your email<a/></div>\n" +
                 "</body>\n" +
                 "</html>\n";
         helper.setText(html, true);
-        helper.setTo("ns.o.petar@gmail.com");
-//        helper.setTo(user.getEmail());
+//        helper.setTo("ns.o.petar@gmail.com");
+        helper.setTo(user.getEmail());
         javaMailSender.send(mimeMessage);
     }
 }

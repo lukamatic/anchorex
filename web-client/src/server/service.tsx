@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { baseUrl } from '../constants/Connections';
+import LocalStorageUtil from '../utils/local-storage-util';
 
 interface httpResponse {
 	status: number;
@@ -7,12 +7,12 @@ interface httpResponse {
 	message?: any;
 }
 
+const storage = new LocalStorageUtil();
 export const validateUserTokenAsync = async (token: string | null): Promise<httpResponse> => {
 	const options: any = {
 		method: 'GET',
-		url: `${baseUrl}/api/validateToken?token=${token}`,
+		url: `/api/validateToken?token=${token}`,
 	};
-	console.log(options);
 
 	return axios(options)
 		.then((response) => {
@@ -21,6 +21,25 @@ export const validateUserTokenAsync = async (token: string | null): Promise<http
 		})
 		.catch((error) => {
 			console.log('error: ', error.response);
+			return { status: error?.response?.status, message: error?.response?.data };
+		});
+};
+export const singUpAsync = async (data: any | null): Promise<httpResponse> => {
+	const options: any = {
+		method: 'POST',
+		url: `/api/auth/signup`,
+		header: {
+			'Content-Type': 'application/json',
+		},
+		data,
+	};
+	console.log(options);
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, message: response?.data };
+		})
+		.catch((error) => {
 			return { status: error?.response?.status, message: error?.response?.data };
 		});
 };

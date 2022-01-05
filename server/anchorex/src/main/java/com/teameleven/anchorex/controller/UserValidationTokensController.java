@@ -27,7 +27,10 @@ public class UserValidationTokensController {
         if(userToken == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        System.out.println("User id: "+userToken.getUserId());
         User user = userService.findOneById(userToken.getUserId());
+        if(user == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         user.setEnabled(true);
         try {
             userService.update(user);

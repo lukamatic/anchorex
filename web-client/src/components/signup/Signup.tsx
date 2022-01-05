@@ -108,6 +108,10 @@ const Signup = () => {
   ) => {
     const value = event.target.value;
     setAddress(value);
+
+    if (value) {
+      setAddressErrorText('');
+    }
   };
 
   const cityChangeHandler = async (
@@ -115,6 +119,10 @@ const Signup = () => {
   ) => {
     const value = event.target.value;
     setCity(value);
+
+    if (value) {
+      setCityErrorText('');
+    }
   };
 
   const countryChangeHandler = async (
@@ -122,6 +130,10 @@ const Signup = () => {
   ) => {
     const value = event.target.value;
     setCountry(value);
+
+    if (value) {
+      setCountryErrorText('');
+    }
   };
 
   const phoneNumberChangeHandler = async (

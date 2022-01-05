@@ -236,4 +236,19 @@ public class User implements UserDetails {
 		}
 		return false;
 	}
+
+	public boolean isService() {
+		for (var role : roles) {
+			if (role.getName().equals("ROLE_LODGE_OWNER")) {
+				return true;
+			}
+			if (role.getName().equals("ROLE_SHIP_OWNER")) {
+				return true;
+			}
+			if (role.getName().equals("ROLE_INSTRUCTOR")) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

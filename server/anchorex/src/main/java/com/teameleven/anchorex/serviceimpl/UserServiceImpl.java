@@ -49,6 +49,8 @@ public class UserServiceImpl implements UserService {
 				UserValidationToken userValidationToken = new UserValidationToken(token, user.getId());
 				userValidationTokenService.create(userValidationToken);
 				this.authService.sendVerificationMail(savedUser, token);
+			} else if (savedUser.isService()) {
+
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,

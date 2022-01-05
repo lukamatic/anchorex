@@ -1,9 +1,14 @@
+import CalendarEvent from '../../../model/calendar-event';
 import { calendarUtil } from '../../../utils/calendar/calendar-util';
 import { months } from '../../../utils/calendar/months';
 import YearlyCalendarDatesInWeek from './YearlyCalendarDatesInWeek';
 import YearlyCalendarDaysInWeek from './YearlyCalendarDaysInWeek';
 
-const YearlyCalendarMonth = (props: { year: number; month: number }) => {
+const YearlyCalendarMonth = (props: {
+  year: number;
+  month: number;
+  events: CalendarEvent[];
+}) => {
   const weeks = calendarUtil.generateWeeksInMonth(props.year, props.month);
 
   return (
@@ -16,9 +21,11 @@ const YearlyCalendarMonth = (props: { year: number; month: number }) => {
         {weeks.map((week, index) => {
           return (
             <YearlyCalendarDatesInWeek
+              key={index}
               month={props.month}
               week={week}
               weekIndex={index}
+              events={props.events}
             />
           );
         })}

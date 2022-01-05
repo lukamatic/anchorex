@@ -1,8 +1,25 @@
+import CalendarEvent from '../../../model/calendar-event';
+import EventFilter from '../../../utils/calendar/event-filter';
+import EventDateButton from './EventDateButton';
+
 const YearlyCalendarDatesInWeek = (props: {
   month: number;
   week: Date[];
   weekIndex: number;
+  events: CalendarEvent[];
 }) => {
+  const eventFilter = new EventFilter();
+
+  const renderDateBox = (date: Date) => {
+    const eventsForDate = eventFilter.getEventsForDate(props.events, date);
+
+    if (eventsForDate.length === 0) {
+      return <p className='text-center w-full'>{date.getDate()}</p>;
+    } else {
+      return <EventDateButton date={date} events={eventsForDate} />;
+    }
+  };
+
   return (
     <div
       key={props.weekIndex}
@@ -20,7 +37,7 @@ const YearlyCalendarDatesInWeek = (props: {
               (props.weekIndex === 5 && index === 6 ? ' rounded-br-md' : '')
             }
           >
-            <p className='text-center w-full'>{date.getDate()}</p>
+            {renderDateBox(date)}
           </div>
         );
       })}

@@ -1,9 +1,11 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import com.teameleven.anchorex.domain.Role;
 import com.teameleven.anchorex.domain.User;
+import com.teameleven.anchorex.domain.UserValidationToken;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.repository.UserRepository;
@@ -11,6 +13,7 @@ import com.teameleven.anchorex.service.AuthService;
 import com.teameleven.anchorex.service.RoleService;
 import com.teameleven.anchorex.service.UserService;
 
+import com.teameleven.anchorex.service.UserValidationTokenService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,11 +25,13 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final RoleService roleService;
 	private final AuthService authService;
+	private final UserValidationTokenService userValidationTokenService;
 
-	public UserServiceImpl(UserRepository userRepository, RoleService roleService, AuthService authService) {
+	public UserServiceImpl(UserRepository userRepository, RoleService roleService, AuthService authService,UserValidationTokenService userValidationTokenService) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
 		this.authService = authService;
+		this.userValidationTokenService = userValidationTokenService;
 	}
 
 	@Override
@@ -40,7 +45,10 @@ public class UserServiceImpl implements UserService {
 			user.encodePassword();
 			savedUser = userRepository.save(user);
 			if (savedUser.isClient()) {
-				this.authService.sendVerificationMail(savedUser.getEmail());
+				String token = UUID.randomUUID().toString();
+				UserValidationToken userValidationToken = new UserValidationToken(token, user.getId());
+				userValidationTokenService.create(userValidationToken);
+				this.authService.sendVerificationMail(savedUser, token);
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,

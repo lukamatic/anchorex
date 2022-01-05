@@ -16,6 +16,11 @@ public class UserValidationToken {
     @Column(unique = true)
     Long userId;
 
+    public UserValidationToken(String token, Long userId) {
+        this.token = token;
+        this.userId = userId;
+    }
+
     public String getToken() {
         return token;
     }

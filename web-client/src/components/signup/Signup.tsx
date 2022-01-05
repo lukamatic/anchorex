@@ -21,7 +21,7 @@ const Signup = () => {
 	const signupValidation = new SignupValidation();
 
 	const [email, setEmail] = useState('');
-	const [userRole, setUserRole] = useState(params.choice === 'client' ? UserRole.CLIENT : UserRole.LOGDE_OWNER);
+	const [userRole, setUserRole] = useState(params.choice === 'client' ? UserRole.CLIENT : UserRole.LODGE_OWNER);
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [dateOfBirth, setDateOfBirth] = useState('');
@@ -129,7 +129,7 @@ const Signup = () => {
 	const userRoleChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		switch (event.target.value) {
 			case 'LODGE_OWNER':
-				return setUserRole(UserRole.LOGDE_OWNER);
+				return setUserRole(UserRole.LODGE_OWNER);
 			case 'SHIP_OWNER':
 				return setUserRole(UserRole.SHIP_OWNER);
 			case 'INSTRUCTOR':
@@ -258,7 +258,6 @@ const Signup = () => {
 				phoneNumber,
 			};
 			const resp = await singUpAsync(createUserDto);
-			console.log(resp);
 			if (resp.status === HttpStatusCode.CREATED) {
 				alert('Email is sent. Please check your inbox!');
 			}
@@ -268,7 +267,7 @@ const Signup = () => {
 	};
 
 	return (
-		<div className='flex flex-col flex-grow bg-gray-100 items-center p-5'>
+		<div className='flex flex-col flex-grow bg-blue-50 items-center p-5'>
 			<div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white'>
 				<div className='flex flex-col items-center'>
 					<div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>

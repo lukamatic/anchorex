@@ -1,5 +1,6 @@
 package com.teameleven.anchorex.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 
 import javax.persistence.*;
@@ -29,8 +30,10 @@ public class ReservationEntity {
     @Column
     public boolean deleted;
 
-    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "entity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Set<AdditionalService> services = new HashSet<AdditionalService>();
+
 
 
     public ReservationEntity() {

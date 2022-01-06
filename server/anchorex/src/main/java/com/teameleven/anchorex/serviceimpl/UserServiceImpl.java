@@ -63,13 +63,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Collection<User> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findAll();
 	}
 
 	@Override
 	public User findOneById(Long id) {
-		return this.userRepository.findOneById(id);
+		return this.userRepository.findById(id).orElse(null);
 	}
 
 	@Override
@@ -86,8 +85,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-
+		userRepository.deleteById(id);
 	}
 
 	private Role validateRole(String roleName) {

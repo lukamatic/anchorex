@@ -31,9 +31,8 @@ public class ReservationEntity {
     public boolean deleted;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "entity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     public Set<AdditionalService> services = new HashSet<AdditionalService>();
-
 
 
     public ReservationEntity() {

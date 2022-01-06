@@ -1,16 +1,19 @@
 package com.teameleven.anchorex.dto;
 
+import com.teameleven.anchorex.domain.enumerations.ServiceSignupRequestStatus;
 import com.teameleven.anchorex.dto.user.UserDto;
 
 public class ServiceSignupRequestDto {
     private Long id;
     private UserDto user;
     private String signupExplanation;
+    private ServiceSignupRequestStatus status;
 
-    public ServiceSignupRequestDto(Long id, UserDto userDto, String signupExplanation) {
+    public ServiceSignupRequestDto(Long id, UserDto userDto, String signupExplanation, ServiceSignupRequestStatus status) {
         this.id = id;
         this.user = userDto;
         this.signupExplanation = signupExplanation;
+        this.status = status;
     }
 
     public Long getId() {
@@ -35,5 +38,13 @@ public class ServiceSignupRequestDto {
 
     public void setSignupExplanation(String signupExplanation) {
         this.signupExplanation = signupExplanation;
+    }
+
+    public ServiceSignupRequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ServiceSignupRequestStatus status) {
+        this.status = status;
     }
 }

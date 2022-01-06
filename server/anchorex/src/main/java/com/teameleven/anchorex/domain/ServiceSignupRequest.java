@@ -1,5 +1,7 @@
 package com.teameleven.anchorex.domain;
 
+import com.teameleven.anchorex.domain.enumerations.ServiceSignupRequestStatus;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
@@ -13,9 +15,12 @@ public class ServiceSignupRequest {
     @JoinColumn (name= "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(unique = true)
+    @Column
     @NotEmpty(message = "Signup explanation is required")
     private String signupExplanation;
+
+    @Column
+    private ServiceSignupRequestStatus status;
 
     public ServiceSignupRequest() {
 
@@ -48,5 +53,13 @@ public class ServiceSignupRequest {
 
     public void setSignupExplanation(String signupExplanation) {
         this.signupExplanation = signupExplanation;
+    }
+
+    public ServiceSignupRequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ServiceSignupRequestStatus status) {
+        this.status = status;
     }
 }

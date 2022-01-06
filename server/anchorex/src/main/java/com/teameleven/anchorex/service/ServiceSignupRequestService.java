@@ -13,4 +13,6 @@ public interface ServiceSignupRequestService {
     ServiceSignupRequest findOneById(Long id);
 
     void approve(Long id) throws Exception;
+
+    void reject(Long id, String reason);
 }

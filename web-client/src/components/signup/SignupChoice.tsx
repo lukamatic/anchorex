@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const SignupChoice = () => {
   return (
-    <div className='bg-gray-100 flex flex-col flex-grow items-center pt-10 md:pt-20'>
+    <div className='bg-blue-50 flex flex-col flex-grow items-center pt-10 md:pt-20'>
       <Link
         to='/signup/client'
         className='bg-white shadow-xl max-w-md flex flex-col mx-5 p-3'

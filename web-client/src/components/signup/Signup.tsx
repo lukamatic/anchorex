@@ -303,7 +303,7 @@ const Signup = () => {
   };
 
   return (
-    <div className='flex flex-col flex-grow bg-gray-100 items-center p-5'>
+    <div className='flex flex-col flex-grow bg-blue-50 items-center p-5'>
       <div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white'>
         <div className='flex flex-col items-center'>
           <div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>

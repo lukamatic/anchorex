@@ -12,6 +12,7 @@ import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.repository.UserRepository;
 import com.teameleven.anchorex.service.*;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
 	private final UserValidationTokenService userValidationTokenService;
 	private final ServiceSignupRequestService serviceSignupRequestService;
 
-	public UserServiceImpl(UserRepository userRepository, RoleService roleService, AuthService authService, UserValidationTokenService userValidationTokenService, ServiceSignupRequestService serviceSignupRequestService) {
+	public UserServiceImpl(UserRepository userRepository, RoleService roleService, AuthService authService, UserValidationTokenService userValidationTokenService, @Lazy ServiceSignupRequestService serviceSignupRequestService) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
 		this.authService = authService;
@@ -86,6 +87,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void delete(Long id) {
 		userRepository.deleteById(id);
+	}
+
+	@Override
+	public void enableUser(Long id) {
+		var user = findOneById(id);
+
+		if (user == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d doesn't exist.", id));
+		}
+
+		user.setEnabled(true);
+		userRepository.save(user);
 	}
 
 	private Role validateRole(String roleName) {

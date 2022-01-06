@@ -9,4 +9,8 @@ public interface ServiceSignupRequestService {
     ServiceSignupRequest create(ServiceSignupRequest serviceSignupRequest) throws Exception;
 
     Collection<ServiceSignupRequest> findAll();
+
+    ServiceSignupRequest findOneById(Long id);
+
+    void approve(Long id) throws Exception;
 }

@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -29,5 +27,12 @@ public class ServiceSignupRequestController {
         var serviceSignupRequestDtos
                 = ServiceSignupRequestMapper.ServiceSignupRequestsToServiceSignupRequestDtos(serviceSignupRequests);
         return new ResponseEntity<>(serviceSignupRequestDtos, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/approve/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> approve(@PathVariable("id") Long id) throws Exception {
+        serviceSignupRequestService.approve(id);
+        return new ResponseEntity<>(String.format("Service signup request with id %d successfully approved.", id), HttpStatus.OK);
     }
 }

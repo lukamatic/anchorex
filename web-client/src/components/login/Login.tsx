@@ -58,10 +58,14 @@ const Login = () => {
         var content = await response.json();
         localStorageUtil.setAccessToken(content.userTokenState.accessToken);
         localStorageUtil.setUserRole(content.userRole);
-
+        
         authContext.setUserRole(localStorageUtil.getUserRole());
-
-        history.push('/');
+        if(localStorageUtil.getUserRole() === UserRole.LODGE_OWNER){
+          history.push('/lodges')
+        }
+        else{
+          history.push('/');
+        }
         break;
       case HttpStatusCode.UNAUTHORIZED:
         setErrorLabelText('Invalid credentials!');

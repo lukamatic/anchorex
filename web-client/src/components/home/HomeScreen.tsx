@@ -1,6 +1,5 @@
 import { cloneElement } from 'react';
-import { useHistory, withRouter } from 'react-router-dom';
-import SearchWithSelect from '../common/SearchWithSelect';
+import { useHistory } from 'react-router-dom';
 import CoachingIcon from './button-icons/CoachingIcon';
 import FishingIcon from './button-icons/FishingIcon';
 import HouseIcon from './button-icons/HouseIcon';

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { ReservationEntityType } from '../../model/reservation-entity-type.enum';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 import ReservationEntities from '../reservation-entities/ReservationEnities';
 const Lodges = () => {
   const [lodges, setLodges] = useState([])
@@ -11,7 +12,7 @@ const Lodges = () => {
       headers:{
         Accept : 'application/json',
         'Content-type': 'application/json',
-        'Authorization':"Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw" 
+        'Authorization':'Bearer ' +  localStorage.getItem(LocalStorageItem.ACCESS_TOKEN)
       }
     }).then((response) => {
       setLodges(response.data)

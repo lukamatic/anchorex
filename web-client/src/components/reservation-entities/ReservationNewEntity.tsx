@@ -1,15 +1,24 @@
-import React, { useState } from "react";
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import SignupInput from "../signup/SignupInput";
 import SignupError from "../signup/SignupErrorLabel";
 import { useHistory } from "react-router-dom";
+import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
+import L from "leaflet";
 
 const ReservationNewEntity = () => {
   const history = useHistory();
+  var marker: L.Marker;
 
+  const GEOCODE_URL =
+    "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&langCode=EN&location=";
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
   const [ownerId, setOwnerId] = useState(3);
   const [name, setEntityName] = useState("");
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
   const [conductRules, setConductRules] = useState([""]);
   const [singleBedroomNumber, setSingleBedroomNumber] = useState("");
@@ -34,6 +43,46 @@ const ReservationNewEntity = () => {
   const [fourBedRoomsErrorText, setFourBedRoomsErrorText] = useState("");
   const [lodgePriceErrorText, setLodgePriceErrorText] = useState("");
 
+  useEffect(() => {
+
+    var mymap = L.map("mapid").setView([45.2635752, 19.8434573], 13);
+    L.tileLayer(
+      "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+      {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: "mapbox/streets-v11",
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken:
+          "pk.eyJ1Ijoib2dpamFoIiwiYSI6ImNrcXMzbjR0ZDE3N24zMXFhOXM5MDlmeWwifQ.V05sowv93LiOgv4O-0bIgw",
+      }
+    ).addTo(mymap);
+
+    mymap.on("click", onMapClick);
+
+    var coordinates = [0, 0]
+    async function onMapClick(e: any) {
+      if (coordinates[0] !== 0) {
+        mymap.removeLayer(L.marker([coordinates[0], coordinates[1]]));
+      }
+      coordinates = e.latlng.toString().substring(7, 25).split(",");
+      setLatitude(coordinates[0]);
+      setLongitude(coordinates[1]);
+      marker = L.marker([coordinates[0], coordinates[1]]);
+      marker.addTo(mymap);
+      var data = await (
+        await fetch(GEOCODE_URL + `${coordinates[1]},${coordinates[0]}`)
+      ).json();
+      console.log(data.address);
+      setAddress(data.address.Address);
+      setAddressErrorText("");
+      setCity(data.address.City);
+      setCountry(data.address.CountryCode);
+    }
+  },[]);
+
   const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setEntityName(value);
@@ -54,22 +103,11 @@ const ReservationNewEntity = () => {
     }
   };
 
-  const rulesChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const rulesChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setCurrentRule(value.trim());
     setRulesErrorText("");
-    console.log(conductRules)
-    if (!value) {
-      return;
-    }
-  };
-
-  const addressChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setAddress(value);
-    setAddressErrorText("");
+    console.log(conductRules);
     if (!value) {
       return;
     }
@@ -199,23 +237,22 @@ const ReservationNewEntity = () => {
     return true;
   };
 
-  const addNewRule = (event: React.MouseEvent<HTMLButtonElement>) =>{
-    if(!renderedRule){
+  const addNewRule = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!renderedRule) {
       const newRules = [];
-      if(currentRule.length !== 0){
+      if (currentRule.length !== 0) {
         setRenderedRule(true);
         newRules.push(currentRule);
         setConductRules(newRules);
       }
-    }
-    else{
+    } else {
       const newRules = [...conductRules];
-      if(currentRule.length > 0 && !newRules.includes(currentRule)){
-        newRules.push(currentRule)
-        setConductRules(newRules)
+      if (currentRule.length > 0 && !newRules.includes(currentRule)) {
+        newRules.push(currentRule);
+        setConductRules(newRules);
       }
     }
-  }
+  };
 
   const addNewService = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rendered) {
@@ -251,42 +288,49 @@ const ReservationNewEntity = () => {
       for (let i = 0; i <= newServices.length; i++) {
         if (newServices[i] === service) {
           newServices.splice(i, 1);
-          newPrices.splice(i,1)
+          newPrices.splice(i, 1);
         }
       }
       setAdditionalService(newServices);
       setAdditionalServicePrices(newPrices);
     };
 
-  const removeRule = (rule: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
-    const newRules = [...conductRules];
-    for(let i = 0; i <= newRules.length; i++){
-      if(conductRules[i] === rule){
-        newRules.splice(i, 1);
+  const removeRule =
+    (rule: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      const newRules = [...conductRules];
+      for (let i = 0; i <= newRules.length; i++) {
+        if (conductRules[i] === rule) {
+          newRules.splice(i, 1);
+        }
       }
-    }
-    setConductRules(newRules)
-  }
-
+      setConductRules(newRules);
+    };
 
   const createEntity = async () => {
     if (!isInputValid()) {
       setErrorText("Please fill out required fields correctly.");
     } else {
       setErrorText("");
-      var rulesOfConduct = ""
-      for(let i = 0; i < conductRules.length; i++){
+      var rulesOfConduct = "";
+      for (let i = 0; i < conductRules.length; i++) {
         rulesOfConduct += "#";
         rulesOfConduct += conductRules[i];
       }
-      const services =[]
-      for(let i = 0; i < additionalServices.length; i++){
-        var info = additionalServices[i]
-        var price = additionalServicePrices[i]
+      const services = [];
+      for (let i = 0; i < additionalServices.length; i++) {
+        var info = additionalServices[i];
+        var price = additionalServicePrices[i];
         services[i] = {
           info,
-          price
-        }
+          price,
+        };
+      }
+      const location = {
+        latitude,
+        longitude,
+        address,
+        city,
+        country
       }
       const newLodge = {
         ownerId,
@@ -297,31 +341,54 @@ const ReservationNewEntity = () => {
         singleBedroomNumber,
         doubleBedroomNumber,
         fourBedroomNumber,
-        services
-      }
-      axios.post("reservationEntity/createLodge", newLodge, {
-        headers: {
-            Accept : 'application/json',
-            'Content-type': 'application/json',
-            'Authorization':"Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw" 
-        }     
-    })  
-      .then(response => {
-        window.alert('Poslato')
-        history.push('/lodges');
-      })
-      .catch((error)=>{
-        window.alert(error.response.toString())
-      })
+        services,
+        location
+      };
+      axios
+        .post("reservationEntity/createLodge", newLodge, {
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+            Authorization:
+              "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+          },
+        })
+        .then((response) => {
+          window.alert("Poslato");
+          history.push("/lodges");
+        })
+        .catch((error) => {
+          window.alert(error.response.toString());
+        });
     }
-    
-
-
-
   };
 
   return (
     <div className="flex flex-col flex-grow bg-gray-100 items-center p-5">
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossOrigin=""
+      />
+      <script
+        src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossOrigin=""
+      ></script>
+      <script
+        src="https://unpkg.com/esri-leaflet@3.0.4/dist/esri-leaflet.js"
+        integrity="sha512-oUArlxr7VpoY7f/dd3ZdUL7FGOvS79nXVVQhxlg6ij4Fhdc4QID43LUFRs7abwHNJ0EYWijiN5LP2ZRR2PY4hQ=="
+        crossOrigin=""
+      ></script>
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
+        integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+        crossOrigin=""
+      />
+      <script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"></script>
+
       <div className="flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white">
         <div className="flex flex-col items-center">
           <div className="flex flex-col mt-2 flex-grow text-lg px-8 pt-5 md:w-500px">
@@ -333,28 +400,19 @@ const ReservationNewEntity = () => {
               onChange={nameChangeHandler}
             />
             <SignupError text={nameErrorText} />
-
-            <SignupInput
-              type="text"
-              text="Address:"
-              name="address"
-              placeholder="address"
-              onChange={addressChangeHandler}
-            />
-            <SignupError text={addressErrorText} />
-
-            <div className="flex flex-wrap mt-4 items-center mb-3">
-              <p className="my-1">Promo description:</p>
-              <p className="ml-2 text-gray-500"></p>
-              <textarea
-                onChange={descriptionChangeHandler}
-                className="input resize-none w-full h-40"
-                maxLength={150}
-                placeholder="Say something about the entity"
-                name="description"
+            <div className="flex flex-wrap items-center">
+              <p className="my-1 w-44 whitespace-nowrap">Address</p>
+              <input
+                className="input flex-grow md:w-60"
+                type="text"
+                name="address"
+                value={address + ' ' + city}
+                disabled
               />
             </div>
-            <SignupError text={descriptionErrorText} />
+            <div id="mapid" className="h-96"></div>
+            <SignupError text={addressErrorText} />
+
             <SignupInput
               text="Single-room"
               type="number"
@@ -392,6 +450,18 @@ const ReservationNewEntity = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
+          <div className="flex flex-wrap mt-4 items-center mb-3 w-max">
+            <p className="my-1">Promo description:</p>
+            <p className="ml-2 text-gray-500"></p>
+            <textarea
+              onChange={descriptionChangeHandler}
+              className="input resize-none w-full h-40"
+              maxLength={150}
+              placeholder="Say something about the entity"
+              name="description"
+            />
+          </div>
+          <SignupError text={descriptionErrorText} />
           <div className="flex flex-col -mt-8 flex-grow text-lg px-8 py-6 md:w-500px">
             <div className="flex flex-wrap items-center mb-3">
               <p className="my-1">Rules of conduct:</p>
@@ -403,41 +473,41 @@ const ReservationNewEntity = () => {
                 onChange={rulesChangeHandler}
               />
               <button
-              className="btnBlueWhite w-52 ml-32 mb-4"
-              onClick={addNewRule}
+                className="btnBlueWhite w-52 ml-32 mb-4"
+                onClick={addNewRule}
               >
-              Add
+                Add
               </button>
               <div className="flex flex-wrap items-center mb-3">
-              <ul>
-                {conductRules.map((c,i) => (
-                  <li key={c}>
-                    Conduct rule:{c}
-                    {!conductRules.includes("") ? (
-                      <button
-                        className="btnBlueWhite w-12 h-8 ml-8"
-                        onClick={removeRule(c)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
+                <ul>
+                  {conductRules.map((c, i) => (
+                    <li key={c}>
+                      Conduct rule:{c}
+                      {!conductRules.includes("") ? (
+                        <button
+                          className="btnBlueWhite w-12 h-8 ml-8"
+                          onClick={removeRule(c)}
                         >
-                          <path
-                            fillRule="evenodd"
-                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    ) : (
-                      <div></div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      ) : (
+                        <div></div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
             <div className="flex flex-wrap items-center mb-3">
               <p className="my-1">Additional services:</p>
@@ -466,10 +536,9 @@ const ReservationNewEntity = () => {
             </div>
             <div className="flex flex-wrap items-center mb-3">
               <ul>
-                {additionalServices.map((d,i) => (
+                {additionalServices.map((d, i) => (
                   <li key={d}>
-                    Service name:{d} , Price:{" "}
-                    {additionalServicePrices[i]}$
+                    Service name:{d} , Price: {additionalServicePrices[i]}$
                     {!additionalServices.includes("") ? (
                       <button
                         className="btnBlueWhite w-12 h-8 ml-8"

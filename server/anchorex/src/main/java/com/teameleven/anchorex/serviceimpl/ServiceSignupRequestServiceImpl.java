@@ -5,6 +5,8 @@ import com.teameleven.anchorex.repository.ServiceSignupRequestRepository;
 import com.teameleven.anchorex.service.ServiceSignupRequestService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class ServiceSignupRequestServiceImpl implements ServiceSignupRequestService {
 
@@ -17,5 +19,10 @@ public class ServiceSignupRequestServiceImpl implements ServiceSignupRequestServ
     @Override
     public ServiceSignupRequest create(ServiceSignupRequest serviceSignupRequest) throws Exception {
         return serviceSignupRequestRepository.save(serviceSignupRequest);
+    }
+
+    @Override
+    public Collection<ServiceSignupRequest> findAll() {
+        return serviceSignupRequestRepository.findAll();
     }
 }

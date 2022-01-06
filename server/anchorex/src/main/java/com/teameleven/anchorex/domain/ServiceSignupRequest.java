@@ -1,20 +1,15 @@
 package com.teameleven.anchorex.domain;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@SQLDelete(sql = "UPDATE test SET deleted = true WHERE id = ?")
-@Where(clause = "deleted = false")
 public class ServiceSignupRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn (name= "user_id", referencedColumnName = "id")
     private User user;
 
@@ -22,12 +17,36 @@ public class ServiceSignupRequest {
     @NotEmpty(message = "Signup explanation is required")
     private String signupExplanation;
 
+    public ServiceSignupRequest() {
+
+    }
+
     public ServiceSignupRequest(User user, String signupExplanation) {
         this.user = user;
         this.signupExplanation = signupExplanation;
     }
 
-    public ServiceSignupRequest() {
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getSignupExplanation() {
+        return signupExplanation;
+    }
+
+    public void setSignupExplanation(String signupExplanation) {
+        this.signupExplanation = signupExplanation;
     }
 }

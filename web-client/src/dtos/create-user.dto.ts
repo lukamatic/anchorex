@@ -6,7 +6,7 @@ export default interface CreateUserDto {
   email: string;
   role: UserRole;
   password: string;
-  // dateOfBirth: string;
+  dateOfBirth: string;
   biography: string;
   country: string;
   phoneNumber: string;

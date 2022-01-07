@@ -6,7 +6,7 @@ import { UserRole } from '../../model/user-role.enum';
 import { singUpAsync } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import SignupValidation from '../../validations/signup-validation';
-import SignupError from './SignupErrorLabel';
+import ErrorLabel from '../common/ErrorLabel';
 import SignupInput from './SignupInput';
 
 const Signup = () => {
@@ -324,7 +324,7 @@ const Signup = () => {
               placeholder='first name'
               onChange={firstNameChangeHandler}
             />
-            <SignupError text={firstNameErrorText} />
+            <ErrorLabel text={firstNameErrorText} />
 
             <SignupInput
               type='text'
@@ -333,7 +333,7 @@ const Signup = () => {
               placeholder='last name'
               onChange={lastNameChangeHandler}
             />
-            <SignupError text={lastNameErrorText} />
+            <ErrorLabel text={lastNameErrorText} />
 
             <SignupInput
               type='email'
@@ -342,7 +342,7 @@ const Signup = () => {
               placeholder='email'
               onChange={emailChangeHandler}
             />
-            <SignupError text={emailErrorText} />
+            <ErrorLabel text={emailErrorText} />
 
             <SignupInput
               type='text'
@@ -351,7 +351,7 @@ const Signup = () => {
               placeholder='address'
               onChange={addressChangeHandler}
             />
-            <SignupError text={addressErrorText} />
+            <ErrorLabel text={addressErrorText} />
 
             <SignupInput
               type='text'
@@ -360,7 +360,7 @@ const Signup = () => {
               placeholder='city'
               onChange={cityChangeHandler}
             />
-            <SignupError text={cityErrorText} />
+            <ErrorLabel text={cityErrorText} />
 
             <SignupInput
               type='text'
@@ -369,7 +369,7 @@ const Signup = () => {
               placeholder='country'
               onChange={countryChangeHandler}
             />
-            <SignupError text={countryErrorText} />
+            <ErrorLabel text={countryErrorText} />
 
             <SignupInput
               type='tel'
@@ -378,7 +378,7 @@ const Signup = () => {
               placeholder='phone number'
               onChange={phoneNumberChangeHandler}
             />
-            <SignupError text={phoneNumberErrorText} />
+            <ErrorLabel text={phoneNumberErrorText} />
 
             {params.choice === 'service' && (
               <div className='flex flex-wrap items-center mb-8'>
@@ -411,7 +411,7 @@ const Signup = () => {
                   />
                 </div>
 
-                <SignupError text={confirmPasswordErrorText} />
+                <ErrorLabel text={confirmPasswordErrorText} />
               </div>
             )}
 
@@ -422,7 +422,7 @@ const Signup = () => {
               placeholder='password'
               onChange={passwordChangeHandler}
             />
-            <SignupError text={passwordErrorText} />
+            <ErrorLabel text={passwordErrorText} />
 
             <SignupInput
               type='password'
@@ -431,7 +431,7 @@ const Signup = () => {
               placeholder='confirm password'
               onChange={confirmPasswordChangeHandler}
             />
-            <SignupError text={confirmPasswordErrorText} />
+            <ErrorLabel text={confirmPasswordErrorText} />
 
             <div className='flex flex-wrap items-center mb-3'>
               <p className='my-1'>About me:</p>
@@ -448,7 +448,7 @@ const Signup = () => {
       </div>
 
       <div className='flex flex-col justify-center my-5'>
-        <SignupError text={errorLabelText} />
+        <ErrorLabel text={errorLabelText} />
         <button className='btnBlueWhite w-72' onClick={createAccount}>
           Create account
         </button>

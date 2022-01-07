@@ -15,6 +15,7 @@ import HomeScreen from './home/HomeScreen';
 import ListScreen from './display-list/ListScreen';
 import Verification from './login/Verification';
 import ServiceSignupRequests from './service-signup-requests/ServiceSignupRequests';
+import AdminsUserList from './admin-user-list/AdminsUserList';
 
 const MyRouter = () => {
   return (
@@ -65,6 +66,9 @@ const MyRouter = () => {
         </Route>
         <Route path='/serviceSignupRequests'>
           <ServiceSignupRequests />
+        </Route>
+        <Route path='/adminUsers'>
+          <AdminsUserList />
         </Route>
       </Switch>
     </Router>

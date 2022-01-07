@@ -5,16 +5,15 @@ import SignupError from "../signup/SignupErrorLabel";
 import { useHistory } from "react-router-dom";
 import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
 import L from "leaflet";
+import localStorageUtil from "../../utils/local-storage/local-storage-util";
 
 const ReservationNewEntity = () => {
   const history = useHistory();
-  var marker: L.Marker;
-
   const GEOCODE_URL =
     "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&langCode=EN&location=";
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
-  const [ownerId, setOwnerId] = useState(3);
+  const [ownerId, setOwnerId] = useState(0);
   const [name, setEntityName] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -45,6 +44,22 @@ const ReservationNewEntity = () => {
 
   useEffect(() => {
 
+    
+    axios.get("api/auth/email", {
+      params:{
+        email:localStorage.getItem(LocalStorageItem.email)
+      },
+      headers:{
+        Accept : 'application/json',
+        'Content-type': 'application/json',
+        'Authorization':'Bearer ' +  localStorage.getItem(LocalStorageItem.ACCESS_TOKEN)
+      }
+    }).then((response) => {
+      console.log(response.data.id)
+      setOwnerId(response.data.id)
+    })
+
+
     var mymap = L.map("mapid").setView([45.2635752, 19.8434573], 13);
     L.tileLayer(
       "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -70,8 +85,7 @@ const ReservationNewEntity = () => {
       coordinates = e.latlng.toString().substring(7, 25).split(",");
       setLatitude(coordinates[0]);
       setLongitude(coordinates[1]);
-      marker = L.marker([coordinates[0], coordinates[1]]);
-      marker.addTo(mymap);
+      L.marker([coordinates[0], coordinates[1]]).addTo(mymap);
       var data = await (
         await fetch(GEOCODE_URL + `${coordinates[1]},${coordinates[0]}`)
       ).json();
@@ -81,6 +95,8 @@ const ReservationNewEntity = () => {
       setCity(data.address.City);
       setCountry(data.address.CountryCode);
     }
+
+
   },[]);
 
   const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -311,6 +327,7 @@ const ReservationNewEntity = () => {
       setErrorText("Please fill out required fields correctly.");
     } else {
       setErrorText("");
+
       var rulesOfConduct = "";
       for (let i = 0; i < conductRules.length; i++) {
         rulesOfConduct += "#";
@@ -345,7 +362,7 @@ const ReservationNewEntity = () => {
         location
       };
       axios
-        .post("reservationEntity/createLodge", newLodge, {
+        .post("api/reservationEntity/createLodge", newLodge, {
           headers: {
             Accept: "application/json",
             "Content-type": "application/json",
@@ -410,7 +427,6 @@ const ReservationNewEntity = () => {
                 disabled
               />
             </div>
-            <div id="mapid" className="h-96"></div>
             <SignupError text={addressErrorText} />
 
             <SignupInput

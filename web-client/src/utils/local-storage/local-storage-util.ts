@@ -21,6 +21,13 @@ class LocalStorageUtil {
   public getAccessToken(): string|null {
     return localStorage.getItem(LocalStorageItem.ACCESS_TOKEN);
   }
+
+  public setEmail(value: string): void{
+    localStorage.setItem(LocalStorageItem.email, value)
+  }
+  public getEmail(): string|null{
+    return localStorage.getItem(LocalStorageItem.email)
+  }
 }
 
 const localStorageUtil = new LocalStorageUtil();

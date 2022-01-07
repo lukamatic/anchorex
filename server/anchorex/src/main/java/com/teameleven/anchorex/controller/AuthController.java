@@ -13,17 +13,14 @@ import com.teameleven.anchorex.service.UserService;
 import com.teameleven.anchorex.util.TokenUtils;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,6 +39,14 @@ public class AuthController {
 	public ResponseEntity<User> signup(@Valid @RequestBody CreateUserDto createUserDto) throws Exception {
 		var user = userService.create(createUserDto);
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
+	}
+
+	@GetMapping(path="/email")
+	public ResponseEntity<User> getUserID(@RequestParam String email){
+		User user = userService.findByEmail(email);
+		System.out.println(email);
+		System.out.println(user.getId());
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 	// Prvi endpoint koji pogadja korisnik kada se loguje.

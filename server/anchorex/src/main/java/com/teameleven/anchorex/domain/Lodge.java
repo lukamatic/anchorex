@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.domain;
 
 import com.teameleven.anchorex.enums.ReservationEntityType;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

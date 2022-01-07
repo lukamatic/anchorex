@@ -16,7 +16,7 @@ public class AdditionalService {
     private double price;
 
     @JsonBackReference
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name= "reservation_entity_id")
     private ReservationEntity entity;
 

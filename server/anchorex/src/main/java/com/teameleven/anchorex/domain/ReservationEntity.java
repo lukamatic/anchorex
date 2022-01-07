@@ -34,6 +34,8 @@ public class ReservationEntity {
     @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     public Set<AdditionalService> services = new HashSet<AdditionalService>();
 
+    @OneToOne(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public Location location;
 
     public ReservationEntity() {
         super();

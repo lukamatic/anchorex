@@ -59,6 +59,11 @@ public class LodgeServiceImpl implements LodgeService {
          lodgeRepository.deleteLodge(id);
     }
 
+    @Override
+    public Lodge getLodgeById(Long id) {
+        return lodgeRepository.findById(id).get();
+    }
+
     private List<LodgeDTO> getLodgesDTO(List<Lodge> lodges) {
         List<LodgeDTO> lodgesDTO = new ArrayList<>();
         for(Lodge lodge : lodges){

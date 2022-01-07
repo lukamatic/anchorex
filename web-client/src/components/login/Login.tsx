@@ -1,9 +1,11 @@
+import axios from 'axios';
 import { useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
 import { UserRole } from '../../model/user-role.enum';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import LoadingSpinner from '../common/LoadingSpinner';
 
@@ -47,7 +49,8 @@ const Login = () => {
         var content = await response.json();
         localStorageUtil.setAccessToken(content.userTokenState.accessToken);
         localStorageUtil.setUserRole(content.userRole);
-        
+        localStorageUtil.setEmail(email)
+        console.log(localStorageUtil.getAccessToken())
         authContext.setUserRole(localStorageUtil.getUserRole());
         if(localStorageUtil.getUserRole() === UserRole.LODGE_OWNER){
           history.push('/lodges')

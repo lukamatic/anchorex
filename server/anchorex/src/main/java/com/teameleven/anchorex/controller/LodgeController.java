@@ -3,6 +3,7 @@ package com.teameleven.anchorex.controller;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
+import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.service.LodgeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reservationEntity")
-public class ReservationEntityController {
+@RequestMapping("/api/reservationEntity")
+public class LodgeController {
 
     private final LodgeService lodgeService;
 
-    public ReservationEntityController(LodgeService lodgeService) {
+    public LodgeController(LodgeService lodgeService) {
         this.lodgeService = lodgeService;
     }
 
@@ -29,7 +30,6 @@ public class ReservationEntityController {
 
     @GetMapping(path="/lodges")
     public ResponseEntity<List<LodgeDTO>> getLodges(){
-
         var lodges = lodgeService.getLodges();
         return new ResponseEntity<>(lodges, HttpStatus.OK);
     }
@@ -38,5 +38,11 @@ public class ReservationEntityController {
     public ResponseEntity<Void> deleteLodge(@PathVariable Long id){
         lodgeService.deleteLodge(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(path="/lodge/{id}")
+    public ResponseEntity<Lodge> getLodge(@PathVariable Long id){
+        Lodge lodge = lodgeService.getLodgeById(id);
+        return new ResponseEntity<>(lodge, HttpStatus.OK);
     }
 }

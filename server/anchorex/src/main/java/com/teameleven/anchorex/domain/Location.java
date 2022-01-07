@@ -3,7 +3,6 @@ package com.teameleven.anchorex.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 public class Location{
@@ -21,7 +20,8 @@ public class Location{
     @Column
     private String country;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "reservation_entity_id")
     private ReservationEntity entity;
 

@@ -8,7 +8,7 @@ const Lodges = () => {
 
   
   useEffect(() => {
-    axios.get("reservationEntity/lodges",{
+    axios.get("api/reservationEntity/lodges",{
       headers:{
         Accept : 'application/json',
         'Content-type': 'application/json',

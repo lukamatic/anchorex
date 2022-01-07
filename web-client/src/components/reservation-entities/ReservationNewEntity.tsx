@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import SignupInput from '../signup/SignupInput';
-import ErrorLabel from '../common/ErrorLabel';
 import { useHistory } from 'react-router-dom';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
+import L from 'leaflet';
+import ErrorLabel from '../common/ErrorLabel';
 
 const ReservationNewEntity = () => {
   const history = useHistory();
+  var marker: L.Marker;
 
+  const GEOCODE_URL =
+    'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&langCode=EN&location=';
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
   const [ownerId, setOwnerId] = useState(3);
   const [name, setEntityName] = useState('');
   const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
   const [description, setDescription] = useState('');
   const [conductRules, setConductRules] = useState(['']);
   const [singleBedroomNumber, setSingleBedroomNumber] = useState('');
@@ -33,6 +42,45 @@ const ReservationNewEntity = () => {
   const [doubleBedRoomsErrorText, setDoubleBedRoomsErrorText] = useState('');
   const [fourBedRoomsErrorText, setFourBedRoomsErrorText] = useState('');
   const [lodgePriceErrorText, setLodgePriceErrorText] = useState('');
+
+  useEffect(() => {
+    var mymap = L.map('mapid').setView([45.2635752, 19.8434573], 13);
+    L.tileLayer(
+      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+      {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken:
+          'pk.eyJ1Ijoib2dpamFoIiwiYSI6ImNrcXMzbjR0ZDE3N24zMXFhOXM5MDlmeWwifQ.V05sowv93LiOgv4O-0bIgw',
+      }
+    ).addTo(mymap);
+
+    mymap.on('click', onMapClick);
+
+    var coordinates = [0, 0];
+    async function onMapClick(e: any) {
+      if (coordinates[0] !== 0) {
+        mymap.removeLayer(L.marker([coordinates[0], coordinates[1]]));
+      }
+      coordinates = e.latlng.toString().substring(7, 25).split(',');
+      setLatitude(coordinates[0]);
+      setLongitude(coordinates[1]);
+      marker = L.marker([coordinates[0], coordinates[1]]);
+      marker.addTo(mymap);
+      var data = await (
+        await fetch(GEOCODE_URL + `${coordinates[1]},${coordinates[0]}`)
+      ).json();
+      console.log(data.address);
+      setAddress(data.address.Address);
+      setAddressErrorText('');
+      setCity(data.address.City);
+      setCountry(data.address.CountryCode);
+    }
+  }, []);
 
   const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -59,15 +107,6 @@ const ReservationNewEntity = () => {
     setCurrentRule(value.trim());
     setRulesErrorText('');
     console.log(conductRules);
-    if (!value) {
-      return;
-    }
-  };
-
-  const addressChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setAddress(value);
-    setAddressErrorText('');
     if (!value) {
       return;
     }
@@ -285,6 +324,13 @@ const ReservationNewEntity = () => {
           price,
         };
       }
+      const location = {
+        latitude,
+        longitude,
+        address,
+        city,
+        country,
+      };
       const newLodge = {
         ownerId,
         name,
@@ -295,6 +341,7 @@ const ReservationNewEntity = () => {
         doubleBedroomNumber,
         fourBedroomNumber,
         services,
+        location,
       };
       axios
         .post('reservationEntity/createLodge', newLodge, {
@@ -302,7 +349,7 @@ const ReservationNewEntity = () => {
             Accept: 'application/json',
             'Content-type': 'application/json',
             Authorization:
-              'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw',
+              'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
           },
         })
         .then((response) => {
@@ -317,6 +364,30 @@ const ReservationNewEntity = () => {
 
   return (
     <div className='flex flex-col flex-grow bg-gray-100 items-center p-5'>
+      <link
+        rel='stylesheet'
+        href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css'
+        integrity='sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=='
+        crossOrigin=''
+      />
+      <script
+        src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'
+        integrity='sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=='
+        crossOrigin=''
+      ></script>
+      <script
+        src='https://unpkg.com/esri-leaflet@3.0.4/dist/esri-leaflet.js'
+        integrity='sha512-oUArlxr7VpoY7f/dd3ZdUL7FGOvS79nXVVQhxlg6ij4Fhdc4QID43LUFRs7abwHNJ0EYWijiN5LP2ZRR2PY4hQ=='
+        crossOrigin=''
+      ></script>
+      <link
+        rel='stylesheet'
+        href='https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css'
+        integrity='sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=='
+        crossOrigin=''
+      />
+      <script src='https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js'></script>
+
       <div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white'>
         <div className='flex flex-col items-center'>
           <div className='flex flex-col mt-2 flex-grow text-lg px-8 pt-5 md:w-500px'>
@@ -328,28 +399,19 @@ const ReservationNewEntity = () => {
               onChange={nameChangeHandler}
             />
             <ErrorLabel text={nameErrorText} />
-
-            <SignupInput
-              type='text'
-              text='Address:'
-              name='address'
-              placeholder='address'
-              onChange={addressChangeHandler}
-            />
-            <ErrorLabel text={addressErrorText} />
-
-            <div className='flex flex-wrap mt-4 items-center mb-3'>
-              <p className='my-1'>Promo description:</p>
-              <p className='ml-2 text-gray-500'></p>
-              <textarea
-                onChange={descriptionChangeHandler}
-                className='input resize-none w-full h-40'
-                maxLength={150}
-                placeholder='Say something about the entity'
-                name='description'
+            <div className='flex flex-wrap items-center'>
+              <p className='my-1 w-44 whitespace-nowrap'>Address</p>
+              <input
+                className='input flex-grow md:w-60'
+                type='text'
+                name='address'
+                value={address + ' ' + city}
+                disabled
               />
             </div>
-            <ErrorLabel text={descriptionErrorText} />
+            <div id='mapid' className='h-96'></div>
+            <ErrorLabel text={addressErrorText} />
+
             <SignupInput
               text='Single-room'
               type='number'
@@ -387,6 +449,18 @@ const ReservationNewEntity = () => {
           </div>
         </div>
         <div className='flex flex-col items-center'>
+          <div className='flex flex-wrap mt-4 items-center mb-3 w-max'>
+            <p className='my-1'>Promo description:</p>
+            <p className='ml-2 text-gray-500'></p>
+            <textarea
+              onChange={descriptionChangeHandler}
+              className='input resize-none w-full h-40'
+              maxLength={150}
+              placeholder='Say something about the entity'
+              name='description'
+            />
+          </div>
+          <ErrorLabel text={descriptionErrorText} />
           <div className='flex flex-col -mt-8 flex-grow text-lg px-8 py-6 md:w-500px'>
             <div className='flex flex-wrap items-center mb-3'>
               <p className='my-1'>Rules of conduct:</p>

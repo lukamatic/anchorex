@@ -1,10 +1,7 @@
-import { useContext } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import AuthContext from "../../context/auth-context";
 
 const ReservationEntityDisplayPricelist = () => {
-  const authContext = useContext(AuthContext);
   const params: { id: string } = useParams();
 
   return (

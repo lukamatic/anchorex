@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 
 const ReservationEntityDropdown = (props: { entityId: number }) => {
   const [isDropdownHidden, setIsDropdownHidden] = useState(true);
@@ -23,8 +24,7 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
     headers:{
        Accept : 'application/json',
       'Content-type': 'application/json',
-      'Access-Control-Allow-Credentials': 'true',
-      'Authorization':"Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6ImJvZ2Rhbm92aWNvZ25qZW5AZ21haWwuY29tIiwiYXVkIjoid2ViIiwiaWF0IjoxNjQxMzI0OTQ2LCJleHAiOjE2NDEzMjY3NDZ9.ilQkjiEsOGBFhy7aYATqbJwI12xSun-aiRunUtoBKMNc6bd3lJ1crlWFIplgAgwI3IZYDkdYuBT_WoRmTtszvw" 
+      'Authorization':'Bearer ' +  localStorage.getItem(LocalStorageItem.ACCESS_TOKEN)
     }
   }).then((response) => {
     console.log('Obrisano!')

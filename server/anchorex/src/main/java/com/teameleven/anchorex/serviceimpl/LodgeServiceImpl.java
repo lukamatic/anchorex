@@ -1,12 +1,15 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.AdditionalService;
+import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.dto.reservationEntity.AdditionalServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LocationDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 import com.teameleven.anchorex.repository.AdditionalServiceRepository;
+import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.LodgeRepository;
 import com.teameleven.anchorex.service.LodgeService;
 import org.springframework.stereotype.Service;
@@ -17,10 +20,12 @@ import java.util.*;
 public class LodgeServiceImpl implements LodgeService {
     private final LodgeRepository lodgeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
+    private final LocationRepository locationRepository;
 
-    public LodgeServiceImpl(LodgeRepository lodgeRepository, AdditionalServiceRepository additionalServiceRepository) {
+    public LodgeServiceImpl(LodgeRepository lodgeRepository, AdditionalServiceRepository additionalServiceRepository, LocationRepository locationRepository) {
         this.lodgeRepository = lodgeRepository;
         this.additionalServiceRepository = additionalServiceRepository;
+        this.locationRepository = locationRepository;
     }
 
     @Override
@@ -38,6 +43,7 @@ public class LodgeServiceImpl implements LodgeService {
         lodge.setDoubleBedroomNumber(createLodgeDTO.getDoubleBedroomNumber());
         lodge.setFourBedroomNumber(createLodgeDTO.getFourBedroomNumber());
         lodgeRepository.save(lodge);
+        setLocation(createLodgeDTO.getLocation(), lodge);
         setAdditionalServices(createLodgeDTO.getServices(), lodge);
         return lodge;
     }
@@ -75,5 +81,16 @@ public class LodgeServiceImpl implements LodgeService {
             service.setEntity(lodge);
             additionalServiceRepository.save(service);
         }
+    }
+
+    private void setLocation(LocationDTO locationDTO, Lodge lodge){
+        Location location = new Location();
+        location.setAddress(locationDTO.getAddress());
+        location.setCity(locationDTO.getCity());
+        location.setCountry(locationDTO.getCountry());
+        location.setLatitude(locationDTO.getLatitude());
+        location.setLongitude(locationDTO.getLongitude());
+        location.setEntity(lodge);
+        locationRepository.save(location);
     }
 }

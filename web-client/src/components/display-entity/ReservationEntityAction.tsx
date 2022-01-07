@@ -1,9 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, {useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import AuthContext from "../../context/auth-context";
 
 const ReservationEntityAction = () => {
-    const authContext = useContext(AuthContext);
     const params: { id: string } = useParams();
   
     const [actionStartDate, setActionStartDate] = useState("");

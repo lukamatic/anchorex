@@ -1,8 +1,7 @@
-import { cloneElement, useEffect, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import LeftArrow from '../../icons/LeftArrow';
 import LiveSearch from '../common/LiveSearch';
-import SearchWithSelect from '../common/SearchWithSelect';
 import ListItem from './ListItem';
 
 const titleDict: any = {

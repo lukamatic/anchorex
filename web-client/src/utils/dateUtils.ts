@@ -1,5 +1,6 @@
 export const addDays = (date: Date, days:number):Date => {
-    return new Date(date.setDate(date.getDate() + days));
+    const d = new Date(date);
+    return new Date(d.setDate(d.getDate() + days));
 }
 
 export const convertDateToStringForPicker = (date:Date|string|undefined):string|undefined => { 

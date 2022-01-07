@@ -63,6 +63,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User createAdmin(CreateUserDto createUserDto) throws Exception {
+		User savedUser = null;
+
+		try {
+			var user = new User(createUserDto);
+			var role = roleService.findOneByName("ROLE_ADMIN");
+			user.getRoles().add(role);
+			user.encodePassword();
+			user.setEnabled(true);
+			savedUser = userRepository.save(user);
+		} catch (DataIntegrityViolationException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"An account with entered email address already exists.");
+		}
+
+		return savedUser;
+	}
+
+	@Override
 	public Collection<User> findAll() {
 		return userRepository.findAll();
 	}

@@ -5,6 +5,7 @@ import CreateUserDto from '../../dtos/create-user.dto';
 import { UserRole } from '../../model/user-role.enum';
 import { singUpAsync } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import SignupValidation from '../../validations/signup-validation';
 import ErrorLabel from '../common/ErrorLabel';
 import SignupInput from './SignupInput';
@@ -13,7 +14,10 @@ const Signup = () => {
   const authContext = useContext(AuthContext);
   const history = useHistory();
 
-  if (authContext.userRole !== UserRole.UNDEFINED) {
+  if (
+    authContext.userRole !== UserRole.UNDEFINED &&
+    authContext.userRole !== UserRole.ADMIN
+  ) {
     history.push('/');
   }
 
@@ -22,7 +26,11 @@ const Signup = () => {
 
   const [email, setEmail] = useState('');
   const [userRole, setUserRole] = useState(
-    params.choice === 'client' ? UserRole.CLIENT : UserRole.LODGE_OWNER
+    params.choice === 'client'
+      ? UserRole.CLIENT
+      : params.choice === 'admin'
+      ? UserRole.ADMIN
+      : UserRole.LODGE_OWNER
   );
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -303,9 +311,33 @@ const Signup = () => {
         biography: biography,
         signupExplanation: signupExplanation,
       };
-      const resp = await singUpAsync(createUserDto);
-      if (resp.status === HttpStatusCode.CREATED) {
-        alert('Email is sent. Please check your inbox!');
+
+      if (params.choice === 'admin') {
+        const response = await fetch('/api/users/createAdmin', {
+          method: 'POST',
+          headers: [
+            ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+            ['Content-Type', 'application/json'],
+          ],
+          body: JSON.stringify(createUserDto),
+        });
+
+        switch (response.status) {
+          case HttpStatusCode.CREATED:
+            alert('New admin created successfully.');
+            history.push('/adminUsers');
+            break;
+          case HttpStatusCode.UNAUTHORIZED:
+            history.push('/login');
+            break;
+          default:
+            alert('Unknown error occurred.');
+        }
+      } else {
+        const resp = await singUpAsync(createUserDto);
+        if (resp.status === HttpStatusCode.CREATED) {
+          alert('Email is sent. Please check your inbox!');
+        }
       }
     } else {
       setErrorText('Please fill out required fields correctly.');

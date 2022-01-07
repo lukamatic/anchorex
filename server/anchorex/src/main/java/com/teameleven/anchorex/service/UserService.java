@@ -10,6 +10,8 @@ public interface UserService {
 
 	User create(CreateUserDto createUserDto) throws Exception;
 
+	User createAdmin(CreateUserDto createUserDto) throws Exception;
+
 	Collection<User> findAll();
 
 	User findOneById(Long id);

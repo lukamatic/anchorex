@@ -1,7 +1,11 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.User;
+import com.teameleven.anchorex.dto.test.CreateTestDto;
+import com.teameleven.anchorex.dto.test.TestDto;
+import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UserDto;
+import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.mapper.UserMapper;
 import com.teameleven.anchorex.service.UserService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,6 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -22,8 +29,17 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
+    @PostMapping(path = "/createAdmin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDto> createAdmin(@Valid @RequestBody CreateUserDto createUserDto) throws Exception {
+        var savedUser = userService.createAdmin(createUserDto);
+        var userDto = UserMapper.UserToUserDto(savedUser);
+        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
+    }
     
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Collection<UserDto>> findAll() {
         var users = userService.findAll();
         var userDtos = UserMapper.UsersToUserDtos(users);

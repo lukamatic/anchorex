@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -34,17 +34,24 @@ const AdminsUserList = () => {
   };
 
   return (
-    <div className='flex flex-grow flex-col items-center bg-blue-50'>
+    <div className='flex flex-grow justify-center'>
       {users ? (
-        users.map((user) => {
-          return (
-            <AdminsUserListItem
-              key={user.id}
-              user={user}
-              onUserDelete={onUserDelete}
-            />
-          );
-        })
+        <div className='flex flex-grow flex-col items-center bg-blue-50'>
+          <Link className='btnBlueWhite self-end mr-10 mt-5' to='/signup/admin'>
+            Add new admin
+          </Link>
+          <div>
+            {users.map((user) => {
+              return (
+                <AdminsUserListItem
+                  key={user.id}
+                  user={user}
+                  onUserDelete={onUserDelete}
+                />
+              );
+            })}
+          </div>
+        </div>
       ) : (
         <LoadingSpinner />
       )}

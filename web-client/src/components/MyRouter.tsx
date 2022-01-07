@@ -15,7 +15,7 @@ import HomeScreen from './home/HomeScreen';
 import ListScreen from './display-list/ListScreen';
 import Verification from './login/Verification';
 import ServiceSignupRequests from './service-signup-requests/ServiceSignupRequests';
-import AdminsUserList from './admin-user-list/AdminsUserList';
+import AdminsUserList from './admin-users/AdminsUserList';
 
 const MyRouter = () => {
   return (

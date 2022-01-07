@@ -1,4 +1,4 @@
-const SignupErrorLabel = (props: { text: string }) => {
+const ErrorLabel = (props: { text: string }) => {
   return (
     <div className='mt-1 mb-4'>
       <p className='text-red-600 text-center text-base h-5'>{props.text}</p>
@@ -6,4 +6,4 @@ const SignupErrorLabel = (props: { text: string }) => {
   );
 };
 
-export default SignupErrorLabel;
+export default ErrorLabel;

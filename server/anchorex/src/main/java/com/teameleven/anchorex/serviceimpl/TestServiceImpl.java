@@ -55,8 +55,7 @@ public class TestServiceImpl implements TestService {
         var testToUpdate = findOneById(updateTestDto.getId());
 
         if (testToUpdate == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Test with id %d doesn't exist.", updateTestDto.getId()));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Test with id %d doesn't exist.", updateTestDto.getId()));
         }
 
         testToUpdate.setName(updateTestDto.getName());

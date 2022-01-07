@@ -7,7 +7,7 @@ const classNames = (...classes: any) => {
 	return classes.filter(Boolean).join(' ');
 };
 
-const Select = (props: any) => {
+const SelectDropdown = (props: any) => {
 	const { list, value, onChange, style } = props;
 	return (
 		<Listbox value={value} onChange={onChange}>
@@ -51,4 +51,4 @@ const Select = (props: any) => {
 		</Listbox>
 	);
 };
-export default Select;
+export default SelectDropdown;

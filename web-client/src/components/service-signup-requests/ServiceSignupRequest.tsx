@@ -47,7 +47,7 @@ const ServiceSignupRequest = (props: {
   };
 
   return (
-    <div className='flex flex-col bg-white m-5 p-3 shadow-lg'>
+    <div className='flex flex-col bg-white m-5 p-3 shadow-xl w-700px'>
       {rejectionPopupVisible && (
         <RejectionPopup
           toggle={toggleRejectionPopup}
@@ -55,22 +55,37 @@ const ServiceSignupRequest = (props: {
           onApproveReject={props.onApproveReject}
         />
       )}
-      <div>
-        {props.signupRequest.user.firstName +
-          ' ' +
-          props.signupRequest.user.lastName}
+      <div className='flex items-center mb-2'>
+        <p>Name:</p>
+        <p className='ml-3 input'>
+          {props.signupRequest.user.firstName +
+            ' ' +
+            props.signupRequest.user.lastName}
+        </p>
       </div>
-      <div>{props.signupRequest.status}</div>
+      <div className='flex items-center mb-2'>
+        <p>Status:</p>
+        <p className='ml-3 input'>{props.signupRequest.status}</p>
+      </div>
+      <p>Signup explanation:</p>
+      <textarea
+        className='input resize-none h-20 mx-7 mt-2 mb-1'
+        value={props.signupRequest.signupExplanation}
+        disabled={true}
+      />
       {fetching ? (
         <LoadingSpinner />
       ) : (
         <div>
           {props.signupRequest.status === 'PENDING' && (
-            <div>
+            <div className='flex justify-end mt-2 pr-8'>
               <button className='btnBlueWhite' onClick={approve}>
                 Approve
               </button>
-              <button className='btnRedWhite' onClick={toggleRejectionPopup}>
+              <button
+                className='btnRedWhite ml-3'
+                onClick={toggleRejectionPopup}
+              >
                 Reject
               </button>
             </div>

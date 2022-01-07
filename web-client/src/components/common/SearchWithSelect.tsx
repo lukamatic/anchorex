@@ -2,7 +2,7 @@
 import { Fragment, useReducer, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import Select from './Select';
+import SelectDropdown from './SelectDropdown';
 
 const people = [
 	{
@@ -76,7 +76,7 @@ export default function SearchWithSelect() {
 
 	return (
 		<div className='flex flex-row justify-between '>
-			<Select onChange={onSelectChanged} list={selectList} value={selectedSearchType} style={{ minWidth: 200 }} />
+			<SelectDropdown onChange={onSelectChanged} list={selectList} value={selectedSearchType} style={{ minWidth: 200 }} />
 			<input className='border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent flex-1 mx-10 rounded-md px-3' placeholder='Search...' />
 			<button className='bg-blue-300 hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 text-white rounded-md px-5'>Search</button>
 		</div>

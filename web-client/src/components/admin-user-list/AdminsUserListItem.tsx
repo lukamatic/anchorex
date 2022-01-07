@@ -39,14 +39,20 @@ const AdminsUserListItem = (props: {
   return (
     <div className='flex flex-col bg-white m-5 p-3 shadow-xl w-700px'>
       <div className='flex items-center mb-2'>
-        <p>Name:</p>
-        <p className='ml-3 input'>
+        <p className='w-16'>Name:</p>
+        <p className='input'>
           {props.user.firstName + ' ' + props.user.lastName}
         </p>
       </div>
       <div className='flex items-center mb-2'>
-        <p>Email:</p>
-        <p className='ml-3 input'>{props.user.email}</p>
+        <p className='w-16'>Role:</p>
+        <p className='input'>
+          {props.user.role.substring(5, props.user.role.length)}
+        </p>
+      </div>
+      <div className='flex items-center mb-2'>
+        <p className='w-16'>Email:</p>
+        <p className='input'>{props.user.email}</p>
       </div>
       {fetching ? (
         <LoadingSpinner />

@@ -56,16 +56,16 @@ const ServiceSignupRequest = (props: {
         />
       )}
       <div className='flex items-center mb-2'>
-        <p>Name:</p>
-        <p className='ml-3 input'>
+        <p className='w-16'>Name:</p>
+        <p className='input'>
           {props.signupRequest.user.firstName +
             ' ' +
             props.signupRequest.user.lastName}
         </p>
       </div>
       <div className='flex items-center mb-2'>
-        <p>Status:</p>
-        <p className='ml-3 input'>{props.signupRequest.status}</p>
+        <p className='w-16'>Status:</p>
+        <p className='input'>{props.signupRequest.status}</p>
       </div>
       <p>Signup explanation:</p>
       <textarea

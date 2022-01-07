@@ -2,9 +2,8 @@
 import React, { createRef, useRef, useState } from 'react';
 import { convertDateToStringForPicker, convertStringToDateFromPicker } from '../../utils/dateUtils';
 
-const DatePicker = (props: any) => {
-	const { description, value, onValueChange, minDate, maxDate } = props;
-
+const DatePicker = (props: { placeholder?: string; value: Date; onValueChange: (d: Date) => void; minDate?: Date; maxDate?: string }) => {
+	const { placeholder, value, onValueChange, minDate, maxDate } = props;
 	const onDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const dateString = event.target.value;
 		onValueChange(convertStringToDateFromPicker(dateString));
@@ -22,7 +21,7 @@ const DatePicker = (props: any) => {
 				<input
 					type='date'
 					className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${''}`}
-					placeholder={description}
+					placeholder={placeholder}
 					min={convertDateToStringForPicker(minDate)}
 					max={convertDateToStringForPicker(maxDate)}
 					onChange={onDateChange}

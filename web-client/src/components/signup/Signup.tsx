@@ -7,7 +7,7 @@ import { UserRole } from '../../model/user-role.enum';
 import { singUpAsync } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import SignupValidation from '../../validations/signup-validation';
-import SignupError from './SignupErrorLabel';
+import ErrorLabel from '../common/ErrorLabel';
 import SignupInput from './SignupInput';
 
 const Signup = () => {
@@ -25,25 +25,25 @@ const Signup = () => {
 	const [userRole, setUserRole] = useState(params.choice === 'client' ? UserRole.CLIENT : UserRole.LODGE_OWNER);
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
-	const [dateOfBirth, setDateOfBirth] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [address, setAddress] = useState('');
 	const [city, setCity] = useState('');
 	const [country, setCountry] = useState('');
 	const [phoneNumber, setPhoneNumber] = useState('');
-	const [profileDescription, setProfileDescription] = useState('');
+	const [signupExplanation, setSignupExplanation] = useState('');
+	const [biography, setBiography] = useState('');
 
 	const [firstNameErrorText, setFirstNameErrorText] = useState('');
 	const [lastNameErrorText, setLastNameErrorText] = useState('');
 	const [emailErrorText, setEmailErrorText] = useState('');
-	const [dateOfBirthErrorText, setDateOfBirthErrorText] = useState('');
 	const [passwordErrorText, setPasswordErrorText] = useState('');
 	const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('');
 	const [addressErrorText, setAddressErrorText] = useState('');
 	const [cityErrorText, setCityErrorText] = useState('');
 	const [countryErrorText, setCountryErrorText] = useState('');
 	const [phoneNumberErrorText, setPhoneNumberErrorText] = useState('');
+	const [signupExplanationErrorText, setSignupExplanationErrorText] = useState('');
 	const [errorLabelText, setErrorText] = useState('');
 
 	const firstNameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,19 +98,32 @@ const Signup = () => {
 	const addressChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event.target.value;
 		setAddress(value);
+
+		if (value) {
+			setAddressErrorText('');
+		}
 	};
 
 	const cityChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event.target.value;
 		setCity(value);
+
+		if (value) {
+			setCityErrorText('');
+		}
 	};
 
 	const countryChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event.target.value;
 		setCountry(value);
+
+		if (value) {
+			setCountryErrorText('');
+		}
 	};
 
 	const phoneNumberChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		console.log(event.target.value);
 		const value = event.target.value;
 		setPhoneNumber(value);
 		setPhoneNumberErrorText('');
@@ -137,20 +150,8 @@ const Signup = () => {
 		}
 	};
 
-	const dateOfBirthChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-		setDateOfBirth(value);
-		setDateOfBirthErrorText('');
-
-		if (!value) {
-			return;
-		}
-
-		try {
-			signupValidation.validateDateOfBirth(value);
-		} catch (error: any) {
-			setDateOfBirthErrorText(error.message);
-		}
+	const signupExplanationChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setSignupExplanation(event.target.value);
 	};
 
 	const passwordChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,9 +186,10 @@ const Signup = () => {
 		}
 	};
 
-	const profileDescriptionChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setProfileDescription(event.target.value);
+	const biographyChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setBiography(event.target.value);
 	};
+
 	const fieldsToValidate: List<[string, any]> = [
 		[firstName, setFirstNameErrorText],
 		[lastName, setLastNameErrorText],
@@ -196,12 +198,11 @@ const Signup = () => {
 		[city, setCityErrorText],
 		[country, setCountryErrorText],
 		[phoneNumber, setPhoneNumberErrorText],
-		[dateOfBirth, setDateOfBirthErrorText],
 		[password, setPasswordErrorText],
 		[confirmPassword, setConfirmPasswordErrorText],
 	];
 	const isInputValid = () => {
-		if (firstNameErrorText || lastNameErrorText || emailErrorText || phoneNumberErrorText || dateOfBirthErrorText || passwordErrorText || confirmPasswordErrorText) {
+		if (firstNameErrorText || lastNameErrorText || emailErrorText || phoneNumberErrorText || passwordErrorText || confirmPasswordErrorText) {
 			return false;
 		}
 		let error = false;
@@ -226,12 +227,12 @@ const Signup = () => {
 				password: password,
 				firstName: firstName,
 				lastName: lastName,
-				dateOfBirth: dateOfBirth,
-				biography: profileDescription,
-				country,
-				city,
-				address,
-				phoneNumber,
+				address: address,
+				city: city,
+				country: country,
+				phoneNumber: phoneNumber,
+				biography: biography,
+				signupExplanation: signupExplanation,
 			};
 			const resp = await singUpAsync(createUserDto);
 			if (resp.status === HttpStatusCode.CREATED) {
@@ -244,33 +245,30 @@ const Signup = () => {
 
 	return (
 		<div className='flex flex-col flex-grow bg-blue-50 items-center p-5'>
-			<div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white rounded'>
+			<div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white'>
 				<div className='flex flex-col items-center'>
 					<div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>
 						<SignupInput type='text' text='First name:' name='firstName' placeholder='first name' onChange={firstNameChangeHandler} />
-						<SignupError text={firstNameErrorText} />
+						<ErrorLabel text={firstNameErrorText} />
 
 						<SignupInput type='text' text='Last name:' name='lastName' placeholder='last name' onChange={lastNameChangeHandler} />
-						<SignupError text={lastNameErrorText} />
+						<ErrorLabel text={lastNameErrorText} />
 
 						<SignupInput type='email' text='Email:' name='email' placeholder='email' onChange={emailChangeHandler} />
-						<SignupError text={emailErrorText} />
+						<ErrorLabel text={emailErrorText} />
 
 						<SignupInput type='text' text='Address:' name='address' placeholder='address' onChange={addressChangeHandler} />
-						<SignupError text={addressErrorText} />
+						<ErrorLabel text={addressErrorText} />
 
 						<SignupInput type='text' text='City:' name='city' placeholder='city' onChange={cityChangeHandler} />
-						<SignupError text={cityErrorText} />
+						<ErrorLabel text={cityErrorText} />
 
 						<SignupInput type='text' text='Country:' name='country' placeholder='country' onChange={countryChangeHandler} />
-						<SignupError text={countryErrorText} />
+						<ErrorLabel text={countryErrorText} />
 
 						<SignupInput type='tel' text='Phone number:' name='phoneNumber' placeholder='phone number' onChange={phoneNumberChangeHandler} />
-						<SignupError text={phoneNumberErrorText} />
-					</div>
-				</div>
-				<div className='flex flex-col items-center'>
-					<div className='flex flex-col flex-grow text-lg px-8 py-6 md:w-500px'>
+						<ErrorLabel text={phoneNumberErrorText} />
+
 						{params.choice === 'service' && (
 							<div className='flex flex-wrap items-center mb-8'>
 								<p className='mt-1 w-44 whitespace-nowrap'>I want to join as:</p>
@@ -281,30 +279,38 @@ const Signup = () => {
 								</select>
 							</div>
 						)}
+					</div>
+				</div>
+				<div className='flex flex-col items-center'>
+					<div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>
+						{params.choice === 'service' && (
+							<div>
+								<div className='flex flex-wrap items-center mb-3'>
+									<p className='my-1'>Signup explanation:</p>
+									<textarea className='input resize-none w-full h-40' maxLength={150} placeholder='Say something about why you are joining Anchorex' onChange={signupExplanationChangeHandler} />
+								</div>
 
-						<div className='flex flex-wrap items-center'>
-							<p className='my-1 w-44 whitespace-nowrap'>Date of birth:</p>
-							<input className='input bg-white' type='date' onChange={dateOfBirthChangeHandler} defaultValue='1990-01-01' max='2010-12-31' />
-						</div>
-						<SignupError text={dateOfBirthErrorText} />
+								<ErrorLabel text={confirmPasswordErrorText} />
+							</div>
+						)}
 
 						<SignupInput type='password' text='Password:' name='password' placeholder='password' onChange={passwordChangeHandler} />
-						<SignupError text={passwordErrorText} />
+						<ErrorLabel text={passwordErrorText} />
 
 						<SignupInput type='password' text='Confirm password' name='confirmPassword' placeholder='confirm password' onChange={confirmPasswordChangeHandler} />
-						<SignupError text={confirmPasswordErrorText} />
+						<ErrorLabel text={confirmPasswordErrorText} />
 
 						<div className='flex flex-wrap items-center mb-3'>
 							<p className='my-1'>About me:</p>
 							<p className='ml-2 text-gray-500'>(optional)</p>
-							<textarea className='input resize-none w-full h-40' maxLength={150} placeholder='Say something about yourself' onChange={profileDescriptionChangeHandler} />
+							<textarea className='input resize-none w-full h-40' maxLength={150} placeholder='Say something about yourself' onChange={biographyChangeHandler} />
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<div className='flex flex-col justify-center my-5'>
-				<SignupError text={errorLabelText} />
+				<ErrorLabel text={errorLabelText} />
 				<button className='btnBlueWhite w-72' onClick={createAccount}>
 					Create account
 				</button>

@@ -9,16 +9,15 @@ import javax.persistence.*;
 
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
-/*
- * @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
- * 
- * @Where(clause = "deleted = false")
- */
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Table(name = "users")
 public class User implements UserDetails {
 	@Id
@@ -58,8 +57,12 @@ public class User implements UserDetails {
 
 	@Column
 	private Timestamp lastPasswordResetDate;
+
 	@Column
 	private boolean enabled;
+
+	@Column
+	private boolean deleted;
 
 	public User() {
 	}
@@ -231,6 +234,21 @@ public class User implements UserDetails {
 	public boolean isClient() {
 		for (var role : roles) {
 			if (role.getName().equals("ROLE_CLIENT")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isService() {
+		for (var role : roles) {
+			if (role.getName().equals("ROLE_LODGE_OWNER")) {
+				return true;
+			}
+			if (role.getName().equals("ROLE_SHIP_OWNER")) {
+				return true;
+			}
+			if (role.getName().equals("ROLE_INSTRUCTOR")) {
 				return true;
 			}
 		}

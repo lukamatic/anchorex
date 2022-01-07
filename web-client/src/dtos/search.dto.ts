@@ -2,8 +2,13 @@ export default interface searchDto {
     searchText: string;
     checkIn: string;
     checkOut: string;
-    sort: sortDto;
-    filter: filterDto;
+    sort: sortDto | null;
+    filter: filterDto | null;
+    pagination: {
+        offset: number,
+        limit: number,
+    };
+    type: string;
 }
 
 export interface filterDto {
@@ -16,4 +21,9 @@ export interface filterDto {
 export interface sortDto {
     field: string;
     order: [-1, 1]
+}
+
+export interface searchResponseDto {
+    list: any[],
+    size: number
 }

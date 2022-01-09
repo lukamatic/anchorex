@@ -14,4 +14,6 @@ public interface LodgeService {
     void deleteLodge(Long id);
 
     Lodge getLodgeById(Long id);
+
+    void updateLodge(Lodge lodge);
 }

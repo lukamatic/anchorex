@@ -12,4 +12,11 @@ public interface LodgeRepository extends JpaRepository<Lodge, Long> {
     @Modifying
     @Query(value = "UPDATE ReservationEntity r SET r.deleted=true WHERE r.id=?1 ")
     void deleteLodge (Long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE Lodge l SET l.description=?1, l.name=?2, l.singleBedroomNumber=?3, l.doubleBedroomNumber=?4, " +
+            "l.fourBedroomNumber=?5, l.rulesOfConduct=?6 WHERE l.id=?7")
+    void updateLodge(String description, String name, Integer singleBedroomNumber, Integer doubleBedroomNumber,
+                     Integer fourBedroomNumber, String rulesOfConduct, Long id);
 }

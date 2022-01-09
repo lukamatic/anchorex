@@ -64,6 +64,14 @@ public class LodgeServiceImpl implements LodgeService {
         return lodgeRepository.findById(id).get();
     }
 
+    @Override
+    public void updateLodge(Lodge lodge) {
+        lodgeRepository.updateLodge(lodge.getDescription(),lodge.getName(),lodge.getSingleBedroomNumber(),
+                lodge.getDoubleBedroomNumber(),lodge.getFourBedroomNumber(),lodge.getRulesOfConduct(),lodge.getId());
+        locationRepository.updateLocation(lodge.location.getLatitude(),lodge.location.getLongitude(),
+                lodge.location.getAddress(),lodge.location.getCity(),lodge.location.getCountry(),lodge.getId());
+    }
+
     private List<LodgeDTO> getLodgesDTO(List<Lodge> lodges) {
         List<LodgeDTO> lodgesDTO = new ArrayList<>();
         for(Lodge lodge : lodges){

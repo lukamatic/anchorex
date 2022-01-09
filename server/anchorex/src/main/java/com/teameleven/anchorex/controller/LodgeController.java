@@ -45,4 +45,10 @@ public class LodgeController {
         Lodge lodge = lodgeService.getLodgeById(id);
         return new ResponseEntity<>(lodge, HttpStatus.OK);
     }
+
+    @PutMapping(path="/updateLodge", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updateLodge(@RequestBody Lodge lodge){
+        lodgeService.updateLodge(lodge);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

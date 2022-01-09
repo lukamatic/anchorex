@@ -5,7 +5,6 @@ import SignupError from "../signup/SignupErrorLabel";
 import { useHistory } from "react-router-dom";
 import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
 import L from "leaflet";
-import localStorageUtil from "../../utils/local-storage/local-storage-util";
 
 const ReservationNewEntity = () => {
   const history = useHistory();
@@ -76,16 +75,17 @@ const ReservationNewEntity = () => {
     ).addTo(mymap);
 
     mymap.on("click", onMapClick);
-
     var coordinates = [0, 0]
+    var marker: L.Marker;
     async function onMapClick(e: any) {
-      if (coordinates[0] !== 0) {
-        mymap.removeLayer(L.marker([coordinates[0], coordinates[1]]));
+      if(coordinates[0] !== 0){
+        mymap.removeLayer(marker)
       }
       coordinates = e.latlng.toString().substring(7, 25).split(",");
       setLatitude(coordinates[0]);
       setLongitude(coordinates[1]);
-      L.marker([coordinates[0], coordinates[1]]).addTo(mymap);
+      marker = L.marker([coordinates[0], coordinates[1]]);
+      marker.addTo(mymap);
       var data = await (
         await fetch(GEOCODE_URL + `${coordinates[1]},${coordinates[0]}`)
       ).json();
@@ -95,7 +95,6 @@ const ReservationNewEntity = () => {
       setCity(data.address.City);
       setCountry(data.address.CountryCode);
     }
-
 
   },[]);
 
@@ -361,8 +360,7 @@ const ReservationNewEntity = () => {
         services,
         location
       };
-      axios
-        .post("api/reservationEntity/createLodge", newLodge, {
+      axios.post("api/reservationEntity/createLodge", newLodge, {
           headers: {
             Accept: "application/json",
             "Content-type": "application/json",
@@ -427,6 +425,8 @@ const ReservationNewEntity = () => {
                 disabled
               />
             </div>
+            <div id="mapid" className="h-96 w-auto "></div>
+
             <SignupError text={addressErrorText} />
 
             <SignupInput

@@ -20,7 +20,7 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
   };
 
   const remove = (id:number) => (event: React.MouseEvent<HTMLButtonElement>) => {
-    axios.delete("reservationEntity/deleteLodge/" + id,{
+    axios.delete("api/reservationEntity/deleteLodge/" + id,{
     headers:{
        Accept : 'application/json',
       'Content-type': 'application/json',

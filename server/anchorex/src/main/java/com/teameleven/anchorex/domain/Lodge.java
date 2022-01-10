@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.domain;
 
 import com.teameleven.anchorex.enums.ReservationEntityType;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ public class Lodge extends ReservationEntity{
     public Lodge(Long id, Long ownerId, String name, String description, double averageRating,
                  String rulesOfConduct, double price, ReservationEntityType reservationEntityType, boolean deleted,
                  Integer singleBedroomNumber, Integer doubleBedroomNumber, Integer fourBedroomNumber) {
-        super(id, ownerId, name, description, averageRating, rulesOfConduct, price, reservationEntityType, deleted);
+        super(id, ownerId, name, description, averageRating, rulesOfConduct, reservationEntityType, deleted);
         this.singleBedroomNumber = singleBedroomNumber;
         this.doubleBedroomNumber = doubleBedroomNumber;
         this.fourBedroomNumber = fourBedroomNumber;

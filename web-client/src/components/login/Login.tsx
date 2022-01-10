@@ -47,7 +47,8 @@ const Login = () => {
         var content = await response.json();
         localStorageUtil.setAccessToken(content.userTokenState.accessToken);
         localStorageUtil.setUserRole(content.userRole);
-        
+        localStorageUtil.setEmail(email)
+        console.log(localStorageUtil.getAccessToken())
         authContext.setUserRole(localStorageUtil.getUserRole());
         if(localStorageUtil.getUserRole() === UserRole.LODGE_OWNER){
           history.push('/lodges')

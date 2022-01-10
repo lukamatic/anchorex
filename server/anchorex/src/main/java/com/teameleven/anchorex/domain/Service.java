@@ -2,11 +2,12 @@ package com.teameleven.anchorex.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.teameleven.anchorex.enums.ServiceType;
 
 import javax.persistence.*;
 
 @Entity
-public class AdditionalService {
+public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,22 +15,23 @@ public class AdditionalService {
     private String info;
     @Column
     private double price;
+    @Column
+    private ServiceType type;
 
     @JsonBackReference
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name= "reservation_entity_id")
     private ReservationEntity entity;
 
-
-    public AdditionalService() {
+    public Service() {
         super();
     }
 
-    public AdditionalService(Long id, String info, double price) {
-        super();
+    public Service(Long id, String info, double price, ServiceType type) {
         this.id = id;
         this.info = info;
         this.price = price;
+        this.type = type;
     }
 
     public Long getId() {
@@ -54,6 +56,14 @@ public class AdditionalService {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public ServiceType getType() {
+        return type;
+    }
+
+    public void setType(ServiceType type) {
+        this.type = type;
     }
 
     public ReservationEntity getEntity() {

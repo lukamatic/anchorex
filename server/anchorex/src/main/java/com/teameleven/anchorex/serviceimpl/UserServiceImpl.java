@@ -101,6 +101,11 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
+	@Override
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
 	private Role validateRole(String roleName) {
 		if (roleName.equals("ROLE_ADMIN")) {
 			var auth = SecurityContextHolder.getContext().getAuthentication();

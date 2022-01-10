@@ -8,43 +8,61 @@ import ErrorLabel from '../common/ErrorLabel';
 
 const ReservationNewEntity = () => {
   const history = useHistory();
-  var marker: L.Marker;
-
   const GEOCODE_URL =
     'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&langCode=EN&location=';
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
-  const [ownerId, setOwnerId] = useState(3);
-  const [name, setEntityName] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
-  const [description, setDescription] = useState('');
-  const [conductRules, setConductRules] = useState(['']);
-  const [singleBedroomNumber, setSingleBedroomNumber] = useState('');
-  const [doubleBedroomNumber, setDoubleBedroomNumber] = useState('');
-  const [fourBedroomNumber, setFourBedroomNumber] = useState('');
-  const [lodgePrice, setLodgePrice] = useState('');
-  const [additionalServices, setAdditionalService] = useState(['']);
-  const [additionalServicePrices, setAdditionalServicePrices] = useState([0]);
-  const [currentService, setCurrentService] = useState('');
-  const [currentPrice, setCurrentPrice] = useState(0);
-  const [currentRule, setCurrentRule] = useState('');
+  const [ownerId, setOwnerId] = useState(0);
+  const [name, setEntityName] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [description, setDescription] = useState("");
+  const [conductRules, setConductRules] = useState([""]);
+  const [singleBedroomNumber, setSingleBedroomNumber] = useState("");
+  const [doubleBedroomNumber, setDoubleBedroomNumber] = useState("");
+  const [fourBedroomNumber, setFourBedroomNumber] = useState("");
+  const [newRegularServices, setRegularService] = useState([""]);
+  const [newRegularServicePrices, setRegularServicePrices] = useState([0]);
+  const [currentRegularService, setCurrentRegularService] = useState("");
+  const [currentRegularPrice, setCurrentRegularPrice] = useState(0);
+  const [newAdditionalServices, setAdditionalService] = useState([""]);
+  const [newAdditionalServicePrices, setAdditionalServicePrices] = useState([0]);
+  const [currentAdditionalService, setCurrentAdditionalService] = useState("");
+  const [currentAdditionalPrice, setCurrentAdditionalPrice] = useState(0);
+  const [currentRule, setCurrentRule] = useState("");
 
+  const [renderedService, setRenderedService] = useState(false);
   const [rendered, setRendered] = useState(false);
   const [renderedRule, setRenderedRule] = useState(false);
-  const [nameErrorText, setNameErrorText] = useState('');
-  const [descriptionErrorText, setDescriptionErrorText] = useState('');
-  const [rulesErrorText, setRulesErrorText] = useState('');
-  const [addressErrorText, setAddressErrorText] = useState('');
-  const [errorLabelText, setErrorText] = useState('');
-  const [singleBedRoomsErrorText, setOneBedRoomsErrorText] = useState('');
-  const [doubleBedRoomsErrorText, setDoubleBedRoomsErrorText] = useState('');
-  const [fourBedRoomsErrorText, setFourBedRoomsErrorText] = useState('');
-  const [lodgePriceErrorText, setLodgePriceErrorText] = useState('');
+  const [nameErrorText, setNameErrorText] = useState("");
+  const [descriptionErrorText, setDescriptionErrorText] = useState("");
+  const [rulesErrorText, setRulesErrorText] = useState("");
+  const [addressErrorText, setAddressErrorText] = useState("");
+  const [errorLabelText, setErrorText] = useState("");
+  const [singleBedRoomsErrorText, setOneBedRoomsErrorText] = useState("");
+  const [doubleBedRoomsErrorText, setDoubleBedRoomsErrorText] = useState("");
+  const [fourBedRoomsErrorText, setFourBedRoomsErrorText] = useState("");
 
   useEffect(() => {
-    var mymap = L.map('mapid').setView([45.2635752, 19.8434573], 13);
+    axios
+      .get("api/auth/email", {
+        params: {
+          email: localStorage.getItem(LocalStorageItem.email),
+        },
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization:
+            "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+        },
+      })
+      .then((response) => {
+        console.log(response.data.id);
+        setOwnerId(response.data.id);
+      });
+
+    var mymap = L.map("mapid").setView([45.2635752, 19.8434573], 13);
     L.tileLayer(
       'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
       {
@@ -59,12 +77,12 @@ const ReservationNewEntity = () => {
       }
     ).addTo(mymap);
 
-    mymap.on('click', onMapClick);
-
+    mymap.on("click", onMapClick);
     var coordinates = [0, 0];
+    var marker: L.Marker;
     async function onMapClick(e: any) {
       if (coordinates[0] !== 0) {
-        mymap.removeLayer(L.marker([coordinates[0], coordinates[1]]));
+        mymap.removeLayer(marker);
       }
       coordinates = e.latlng.toString().substring(7, 25).split(',');
       setLatitude(coordinates[0]);
@@ -84,8 +102,8 @@ const ReservationNewEntity = () => {
 
   const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setEntityName(value);
-    setNameErrorText('');
+    setEntityName(value.trim());
+    setNameErrorText("");
     if (!value) {
       return;
     }
@@ -95,8 +113,8 @@ const ReservationNewEntity = () => {
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const value = event.target.value;
-    setDescription(value);
-    setDescriptionErrorText('');
+    setDescription(value.trim());
+    setDescriptionErrorText("");
     if (!value) {
       return;
     }
@@ -105,7 +123,6 @@ const ReservationNewEntity = () => {
   const rulesChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setCurrentRule(value.trim());
-    setRulesErrorText('');
     console.log(conductRules);
     if (!value) {
       return;
@@ -151,34 +168,153 @@ const ReservationNewEntity = () => {
     }
   };
 
-  const lodgePriceChangeHandler = (
+  const regularServiceChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setLodgePrice(value);
-    var price = Number(value);
-    if (price < 0) {
-      setLodgePriceErrorText('Invalid input!');
-    } else {
-      setLodgePriceErrorText('');
-    }
+    setCurrentRegularService(value.trim());
+    console.log(newRegularServices);
   };
 
-  const additonalServiceChangeHandler = (
+  const regularServicePriceChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setCurrentService(value.trim());
-    console.log(additionalServices);
+    setCurrentRegularPrice(Number(value));
+    console.log(newRegularServicePrices);
+  };
+
+  const additionalServiceChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setCurrentAdditionalService(value.trim());
+    console.log(newAdditionalServices);
   };
 
   const additionalServicePriceChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    setCurrentPrice(Number(value));
-    console.log(additionalServicePrices);
+    setCurrentAdditionalPrice(Number(value));
+    console.log(newAdditionalServicePrices);
   };
+
+  const addNewRule = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!renderedRule) {
+      const newRules = [];
+      if (currentRule.length !== 0) {
+        setRenderedRule(true);
+        newRules.push(currentRule);
+        setConductRules(newRules);
+        setRulesErrorText("");
+      }
+    } else {
+      const newRules = [...conductRules];
+      if (currentRule.length > 0 && !newRules.includes(currentRule)) {
+        newRules.push(currentRule);
+        setConductRules(newRules);
+        setRulesErrorText("");
+      }
+    }
+  };
+
+  const removeRule =
+    (rule: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      const newRules = [...conductRules];
+      for (let i = 0; i <= newRules.length; i++) {
+        if (conductRules[i] === rule) {
+          newRules.splice(i, 1);
+        }
+      }
+      setConductRules(newRules);
+    };
+
+  const addNewRegularService = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) =>{
+    if(!renderedService){
+      const newPrices = [];
+      const newServices = [];
+      if (currentRegularService.length !== 0 && currentRegularPrice > 0) {
+        setRenderedService(true);
+        newServices.push(currentRegularService);
+        newPrices.push(currentRegularPrice);
+        setRegularServicePrices(newPrices);
+        setRegularService(newServices);
+      }
+    }else {
+      const newServices = [...newRegularServices];
+      const newPrices = [...newRegularServicePrices];
+      if (
+        currentRegularPrice > 0 &&
+        currentRegularService.length !== 0 &&
+        !newServices.includes(currentRegularService)
+      ) {
+        newServices.push(currentRegularService);
+        newPrices.push(currentRegularPrice);
+        setRegularServicePrices(newPrices);
+        setRegularService(newServices);
+      }
+    }
+  }
+
+  const addNewAdditionalService = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    if (!rendered) {
+      const newPrices = [];
+      const newServices = [];
+      if (currentAdditionalService.length !== 0 && currentAdditionalPrice > 0) {
+        setRendered(true);
+        newServices.push(currentAdditionalService);
+        newPrices.push(currentAdditionalPrice);
+        setAdditionalServicePrices(newPrices);
+        setAdditionalService(newServices);
+      }
+    } else {
+      const newServices = [...newAdditionalServices];
+      const newPrices = [...newAdditionalServicePrices];
+      if (
+        currentAdditionalPrice > 0 &&
+        currentAdditionalService.length !== 0 &&
+        !newServices.includes(currentAdditionalService)
+      ) {
+        newServices.push(currentAdditionalService);
+        newPrices.push(currentAdditionalPrice);
+        setAdditionalServicePrices(newPrices);
+        setAdditionalService(newServices);
+      }
+    }
+  };
+
+  const removeRegularService =
+  (service:string) => (event: React.MouseEvent<HTMLButtonElement>) =>{
+    const newServices = [...newRegularServices];
+      const newPrices = [...newRegularServicePrices];
+      for (let i = 0; i <= newServices.length; i++) {
+        if (newServices[i] === service) {
+          newServices.splice(i, 1);
+          newPrices.splice(i, 1);
+        }
+      }
+      setRegularService(newServices);
+      setRegularServicePrices(newPrices);
+  }
+
+  const removeAdditionalService =
+    (service: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      const newServices = [...newAdditionalServices];
+      const newPrices = [...newAdditionalServicePrices];
+      for (let i = 0; i <= newServices.length; i++) {
+        if (newServices[i] === service) {
+          newServices.splice(i, 1);
+          newPrices.splice(i, 1);
+        }
+      }
+      setAdditionalService(newServices);
+      setAdditionalServicePrices(newPrices);
+    };
 
   const isInputValid = () => {
     if (
@@ -236,90 +372,31 @@ const ReservationNewEntity = () => {
     return true;
   };
 
-  const addNewRule = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!renderedRule) {
-      const newRules = [];
-      if (currentRule.length !== 0) {
-        setRenderedRule(true);
-        newRules.push(currentRule);
-        setConductRules(newRules);
-      }
-    } else {
-      const newRules = [...conductRules];
-      if (currentRule.length > 0 && !newRules.includes(currentRule)) {
-        newRules.push(currentRule);
-        setConductRules(newRules);
-      }
-    }
-  };
-
-  const addNewService = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!rendered) {
-      const newPrices = [];
-      const newServices = [];
-      if (currentService.length !== 0 && currentPrice > 0) {
-        setRendered(true);
-        newServices.push(currentService);
-        newPrices.push(currentPrice);
-        setAdditionalServicePrices(newPrices);
-        setAdditionalService(newServices);
-      }
-    } else {
-      const newServices = [...additionalServices];
-      const newPrices = [...additionalServicePrices];
-      if (
-        currentPrice > 0 &&
-        currentService.length !== 0 &&
-        !newServices.includes(currentService)
-      ) {
-        newServices.push(currentService);
-        newPrices.push(currentPrice);
-        setAdditionalServicePrices(newPrices);
-        setAdditionalService(newServices);
-      }
-    }
-  };
-
-  const removeService =
-    (service: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      const newServices = [...additionalServices];
-      const newPrices = [...additionalServicePrices];
-      for (let i = 0; i <= newServices.length; i++) {
-        if (newServices[i] === service) {
-          newServices.splice(i, 1);
-          newPrices.splice(i, 1);
-        }
-      }
-      setAdditionalService(newServices);
-      setAdditionalServicePrices(newPrices);
-    };
-
-  const removeRule =
-    (rule: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      const newRules = [...conductRules];
-      for (let i = 0; i <= newRules.length; i++) {
-        if (conductRules[i] === rule) {
-          newRules.splice(i, 1);
-        }
-      }
-      setConductRules(newRules);
-    };
-
   const createEntity = async () => {
     if (!isInputValid()) {
       setErrorText('Please fill out required fields correctly.');
     } else {
-      setErrorText('');
-      var rulesOfConduct = '';
+      setErrorText("");
+
+      var rulesOfConduct = "";
       for (let i = 0; i < conductRules.length; i++) {
         rulesOfConduct += '#';
         rulesOfConduct += conductRules[i];
       }
-      const services = [];
-      for (let i = 0; i < additionalServices.length; i++) {
-        var info = additionalServices[i];
-        var price = additionalServicePrices[i];
-        services[i] = {
+      const regularServices = [];
+      for (let i = 0; i < newRegularServices.length; i++) {
+        let info = newRegularServices[i];
+        let price = newRegularServicePrices[i];
+        regularServices[i] = {
+          info,
+          price,
+        };
+      }
+      const additionalServices = [];
+      for (let i = 0; i < newAdditionalServices.length; i++) {
+        let info = newAdditionalServices[i];
+        let price = newAdditionalServicePrices[i];
+        additionalServices[i] = {
           info,
           price,
         };
@@ -336,15 +413,15 @@ const ReservationNewEntity = () => {
         name,
         description,
         rulesOfConduct,
-        lodgePrice,
         singleBedroomNumber,
         doubleBedroomNumber,
         fourBedroomNumber,
-        services,
+        regularServices,
+        additionalServices,
         location,
       };
       axios
-        .post('reservationEntity/createLodge', newLodge, {
+        .post("api/reservationEntity/createLodge", newLodge, {
           headers: {
             Accept: 'application/json',
             'Content-type': 'application/json',
@@ -402,15 +479,14 @@ const ReservationNewEntity = () => {
             <div className='flex flex-wrap items-center'>
               <p className='my-1 w-44 whitespace-nowrap'>Address</p>
               <input
-                className='input flex-grow md:w-60'
-                type='text'
-                name='address'
-                value={address + ' ' + city}
+                className="input flex-grow md:w-60"
+                type="text"
+                name="address"
+                value={address + " " + city}
                 disabled
               />
             </div>
-            <div id='mapid' className='h-96'></div>
-            <ErrorLabel text={addressErrorText} />
+            <div id="mapid" className="h-96 w-auto "></div>
 
             <SignupInput
               text='Single-room'
@@ -437,15 +513,6 @@ const ReservationNewEntity = () => {
               placeholder='Enter room number'
               onChange={fourBedRoomChangeHandler}
             />
-            <ErrorLabel text={fourBedRoomsErrorText} />
-            <SignupInput
-              text='Price'
-              type='number'
-              name='lodgePrice'
-              placeholder='Enter price per day'
-              onChange={lodgePriceChangeHandler}
-            />
-            <ErrorLabel text={lodgePriceErrorText} />
           </div>
         </div>
         <div className='flex flex-col items-center'>
@@ -508,14 +575,68 @@ const ReservationNewEntity = () => {
                 </ul>
               </div>
             </div>
-            <div className='flex flex-wrap items-center mb-3'>
-              <p className='my-1'>Additional services:</p>
-              <p className='ml-2 text-gray-500'>(optional)</p>
+            <div className="flex flex-wrap items-center mb-3">
+              <p className="my-1">Regular services (at least one):</p>
               <input
-                className='input resize-none w-52 h-10  mb-4'
-                placeholder='Add service name'
-                name='additionalServices'
-                onChange={additonalServiceChangeHandler}
+                className="input resize-none w-52 h-10  mb-4"
+                placeholder="Add service name"
+                name="additionalServices"
+                onChange={regularServiceChangeHandler}
+              />
+              <input
+                className="input resize-none w-52 h-10 ml-4 mb-4"
+                placeholder="Add service price"
+                name="additionalService"
+                type="number"
+                min="0.1"
+                step="0.1"
+                onChange={regularServicePriceChangeHandler}
+              />
+              <button
+                className="btnBlueWhite w-52 ml-32"
+                onClick={addNewRegularService}
+              >
+                Add
+              </button>
+            </div>
+            <div className="flex flex-wrap items-center mb-3">
+              <ul>
+                {newRegularServices.map((d, i) => (
+                  <li key={d}>
+                    Service name:{d} , Price: {newRegularServicePrices[i]}$
+                    {!newRegularServices.includes("") ? (
+                      <button
+                        className="btnBlueWhite w-12 h-8 ml-8"
+                        onClick={removeRegularService(d)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex flex-wrap items-center mb-3">
+              <p className="my-1">Additional services:</p>
+              <p className="ml-2 text-gray-500">(optional)</p>
+              <input
+                className="input resize-none w-52 h-10  mb-4"
+                placeholder="Add service name"
+                name="additionalServices"
+                onChange={additionalServiceChangeHandler}
               />
               <input
                 className='input resize-none w-52 h-10 ml-4 mb-4'
@@ -527,21 +648,21 @@ const ReservationNewEntity = () => {
                 onChange={additionalServicePriceChangeHandler}
               />
               <button
-                className='btnBlueWhite w-52 ml-32'
-                onClick={addNewService}
+                className="btnBlueWhite w-52 ml-32"
+                onClick={addNewAdditionalService}
               >
                 Add
               </button>
             </div>
             <div className='flex flex-wrap items-center mb-3'>
               <ul>
-                {additionalServices.map((d, i) => (
+                {newAdditionalServices.map((d, i) => (
                   <li key={d}>
-                    Service name:{d} , Price: {additionalServicePrices[i]}$
-                    {!additionalServices.includes('') ? (
+                    Service name:{d} , Price: {newAdditionalServicePrices[i]}$
+                    {!newAdditionalServices.includes("") ? (
                       <button
-                        className='btnBlueWhite w-12 h-8 ml-8'
-                        onClick={removeService(d)}
+                        className="btnBlueWhite w-12 h-8 ml-8"
+                        onClick={removeAdditionalService(d)}
                       >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'

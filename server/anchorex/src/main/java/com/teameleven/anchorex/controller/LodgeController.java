@@ -1,9 +1,10 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Lodge;
+import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
-import com.teameleven.anchorex.mapper.LodgeMapper;
+import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.service.LodgeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,5 +51,17 @@ public class LodgeController {
     public ResponseEntity<Void> updateLodge(@RequestBody Lodge lodge){
         lodgeService.updateLodge(lodge);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(path="/deleteService/{id}")
+    public ResponseEntity<Void> deleteService(@PathVariable Long id){
+        lodgeService.deleteService(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(path="/addService/{id}")
+    public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
+        lodgeService.addService(service, id);
+        return new ResponseEntity<>(service, HttpStatus.CREATED);
     }
 }

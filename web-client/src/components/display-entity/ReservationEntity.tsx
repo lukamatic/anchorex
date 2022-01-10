@@ -22,7 +22,7 @@ const ReservationEntityDisplay = () => {
   const [singleBedroomNumber, setSingleBedroomNumber] = useState(0);
   const [doubleBedroomNumber, setDoubleBedroomNumber] = useState(0);
   const [fourBedroomNumber, setFourBedroomNumber] = useState(0);
-  
+
   const [entity, setEntity] = useState({
     name,
     description,
@@ -31,7 +31,7 @@ const ReservationEntityDisplay = () => {
       longitude,
       address,
       city,
-      country
+      country,
     },
     singleBedroomNumber,
     doubleBedroomNumber,
@@ -39,80 +39,76 @@ const ReservationEntityDisplay = () => {
   });
 
   useEffect(() => {
-    if (userRole === UserRole.LODGE_OWNER) {
-      axios
-        .get("/api/reservationEntity/lodge/" + parameters.id, {
-          headers: {
-            Accept: "application/json",
-            "Content-type": "application/json",
-            Authorization:
-              "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
-          },
-        })
-        .then((response) => {
-          setName(response.data.name);
-          setDescription(response.data.description);
-          setLatitude(response.data.location.latitude);
-          setLongitude(response.data.location.longitude);
-          setAddress(response.data.location.address);
-          setCity(response.data.location.city);
-          setCountry(response.data.location.country);
-          setSingleBedroomNumber(response.data.singleBedroomNumber);
-          setDoubleBedroomNumber(response.data.doubleBedroomNumber);
-          setFourBedroomNumber(response.data.fourBedroomNumber);
-          var mymap = L.map("mapid").setView(
-            [response.data.location.latitude, response.data.location.longitude],
-            13
-          );
-          L.tileLayer(
-            "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-            {
-              attribution:
-                'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-              maxZoom: 18,
-              id: "mapbox/streets-v11",
-              tileSize: 512,
-              zoomOffset: -1,
-              accessToken:
-                "pk.eyJ1Ijoib2dpamFoIiwiYSI6ImNrcXMzbjR0ZDE3N24zMXFhOXM5MDlmeWwifQ.V05sowv93LiOgv4O-0bIgw",
-            }
-          ).addTo(mymap);
+    axios
+      .get("/api/reservationEntity/lodge/" + parameters.id, {
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization:
+            "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+        },
+      })
+      .then((response) => {
+        setName(response.data.name);
+        setDescription(response.data.description);
+        setLatitude(response.data.location.latitude);
+        setLongitude(response.data.location.longitude);
+        setAddress(response.data.location.address);
+        setCity(response.data.location.city);
+        setCountry(response.data.location.country);
+        setSingleBedroomNumber(response.data.singleBedroomNumber);
+        setDoubleBedroomNumber(response.data.doubleBedroomNumber);
+        setFourBedroomNumber(response.data.fourBedroomNumber);
+        var mymap = L.map("mapid").setView(
+          [response.data.location.latitude, response.data.location.longitude],
+          13
+        );
+        L.tileLayer(
+          "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+          {
+            attribution:
+              'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: "mapbox/streets-v11",
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken:
+              "pk.eyJ1Ijoib2dpamFoIiwiYSI6ImNrcXMzbjR0ZDE3N24zMXFhOXM5MDlmeWwifQ.V05sowv93LiOgv4O-0bIgw",
+          }
+        ).addTo(mymap);
 
-          var marker = L.marker([
-            response.data.location.latitude,
-            response.data.location.longitude,
-          ]);
-          setEntity(response.data);
-          
+        var marker = L.marker([
+          response.data.location.latitude,
+          response.data.location.longitude,
+        ]);
+        setEntity(response.data);
+
+        marker.addTo(mymap);
+        var coordinates = [0, 0];
+        if (userRole === UserRole.LODGE_OWNER) {
+          mymap.on("click", onMapClick);
+        }
+        async function onMapClick(e: any) {
+          mymap.removeLayer(marker);
+          coordinates = e.latlng.toString().substring(7, 25).split(",");
+          setLatitude(coordinates[0]);
+          setLongitude(coordinates[1]);
+          marker = L.marker([coordinates[0], coordinates[1]]);
           marker.addTo(mymap);
-          var coordinates = [0, 0]
-          if(userRole === UserRole.LODGE_OWNER){
-            mymap.on("click",onMapClick)
-          }
-          async function onMapClick(e: any) {
-            mymap.removeLayer(marker)
-            coordinates = e.latlng.toString().substring(7, 25).split(",");
-            setLatitude(coordinates[0]);
-            setLongitude(coordinates[1]);
-            marker = L.marker([coordinates[0], coordinates[1]]);
-            marker.addTo(mymap);
-            var data = await (
-              await fetch(GEOCODE_URL + `${coordinates[1]},${coordinates[0]}`)
-            ).json();
-            console.log(data.address);
-            setAddress(data.address.Address);
-            setCity(data.address.City);
-            setCountry(data.address.CountryCode);
-            
-          }
-          
-        });
-    }
+          var data = await (
+            await fetch(GEOCODE_URL + `${coordinates[1]},${coordinates[0]}`)
+          ).json();
+          console.log(data.address);
+          setAddress(data.address.Address);
+          setCity(data.address.City);
+          setCountry(data.address.CountryCode);
+        }
+      });
   }, []);
 
   const nameChangeHandler = (value: string) => {
     setName(value);
-    entity.name = value;
+    entity.name = value.trim();
     console.log(entity);
   };
 
@@ -121,7 +117,7 @@ const ReservationEntityDisplay = () => {
   ) => {
     const value = event.target.value;
     setDescription(value);
-    entity.description = value;
+    entity.description = value.trim();
     console.log(entity);
   };
 
@@ -159,9 +155,9 @@ const ReservationEntityDisplay = () => {
       address,
       city,
       country
-    }
-    entity.location = location
-    
+    };
+    entity.location = location;
+
     axios
       .put("/api/reservationEntity/updateLodge", entity, {
         headers: {
@@ -176,7 +172,6 @@ const ReservationEntityDisplay = () => {
         console.log("Update-ovano!");
         window.location.reload();
       });
-      
   };
   return (
     <div>

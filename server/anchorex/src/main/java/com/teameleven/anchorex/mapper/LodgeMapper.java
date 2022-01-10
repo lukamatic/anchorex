@@ -10,7 +10,6 @@ public class LodgeMapper {
         dto.setName(lodge.getName());
         dto.setOwnerId(lodge.getOwnerId());
         dto.setDescription(lodge.getDescription());
-        dto.setLodgePrice(lodge.getPrice());
         dto.setRulesOfConduct(lodge.getRulesOfConduct());
         dto.setSingleBedroomNumber(lodge.getSingleBedroomNumber());
         dto.setDoubleBedroomNumber(lodge.getDoubleBedroomNumber());

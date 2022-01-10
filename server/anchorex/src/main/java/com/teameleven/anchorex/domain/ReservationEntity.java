@@ -24,15 +24,13 @@ public class ReservationEntity {
     @Column
     public String rulesOfConduct;
     @Column
-    public double price;
-    @Column
     public ReservationEntityType reservationEntityType;
     @Column
     public boolean deleted;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    public Set<AdditionalService> services = new HashSet<AdditionalService>();
+    public Set<Service> services = new HashSet<Service>();
 
     @OneToOne(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     public Location location;
@@ -42,7 +40,7 @@ public class ReservationEntity {
     }
 
     public ReservationEntity(Long id, Long ownerId, String name, String description, double averageRating,
-                             String rulesOfConduct, double price, ReservationEntityType reservationEntityType,
+                             String rulesOfConduct, ReservationEntityType reservationEntityType,
                              boolean deleted) {
         super();
         this.id = id;
@@ -51,7 +49,6 @@ public class ReservationEntity {
         this.description = description;
         this.averageRating = averageRating;
         this.rulesOfConduct = rulesOfConduct;
-        this.price = price;
         this.reservationEntityType = reservationEntityType;
         this.deleted = deleted;
     }
@@ -104,14 +101,6 @@ public class ReservationEntity {
         this.rulesOfConduct = rulesOfConduct;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public ReservationEntityType getReservationEntityType() {
         return reservationEntityType;
     }
@@ -128,4 +117,11 @@ public class ReservationEntity {
         this.deleted = deleted;
     }
 
+    public Set<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(Set<Service> services) {
+        this.services = services;
+    }
 }

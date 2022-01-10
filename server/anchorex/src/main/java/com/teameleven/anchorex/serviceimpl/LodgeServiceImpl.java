@@ -1,30 +1,31 @@
 package com.teameleven.anchorex.serviceimpl;
 
-import com.teameleven.anchorex.domain.AdditionalService;
+import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Lodge;
-import com.teameleven.anchorex.dto.reservationEntity.AdditionalServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LocationDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
-import com.teameleven.anchorex.repository.AdditionalServiceRepository;
+import com.teameleven.anchorex.enums.ServiceType;
+import com.teameleven.anchorex.mapper.ServiceMapper;
+import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.LodgeRepository;
 import com.teameleven.anchorex.service.LodgeService;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service
+@org.springframework.stereotype.Service
 public class LodgeServiceImpl implements LodgeService {
     private final LodgeRepository lodgeRepository;
-    private final AdditionalServiceRepository additionalServiceRepository;
+    private final ServiceRepository serviceRepository;
     private final LocationRepository locationRepository;
 
-    public LodgeServiceImpl(LodgeRepository lodgeRepository, AdditionalServiceRepository additionalServiceRepository, LocationRepository locationRepository) {
+    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository) {
         this.lodgeRepository = lodgeRepository;
-        this.additionalServiceRepository = additionalServiceRepository;
+        this.serviceRepository = additionalServiceRepository;
         this.locationRepository = locationRepository;
     }
 
@@ -35,7 +36,6 @@ public class LodgeServiceImpl implements LodgeService {
         lodge.setDeleted(false);
         lodge.setAverageRating(0);
         lodge.setName(createLodgeDTO.getName());
-        lodge.setPrice(createLodgeDTO.getLodgePrice());
         lodge.setOwnerId(createLodgeDTO.getOwnerId());
         lodge.setReservationEntityType(ReservationEntityType.LODGE);
         lodge.setRulesOfConduct(createLodgeDTO.getRulesOfConduct());
@@ -44,7 +44,8 @@ public class LodgeServiceImpl implements LodgeService {
         lodge.setFourBedroomNumber(createLodgeDTO.getFourBedroomNumber());
         lodgeRepository.save(lodge);
         setLocation(createLodgeDTO.getLocation(), lodge);
-        setAdditionalServices(createLodgeDTO.getServices(), lodge);
+        setAdditionalServices(createLodgeDTO.getAdditionalServices(), lodge);
+        setRegularServices(createLodgeDTO.getRegularServices(), lodge);
         return lodge;
     }
 
@@ -66,10 +67,22 @@ public class LodgeServiceImpl implements LodgeService {
 
     @Override
     public void updateLodge(Lodge lodge) {
-        lodgeRepository.updateLodge(lodge.getDescription(),lodge.getName(),lodge.getSingleBedroomNumber(),
-                lodge.getDoubleBedroomNumber(),lodge.getFourBedroomNumber(),lodge.getRulesOfConduct(),lodge.getId());
-        locationRepository.updateLocation(lodge.location.getLatitude(),lodge.location.getLongitude(),
-                lodge.location.getAddress(),lodge.location.getCity(),lodge.location.getCountry(),lodge.getId());
+        lodgeRepository.updateLodge(lodge.getDescription(), lodge.getName(), lodge.getSingleBedroomNumber(),
+                lodge.getDoubleBedroomNumber(), lodge.getFourBedroomNumber(), lodge.getRulesOfConduct(), lodge.getId());
+        locationRepository.updateLocation(lodge.location.getLatitude(), lodge.location.getLongitude(),
+                lodge.location.getAddress(), lodge.location.getCity(), lodge.location.getCountry(), lodge.getId());
+    }
+
+    @Override
+    public void deleteService(Long id){
+        serviceRepository.deleteService(id);
+    }
+
+    @Override
+    public void addService(ServiceDTO serviceDTO, Long id) {
+        Service service = ServiceMapper.serviceDTOToService(serviceDTO);
+        service.setEntity(getLodgeById(id));
+        serviceRepository.save(service);
     }
 
     private List<LodgeDTO> getLodgesDTO(List<Lodge> lodges) {
@@ -86,13 +99,24 @@ public class LodgeServiceImpl implements LodgeService {
     }
 
 
-    private void setAdditionalServices(Set<AdditionalServiceDTO> services, Lodge lodge){
-        for(AdditionalServiceDTO serviceDTO: services){
-            AdditionalService service = new AdditionalService();
+    private void setAdditionalServices(Set<ServiceDTO> additionalServices,Lodge lodge){
+        for(ServiceDTO serviceDTO: additionalServices) {
+            Service service = new Service();
             service.setInfo(serviceDTO.getInfo());
             service.setPrice(serviceDTO.getPrice());
             service.setEntity(lodge);
-            additionalServiceRepository.save(service);
+            service.setType(ServiceType.ADDITIONAL);
+            serviceRepository.save(service);
+        }
+    }
+    private void setRegularServices(Set<ServiceDTO> regularServices,Lodge lodge){
+        for(ServiceDTO serviceDTO: regularServices) {
+            Service service = new Service();
+            service.setInfo(serviceDTO.getInfo());
+            service.setPrice(serviceDTO.getPrice());
+            service.setEntity(lodge);
+            service.setType(ServiceType.REGULAR);
+            serviceRepository.save(service);
         }
     }
 

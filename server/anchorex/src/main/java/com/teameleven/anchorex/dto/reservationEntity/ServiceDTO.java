@@ -1,15 +1,20 @@
 package com.teameleven.anchorex.dto.reservationEntity;
 
-public class AdditionalServiceDTO {
+import com.teameleven.anchorex.enums.ServiceType;
+
+public class ServiceDTO {
     private String info;
     private double price;
-
-    public AdditionalServiceDTO() {
+    private ServiceType type;
+    public ServiceDTO() {
     }
 
-    public AdditionalServiceDTO(String info, double price) {
-        this.info = info;
-        this.price = price;
+    public ServiceType getType() {
+        return type;
+    }
+
+    public void setType(ServiceType type) {
+        this.type = type;
     }
 
     public String getInfo() {
@@ -27,4 +32,5 @@ public class AdditionalServiceDTO {
     public void setPrice(double price) {
         this.price = price;
     }
+
 }

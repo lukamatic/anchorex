@@ -78,8 +78,7 @@ public class TestController {
         try {
             testService.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Test with id %d doesn't exist.", id));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Test with id %d doesn't exist.", id));
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

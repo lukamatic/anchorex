@@ -1,3 +1,4 @@
+import { List } from 'lodash';
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import AuthContext from '../../context/auth-context';
@@ -6,450 +7,316 @@ import { UserRole } from '../../model/user-role.enum';
 import { singUpAsync } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import SignupValidation from '../../validations/signup-validation';
-import SignupError from './SignupErrorLabel';
+import ErrorLabel from '../common/ErrorLabel';
 import SignupInput from './SignupInput';
 
 const Signup = () => {
-  const authContext = useContext(AuthContext);
-  const history = useHistory();
+	const authContext = useContext(AuthContext);
+	const history = useHistory();
 
-  if (authContext.userRole !== UserRole.UNDEFINED) {
-    history.push('/');
-  }
+	if (authContext.userRole !== UserRole.UNDEFINED) {
+		history.push('/');
+	}
 
-  const params: { choice: string } = useParams();
-  const signupValidation = new SignupValidation();
+	const params: { choice: string } = useParams();
+	const signupValidation = new SignupValidation();
 
-  const [email, setEmail] = useState('');
-  const [userRole, setUserRole] = useState(
-    params.choice === 'client' ? UserRole.CLIENT : UserRole.LODGE_OWNER
-  );
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [profileDescription, setProfileDescription] = useState('');
+	const [email, setEmail] = useState('');
+	const [userRole, setUserRole] = useState(params.choice === 'client' ? UserRole.CLIENT : UserRole.LODGE_OWNER);
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
+	const [password, setPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+	const [address, setAddress] = useState('');
+	const [city, setCity] = useState('');
+	const [country, setCountry] = useState('');
+	const [phoneNumber, setPhoneNumber] = useState('');
+	const [signupExplanation, setSignupExplanation] = useState('');
+	const [biography, setBiography] = useState('');
 
-  const [firstNameErrorText, setFirstNameErrorText] = useState('');
-  const [lastNameErrorText, setLastNameErrorText] = useState('');
-  const [emailErrorText, setEmailErrorText] = useState('');
-  const [dateOfBirthErrorText, setDateOfBirthErrorText] = useState('');
-  const [passwordErrorText, setPasswordErrorText] = useState('');
-  const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('');
-  const [addressErrorText, setAddressErrorText] = useState('');
-  const [cityErrorText, setCityErrorText] = useState('');
-  const [countryErrorText, setCountryErrorText] = useState('');
-  const [phoneNumberErrorText, setPhoneNumberErrorText] = useState('');
-  const [errorLabelText, setErrorText] = useState('');
+	const [firstNameErrorText, setFirstNameErrorText] = useState('');
+	const [lastNameErrorText, setLastNameErrorText] = useState('');
+	const [emailErrorText, setEmailErrorText] = useState('');
+	const [passwordErrorText, setPasswordErrorText] = useState('');
+	const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('');
+	const [addressErrorText, setAddressErrorText] = useState('');
+	const [cityErrorText, setCityErrorText] = useState('');
+	const [countryErrorText, setCountryErrorText] = useState('');
+	const [phoneNumberErrorText, setPhoneNumberErrorText] = useState('');
+	const [signupExplanationErrorText, setSignupExplanationErrorText] = useState('');
+	const [errorLabelText, setErrorText] = useState('');
 
-  const firstNameChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setFirstName(value);
-    setFirstNameErrorText('');
+	const firstNameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setFirstName(value);
+		setFirstNameErrorText('');
 
-    if (!value) {
-      return;
-    }
+		if (!value) {
+			return;
+		}
 
-    try {
-      signupValidation.validateFirstName(value);
-      setFirstNameErrorText('');
-    } catch (error: any) {
-      setFirstNameErrorText(error.message);
-    }
-  };
+		try {
+			signupValidation.validateFirstName(value);
+			setFirstNameErrorText('');
+		} catch (error: any) {
+			setFirstNameErrorText(error.message);
+		}
+	};
 
-  const lastNameChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setLastName(value);
-    setLastNameErrorText('');
+	const lastNameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setLastName(value);
+		setLastNameErrorText('');
 
-    if (!value) {
-      return;
-    }
+		if (!value) {
+			return;
+		}
 
-    try {
-      signupValidation.validateLastName(value);
-    } catch (error: any) {
-      setLastNameErrorText(error.message);
-    }
-  };
+		try {
+			signupValidation.validateLastName(value);
+		} catch (error: any) {
+			setLastNameErrorText(error.message);
+		}
+	};
 
-  const emailChangeHandler = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setEmail(value);
-    setEmailErrorText('');
+	const emailChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setEmail(value);
+		setEmailErrorText('');
 
-    if (!value) {
-      return;
-    }
+		if (!value) {
+			return;
+		}
 
-    try {
-      signupValidation.validateEmail(value);
-    } catch (error: any) {
-      setEmailErrorText(error.message);
-    }
-  };
+		try {
+			signupValidation.validateEmail(value);
+		} catch (error: any) {
+			setEmailErrorText(error.message);
+		}
+	};
 
-  const addressChangeHandler = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setAddress(value);
-  };
+	const addressChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setAddress(value);
 
-  const cityChangeHandler = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setCity(value);
-  };
+		if (value) {
+			setAddressErrorText('');
+		}
+	};
 
-  const countryChangeHandler = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setCountry(value);
-  };
+	const cityChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setCity(value);
 
-  const phoneNumberChangeHandler = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    console.log(event.target.value);
-    const value = event.target.value;
-    setPhoneNumber(value);
-    setPhoneNumberErrorText('');
+		if (value) {
+			setCityErrorText('');
+		}
+	};
 
-    if (!value) {
-      return;
-    }
+	const countryChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setCountry(value);
 
-    try {
-      signupValidation.validatePhoneNumber(value);
-    } catch (error: any) {
-      setPhoneNumberErrorText(error.message);
-    }
-  };
+		if (value) {
+			setCountryErrorText('');
+		}
+	};
 
-  const userRoleChangeHandler = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    switch (event.target.value) {
-      case 'LODGE_OWNER':
-        return setUserRole(UserRole.LODGE_OWNER);
-      case 'SHIP_OWNER':
-        return setUserRole(UserRole.SHIP_OWNER);
-      case 'INSTRUCTOR':
-        return setUserRole(UserRole.INSTRUCTOR);
-    }
-  };
+	const phoneNumberChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		console.log(event.target.value);
+		const value = event.target.value;
+		setPhoneNumber(value);
+		setPhoneNumberErrorText('');
 
-  const dateOfBirthChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setDateOfBirth(value);
-    setDateOfBirthErrorText('');
+		if (!value) {
+			return;
+		}
 
-    if (!value) {
-      return;
-    }
+		try {
+			signupValidation.validatePhoneNumber(value);
+		} catch (error: any) {
+			setPhoneNumberErrorText(error.message);
+		}
+	};
 
-    try {
-      signupValidation.validateDateOfBirth(value);
-    } catch (error: any) {
-      setDateOfBirthErrorText(error.message);
-    }
-  };
+	const userRoleChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		switch (event.target.value) {
+			case 'LODGE_OWNER':
+				return setUserRole(UserRole.LODGE_OWNER);
+			case 'SHIP_OWNER':
+				return setUserRole(UserRole.SHIP_OWNER);
+			case 'INSTRUCTOR':
+				return setUserRole(UserRole.INSTRUCTOR);
+		}
+	};
 
-  const passwordChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setPassword(value);
-    setPasswordErrorText('');
+	const signupExplanationChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setSignupExplanation(event.target.value);
+	};
 
-    if (!value) {
-      return;
-    }
+	const passwordChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setPassword(value);
+		setPasswordErrorText('');
 
-    try {
-      signupValidation.validatePassword(value);
-    } catch (error: any) {
-      setPasswordErrorText(error.message);
-    }
-  };
+		if (!value) {
+			return;
+		}
 
-  const confirmPasswordChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setConfirmPassword(value);
+		try {
+			signupValidation.validatePassword(value);
+		} catch (error: any) {
+			setPasswordErrorText(error.message);
+		}
+	};
 
-    if (!value) {
-      return;
-    }
+	const confirmPasswordChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const value = event.target.value;
+		setConfirmPassword(value);
 
-    try {
-      signupValidation.validateConfirmPassword(value, password);
-      setConfirmPasswordErrorText('');
-    } catch (error: any) {
-      setConfirmPasswordErrorText(error.message);
-    }
-  };
+		if (!value) {
+			return;
+		}
 
-  const profileDescriptionChangeHandler = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setProfileDescription(event.target.value);
-  };
+		try {
+			signupValidation.validateConfirmPassword(value, password);
+			setConfirmPasswordErrorText('');
+		} catch (error: any) {
+			setConfirmPasswordErrorText(error.message);
+		}
+	};
 
-  const isInputValid = () => {
-    if (
-      firstNameErrorText ||
-      lastNameErrorText ||
-      emailErrorText ||
-      phoneNumberErrorText ||
-      dateOfBirthErrorText ||
-      passwordErrorText ||
-      confirmPasswordErrorText
-    ) {
-      return false;
-    }
+	const biographyChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setBiography(event.target.value);
+	};
 
-    if (!firstName) {
-      setFirstNameErrorText('This field is required.');
-    }
+	const fieldsToValidate: List<[string, any]> = [
+		[firstName, setFirstNameErrorText],
+		[lastName, setLastNameErrorText],
+		[email, setEmailErrorText],
+		[address, setAddressErrorText],
+		[city, setCityErrorText],
+		[country, setCountryErrorText],
+		[phoneNumber, setPhoneNumberErrorText],
+		[password, setPasswordErrorText],
+		[confirmPassword, setConfirmPasswordErrorText],
+	];
+	const isInputValid = () => {
+		if (firstNameErrorText || lastNameErrorText || emailErrorText || phoneNumberErrorText || passwordErrorText || confirmPasswordErrorText) {
+			return false;
+		}
+		let error = false;
+		for (const validationFieldGroup in fieldsToValidate) {
+			const field = validationFieldGroup[0];
+			const setError: any = validationFieldGroup[1];
+			if (!field) {
+				setError('This field is required.');
+				error = true;
+			}
+		}
+		if (error) return false;
+		return true;
+	};
 
-    if (!lastName) {
-      setLastNameErrorText('This field is required.');
-    }
+	const createAccount = async () => {
+		if (isInputValid()) {
+			setErrorText('');
+			const createUserDto: CreateUserDto = {
+				role: userRole,
+				email: email,
+				password: password,
+				firstName: firstName,
+				lastName: lastName,
+				address: address,
+				city: city,
+				country: country,
+				phoneNumber: phoneNumber,
+				biography: biography,
+				signupExplanation: signupExplanation,
+			};
+			const resp = await singUpAsync(createUserDto);
+			if (resp.status === HttpStatusCode.CREATED) {
+				alert('Email is sent. Please check your inbox!');
+			}
+		} else {
+			setErrorText('Please fill out required fields correctly.');
+		}
+	};
 
-    if (!email) {
-      setEmailErrorText('This field is required.');
-    }
+	return (
+		<div className='flex flex-col flex-grow bg-blue-50 items-center p-5'>
+			<div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white'>
+				<div className='flex flex-col items-center'>
+					<div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>
+						<SignupInput type='text' text='First name:' name='firstName' placeholder='first name' onChange={firstNameChangeHandler} />
+						<ErrorLabel text={firstNameErrorText} />
 
-    if (!address) {
-      setAddressErrorText('This field is required.');
-    }
+						<SignupInput type='text' text='Last name:' name='lastName' placeholder='last name' onChange={lastNameChangeHandler} />
+						<ErrorLabel text={lastNameErrorText} />
 
-    if (!city) {
-      setCityErrorText('This field is required.');
-    }
+						<SignupInput type='email' text='Email:' name='email' placeholder='email' onChange={emailChangeHandler} />
+						<ErrorLabel text={emailErrorText} />
 
-    if (!country) {
-      setCountryErrorText('This field is required.');
-    }
+						<SignupInput type='text' text='Address:' name='address' placeholder='address' onChange={addressChangeHandler} />
+						<ErrorLabel text={addressErrorText} />
 
-    if (!phoneNumber) {
-      setPhoneNumberErrorText('This field is required.');
-    }
+						<SignupInput type='text' text='City:' name='city' placeholder='city' onChange={cityChangeHandler} />
+						<ErrorLabel text={cityErrorText} />
 
-    if (!dateOfBirth) {
-      setDateOfBirthErrorText('This field is required.');
-    }
+						<SignupInput type='text' text='Country:' name='country' placeholder='country' onChange={countryChangeHandler} />
+						<ErrorLabel text={countryErrorText} />
 
-    if (!password) {
-      setPasswordErrorText('This field is required.');
-    }
+						<SignupInput type='tel' text='Phone number:' name='phoneNumber' placeholder='phone number' onChange={phoneNumberChangeHandler} />
+						<ErrorLabel text={phoneNumberErrorText} />
 
-    if (!confirmPassword) {
-      setConfirmPasswordErrorText('This field is required.');
-    }
+						{params.choice === 'service' && (
+							<div className='flex flex-wrap items-center mb-8'>
+								<p className='mt-1 w-44 whitespace-nowrap'>I want to join as:</p>
+								<select className='input bg-white' onChange={userRoleChangeHandler}>
+									<option value='LOGDE_OWNER'>lodge owner</option>
+									<option value='SHIP_OWNER'>ship owner</option>
+									<option value='INSTRUCTOR'>fishing instructor</option>
+								</select>
+							</div>
+						)}
+					</div>
+				</div>
+				<div className='flex flex-col items-center'>
+					<div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>
+						{params.choice === 'service' && (
+							<div>
+								<div className='flex flex-wrap items-center mb-3'>
+									<p className='my-1'>Signup explanation:</p>
+									<textarea className='input resize-none w-full h-40' maxLength={150} placeholder='Say something about why you are joining Anchorex' onChange={signupExplanationChangeHandler} />
+								</div>
 
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !address ||
-      !city ||
-      !country ||
-      !phoneNumber ||
-      !dateOfBirth ||
-      !password ||
-      !confirmPassword
-    ) {
-      return false;
-    }
+								<ErrorLabel text={confirmPasswordErrorText} />
+							</div>
+						)}
 
-    return true;
-  };
+						<SignupInput type='password' text='Password:' name='password' placeholder='password' onChange={passwordChangeHandler} />
+						<ErrorLabel text={passwordErrorText} />
 
-  const createAccount = async () => {
-    if (isInputValid()) {
-      setErrorText('');
-      const createUserDto: CreateUserDto = {
-        role: userRole,
-        email: email,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        // dateOfBirth: dateOfBirth,
-        biography: profileDescription,
-        country,
-        city,
-        address,
-        phoneNumber,
-      };
-      const resp = await singUpAsync(createUserDto);
-      if (resp.status === HttpStatusCode.CREATED) {
-        alert('Email is sent. Please check your inbox!');
-      }
-    } else {
-      setErrorText('Please fill out required fields correctly.');
-    }
-  };
+						<SignupInput type='password' text='Confirm password' name='confirmPassword' placeholder='confirm password' onChange={confirmPasswordChangeHandler} />
+						<ErrorLabel text={confirmPasswordErrorText} />
 
-  return (
-    <div className='flex flex-col flex-grow bg-blue-50 items-center p-5'>
-      <div className='flex flex-row justify-center flex-wrap shadow-lg lg:mt-16 bg-white'>
-        <div className='flex flex-col items-center'>
-          <div className='flex flex-col flex-grow text-lg px-8 pt-5 md:w-500px'>
-            <SignupInput
-              type='text'
-              text='First name:'
-              name='firstName'
-              placeholder='first name'
-              onChange={firstNameChangeHandler}
-            />
-            <SignupError text={firstNameErrorText} />
+						<div className='flex flex-wrap items-center mb-3'>
+							<p className='my-1'>About me:</p>
+							<p className='ml-2 text-gray-500'>(optional)</p>
+							<textarea className='input resize-none w-full h-40' maxLength={150} placeholder='Say something about yourself' onChange={biographyChangeHandler} />
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <SignupInput
-              type='text'
-              text='Last name:'
-              name='lastName'
-              placeholder='last name'
-              onChange={lastNameChangeHandler}
-            />
-            <SignupError text={lastNameErrorText} />
-
-            <SignupInput
-              type='email'
-              text='Email:'
-              name='email'
-              placeholder='email'
-              onChange={emailChangeHandler}
-            />
-            <SignupError text={emailErrorText} />
-
-            <SignupInput
-              type='text'
-              text='Address:'
-              name='address'
-              placeholder='address'
-              onChange={addressChangeHandler}
-            />
-            <SignupError text={addressErrorText} />
-
-            <SignupInput
-              type='text'
-              text='City:'
-              name='city'
-              placeholder='city'
-              onChange={cityChangeHandler}
-            />
-            <SignupError text={cityErrorText} />
-
-            <SignupInput
-              type='text'
-              text='Country:'
-              name='country'
-              placeholder='country'
-              onChange={countryChangeHandler}
-            />
-            <SignupError text={countryErrorText} />
-
-            <SignupInput
-              type='tel'
-              text='Phone number:'
-              name='phoneNumber'
-              placeholder='phone number'
-              onChange={phoneNumberChangeHandler}
-            />
-            <SignupError text={phoneNumberErrorText} />
-          </div>
-        </div>
-        <div className='flex flex-col items-center'>
-          <div className='flex flex-col flex-grow text-lg px-8 py-6 md:w-500px'>
-            {params.choice === 'service' && (
-              <div className='flex flex-wrap items-center mb-8'>
-                <p className='mt-1 w-44 whitespace-nowrap'>
-                  I want to join as:
-                </p>
-                <select
-                  className='input bg-white'
-                  onChange={userRoleChangeHandler}
-                >
-                  <option value='LOGDE_OWNER'>lodge owner</option>
-                  <option value='SHIP_OWNER'>ship owner</option>
-                  <option value='INSTRUCTOR'>fishing instructor</option>
-                </select>
-              </div>
-            )}
-
-            <div className='flex flex-wrap items-center'>
-              <p className='my-1 w-44 whitespace-nowrap'>Date of birth:</p>
-              <input
-                className='input bg-white'
-                type='date'
-                onChange={dateOfBirthChangeHandler}
-                defaultValue='1990-01-01'
-                max='2010-12-31'
-              />
-            </div>
-            <SignupError text={dateOfBirthErrorText} />
-
-            <SignupInput
-              type='password'
-              text='Password:'
-              name='password'
-              placeholder='password'
-              onChange={passwordChangeHandler}
-            />
-            <SignupError text={passwordErrorText} />
-
-            <SignupInput
-              type='password'
-              text='Confirm password'
-              name='confirmPassword'
-              placeholder='confirm password'
-              onChange={confirmPasswordChangeHandler}
-            />
-            <SignupError text={confirmPasswordErrorText} />
-
-            <div className='flex flex-wrap items-center mb-3'>
-              <p className='my-1'>About me:</p>
-              <p className='ml-2 text-gray-500'>(optional)</p>
-              <textarea
-                className='input resize-none w-full h-40'
-                maxLength={150}
-                placeholder='Say something about yourself'
-                onChange={profileDescriptionChangeHandler}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className='flex flex-col justify-center my-5'>
-        <SignupError text={errorLabelText} />
-        <button className='btnBlueWhite w-72' onClick={createAccount}>
-          Create account
-        </button>
-      </div>
-    </div>
-  );
+			<div className='flex flex-col justify-center my-5'>
+				<ErrorLabel text={errorLabelText} />
+				<button className='btnBlueWhite w-72' onClick={createAccount}>
+					Create account
+				</button>
+			</div>
+		</div>
+	);
 };
 
 export default Signup;

@@ -21,4 +21,6 @@ public interface UserService {
 	void delete(Long id);
 
 	User findByEmail(String email);
+	
+    void enableUser(Long id);
 }

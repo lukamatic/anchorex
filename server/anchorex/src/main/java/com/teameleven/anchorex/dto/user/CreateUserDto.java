@@ -33,6 +33,8 @@ public class CreateUserDto {
 
 	private String biography;
 
+	private String signupExplanation;
+
 	public CreateUserDto() {
 	}
 
@@ -114,6 +116,14 @@ public class CreateUserDto {
 
 	public void setBiography(String biography) {
 		this.biography = biography;
+	}
+
+	public String getSignupExplanation() {
+		return signupExplanation;
+	}
+
+	public void setSignupExplanation(String signupExplanation) {
+		this.signupExplanation = signupExplanation;
 	}
 
 }

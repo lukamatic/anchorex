@@ -4,16 +4,15 @@ import java.util.Collection;
 import java.util.UUID;
 
 import com.teameleven.anchorex.domain.Role;
+import com.teameleven.anchorex.domain.ServiceSignupRequest;
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.domain.UserValidationToken;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.repository.UserRepository;
-import com.teameleven.anchorex.service.AuthService;
-import com.teameleven.anchorex.service.RoleService;
-import com.teameleven.anchorex.service.UserService;
+import com.teameleven.anchorex.service.*;
 
-import com.teameleven.anchorex.service.UserValidationTokenService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,12 +25,14 @@ public class UserServiceImpl implements UserService {
 	private final RoleService roleService;
 	private final AuthService authService;
 	private final UserValidationTokenService userValidationTokenService;
+	private final ServiceSignupRequestService serviceSignupRequestService;
 
-	public UserServiceImpl(UserRepository userRepository, RoleService roleService, AuthService authService,UserValidationTokenService userValidationTokenService) {
+	public UserServiceImpl(UserRepository userRepository, RoleService roleService, AuthService authService, UserValidationTokenService userValidationTokenService, @Lazy ServiceSignupRequestService serviceSignupRequestService) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
 		this.authService = authService;
 		this.userValidationTokenService = userValidationTokenService;
+		this.serviceSignupRequestService = serviceSignupRequestService;
 	}
 
 	@Override
@@ -49,6 +50,9 @@ public class UserServiceImpl implements UserService {
 				UserValidationToken userValidationToken = new UserValidationToken(token, user.getId());
 				userValidationTokenService.create(userValidationToken);
 				this.authService.sendVerificationMail(savedUser, token);
+			} else if (savedUser.isService()) {
+				var serviceSignupRequest = new ServiceSignupRequest(savedUser, createUserDto.getSignupExplanation());
+				serviceSignupRequestService.create(serviceSignupRequest);
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -60,13 +64,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Collection<User> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findAll();
 	}
 
 	@Override
 	public User findOneById(Long id) {
-		return this.userRepository.findOneById(id);
+		return this.userRepository.findById(id).orElse(null);
 	}
 
 	@Override
@@ -83,8 +86,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
+		userRepository.deleteById(id);
+	}
 
+	@Override
+	public void enableUser(Long id) {
+		var user = findOneById(id);
+
+		if (user == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("User with id %d doesn't exist.", id));
+		}
+
+		user.setEnabled(true);
+		userRepository.save(user);
 	}
 
 	@Override

@@ -1,11 +1,12 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Lodge;
-import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.service.LodgeService;
+import com.teameleven.anchorex.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,11 @@ import java.util.List;
 public class LodgeController {
 
     private final LodgeService lodgeService;
+    private final UserService userService;
 
-    public LodgeController(LodgeService lodgeService) {
+    public LodgeController(LodgeService lodgeService, UserService userService) {
         this.lodgeService = lodgeService;
+        this.userService = userService;
     }
 
     @PostMapping(path="/createLodge", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,9 +32,9 @@ public class LodgeController {
         return new ResponseEntity<>(lodge, HttpStatus.CREATED);
     }
 
-    @GetMapping(path="/lodges")
-    public ResponseEntity<List<LodgeDTO>> getLodges(){
-        var lodges = lodgeService.getLodges();
+    @GetMapping(path="/lodges/{id}")
+    public ResponseEntity<List<LodgeDTO>> getLodges(@PathVariable Long id){
+        var lodges = lodgeService.getLodges(id);
         return new ResponseEntity<>(lodges, HttpStatus.OK);
     }
 

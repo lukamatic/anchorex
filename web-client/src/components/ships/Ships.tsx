@@ -1,10 +1,11 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { ReservationEntityType } from "../../model/reservation-entity-type.enum";
-import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
-import ReservationEntities from "../reservation-entities/ReservationEnities";
-const Lodges = () => {
-  const [lodges, setLodges] = useState([]);
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { ReservationEntityType } from '../../model/reservation-entity-type.enum';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
+import ReservationEntities from '../reservation-entities/ReservationEnities';
+const Ships = () => {
+  const [ships, setShips] = useState([])
+
   useEffect(() => {
     axios
       .get("api/auth/email", {
@@ -19,12 +20,12 @@ const Lodges = () => {
         },
       })
       .then((response) => {
-        findLodge(response.data.id);
+        findShips(response.data.id);
       });
 
-    const findLodge = (id: number) => {
+    const findShips = (id: number) => {
       axios
-        .get("/api/reservationEntity/lodges/" + id, {
+        .get("/api/reservationEntity/ships/" + id, {
           headers: {
             Accept: "application/json",
             "Content-type": "application/json",
@@ -33,17 +34,17 @@ const Lodges = () => {
           },
         })
         .then((response) => {
-          setLodges(response.data);
+          setShips(response.data);
         });
     };
   },[]);
 
   return (
     <ReservationEntities
-      reservationEntityType={ReservationEntityType.LODGE}
-      entities={lodges}
+      reservationEntityType={ReservationEntityType.SHIP}
+      entities={ships}
     />
   );
 };
 
-export default Lodges;
+export default Ships;

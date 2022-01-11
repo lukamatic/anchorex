@@ -5,6 +5,7 @@ import Search from '../Search';
 import ReservationEntityDropdown from './ReservationEntityDropdown';
 
 const ReservationEntities = (props: { reservationEntityType: ReservationEntityType; entities: ReservationEntity[] }) => {
+	
 	const addNewEntityButtonText = () => {
 		switch (props.reservationEntityType) {
 			case ReservationEntityType.LODGE:
@@ -28,7 +29,7 @@ const ReservationEntities = (props: { reservationEntityType: ReservationEntityTy
 							<li key={entity.id}>
 								<div className='flex items-center bg-white shadow-lg w-full my-1 border-2 focus:border-blue-400' id={entity.id}>
 									<div className='flex flex-grow justify-center p-1 '>
-										<Link to={'/reservationEntities/' + entity.id} className='text-center hover:underline'>
+										<Link to={'/lodge/' + entity.id} className='text-center hover:underline'>
 											{entity.name}
 										</Link>
 									</div>

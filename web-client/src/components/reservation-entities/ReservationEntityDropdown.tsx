@@ -1,9 +1,13 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from '../../context/auth-context';
+import { UserRole } from '../../model/user-role.enum';
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 
 const ReservationEntityDropdown = (props: { entityId: number }) => {
+  const authContext = useContext(AuthContext);
+  const userRole = authContext.userRole;
   const [isDropdownHidden, setIsDropdownHidden] = useState(true);
 
   const togglePopup = () => {
@@ -14,20 +18,21 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
     setIsDropdownHidden(true);
   };
 
-  const edit = () => {
-    console.log('edit');
-    hidePopup();
-  };
-
   const remove = (id:number) => (event: React.MouseEvent<HTMLButtonElement>) => {
-    axios.delete("api/reservationEntity/deleteLodge/" + id,{
+    var url = "/api/reservationEntity/";
+    if(userRole === UserRole.LODGE_OWNER){
+      url += "deleteLodge/"
+    }
+    else if(userRole === UserRole.SHIP_OWNER){
+      url += "deleteShip/"
+    }
+    axios.delete(url + id,{
     headers:{
        Accept : 'application/json',
       'Content-type': 'application/json',
       'Authorization':'Bearer ' +  localStorage.getItem(LocalStorageItem.ACCESS_TOKEN)
     }
   }).then((response) => {
-    console.log('Obrisano!')
     hidePopup();
     window.location.reload()
   })
@@ -69,18 +74,12 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
         <div className='flex flex-col w-24 text-white'>
           <Link
             className='p-1 hover:bg-blue-400 hover:text-white rounded-t-md text-center border-b border-white'
-            to={'/reservationEntities/' + props.entityId}
+            to={'/lodge/' + props.entityId}
             id={'dropdown-link-' + props.entityId}
           >
-            View
-          </Link>
-          <button
-            className='p-1 hover:bg-blue-400 hover:text-white border-b border-white'
-            onClick={edit}
-            id={'dropdown-edit-' + props.entityId}
-          >
             Edit
-          </button>
+          </Link>
+          
           <button
             className='p-1 hover:bg-blue-400 hover:text-white rounded-b-md'
             onClick={remove(props.entityId)}

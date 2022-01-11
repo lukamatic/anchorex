@@ -53,6 +53,9 @@ const Login = () => {
         if(localStorageUtil.getUserRole() === UserRole.LODGE_OWNER){
           history.push('/lodges')
         }
+        else if(localStorageUtil.getUserRole() === UserRole.SHIP_OWNER){
+          history.push('/ships')
+        }
         else{
           history.push('/');
         }

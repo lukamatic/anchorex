@@ -20,6 +20,7 @@ const CalendarMenu = (props: {
       <div className='flex items-center py-1'>
         <p className='mt-1 w-20 whitespace-nowrap'>Mode:</p>
         <select className='input bg-white' onChange={props.onModeChangeHandler}>
+          <option value={CalendarMode.DAILY}>Daily</option>
           <option value={CalendarMode.WEEKLY}>Weekly</option>
           <option value={CalendarMode.MONTHLY}>Monthly</option>
           <option value={CalendarMode.YEARLY}>Yearly</option>

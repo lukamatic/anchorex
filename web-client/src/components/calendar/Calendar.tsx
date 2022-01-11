@@ -3,6 +3,7 @@ import CalendarEvent from '../../model/calendar-event';
 import { CalendarMode } from '../../model/calendar-mode.enum';
 import EventFilter from '../../utils/calendar/event-filter';
 import CalendarMenu from './CalendarMenu';
+import DailyCalendar from './daily-calendar/DailyCalendar';
 import MonthlyCalendar from './monthly-calendar/MonthlyCalendar';
 import WeeklyCalendar from './WeeklyCalendar';
 import YearlyCalendar from './yearly-calendar/YearlyCalendar';
@@ -10,7 +11,7 @@ import YearlyCalendar from './yearly-calendar/YearlyCalendar';
 const Calendar = () => {
   const eventFilter = new EventFilter();
 
-  const [mode, setMode] = useState(CalendarMode.YEARLY);
+  const [mode, setMode] = useState(CalendarMode.DAILY);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
   const [day, setDay] = useState(new Date().getDate());
@@ -84,6 +85,9 @@ const Calendar = () => {
         />
       </div>
       <div className='flex flex-grow'>
+        {mode === CalendarMode.DAILY && (
+          <DailyCalendar year={year} month={month} day={day} />
+        )}
         {mode === CalendarMode.WEEKLY && <WeeklyCalendar />}
         {mode === CalendarMode.MONTHLY && (
           <MonthlyCalendar

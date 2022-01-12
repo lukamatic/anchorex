@@ -52,8 +52,8 @@ public class LodgeServiceImpl implements LodgeService {
     }
 
     @Override
-    public List<LodgeDTO> getLodges() {
-        var lodges = lodgeRepository.findAll();
+    public List<LodgeDTO> getLodges(Long id) {
+        List<Lodge> lodges = lodgeRepository.getLodgeByUserId(id);
         return getLodgesDTO(lodges);
     }
 

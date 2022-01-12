@@ -2,6 +2,8 @@ package com.teameleven.anchorex.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.teameleven.anchorex.enums.ReservationEntityType;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,6 +11,8 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@SQLDelete(sql = "UPDATE reservationEntity SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class ReservationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

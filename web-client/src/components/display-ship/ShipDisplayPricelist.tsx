@@ -6,7 +6,7 @@ import AuthContext from "../../context/auth-context";
 import { UserRole } from "../../model/user-role.enum";
 import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
 
-const ReservationEntityDisplayPricelist = () => {
+const ShipDisplayPricelist = () => {
   const params: { id: string } = useParams();
   const authContext = useContext(AuthContext);
   const userRole = authContext.userRole;
@@ -15,11 +15,11 @@ const ReservationEntityDisplayPricelist = () => {
   const [info, setInfo] = useState("");
   const [type, setType] = useState("ADDITIONAL");
 
-  const [currentService, setCurrentService] = useState({id:0, info, price, type });
+  const currentService = {id:0, info, price, type };
   const [services, setServices] = useState([{id:0, info, price, type }]);
   useEffect(() => {
     axios
-      .get("/api/reservationEntity/lodge/" + params.id, {
+      .get("/api/reservationEntity/ship/" + params.id, {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -64,7 +64,7 @@ const ReservationEntityDisplayPricelist = () => {
     (service: { info: string; price: number; type: string }) =>
     (event: React.MouseEvent<HTMLButtonElement>) => {
       axios
-      .post("/api/reservationEntity/addService/" + params.id, service, {
+      .post("/api/reservationEntity/addShipService/" + params.id, service, {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -99,7 +99,7 @@ const ReservationEntityDisplayPricelist = () => {
         <nav className="flex flex-col bg-blue-500 w-64 float-left h-screen px-4 tex-gray-900 border border-blue-900">
           <div className="mt-10 mb-4">
             <ul className="ml-4">
-              <Link to={"/reservationEntities/" + params.id}>
+              <Link to={"/ship/" + params.id}>
                 <li
                   className="mb-2 px-4 py-4  text-gray-100 flex flex-row  border-gray-300 hover:text-black   
             hover:bg-gray-300  hover:font-bold rounded rounded-lg"
@@ -125,7 +125,7 @@ const ReservationEntityDisplayPricelist = () => {
                 </li>
               </Link>
 
-              <Link to={"/reservationEntitiesImages/" + params.id}>
+              <Link to={"/shipImages/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -147,7 +147,7 @@ const ReservationEntityDisplayPricelist = () => {
                   <span className="ml-2">Images</span>
                 </li>
               </Link>
-              <Link to={"/reservationEntitiesAction/" + params.id}>
+              <Link to={"/shipAction/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -199,7 +199,7 @@ const ReservationEntityDisplayPricelist = () => {
                   <span className="ml-2">Pricelist</span>
                 </a>
               </li>
-              <Link to={"/reservationEntitiesRules/" + params.id}>
+              <Link to={"/shipRules/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -219,6 +219,33 @@ const ReservationEntityDisplayPricelist = () => {
                     </svg>
                   </span>
                   <span className="ml-2">Conduct rules</span>
+                </li>
+              </Link>
+              <Link to={"/shipKit/" + params.id}>
+                <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
+                  <svg
+                    version="1.0"
+                    id="Layer_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                    x="0px"
+                    y="0px"
+                    fill="#FFFFFF"
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 100 100"
+                    enableBackground="new 0 0 100 100"
+                    xmlSpace="preserve"
+                  >
+                    <path
+                      d="M60,10.001c-7.363,0-13.333,5.97-13.333,13.333c0,6.204,4.258,11.373,10,12.861v35.471c0,6.445-5.225,11.666-11.667,11.666
+	c-6.445,0-11.667-5.221-11.667-11.666v-3.334H40L26.667,48.334v23.332c0,10.13,8.209,18.333,18.333,18.333
+	s18.333-8.203,18.333-18.333V36.195c5.739-1.488,10-6.657,10-12.861C73.333,15.971,67.363,10.001,60,10.001z M60,30
+	c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.667S63.682,30,60,30z"
+                    />
+                  </svg>
+
+                  <span className="ml-2">Ship kit</span>
                 </li>
               </Link>
             </ul>
@@ -247,7 +274,7 @@ const ReservationEntityDisplayPricelist = () => {
           </tbody>
         </table>
       </div>
-      {userRole === UserRole.LODGE_OWNER ? (
+      {userRole === UserRole.SHIP_OWNER ? (
         <div>
           <div className="flex flex-wrap items-center mb-4 mt-4 ml-96">
             <p className="my-1">New service:</p>
@@ -315,4 +342,4 @@ const ReservationEntityDisplayPricelist = () => {
   );
 };
 
-export default ReservationEntityDisplayPricelist;
+export default ShipDisplayPricelist;

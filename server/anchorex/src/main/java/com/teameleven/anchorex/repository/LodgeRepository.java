@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface LodgeRepository extends JpaRepository<Lodge, Long> {
 
     @Transactional
@@ -19,4 +21,7 @@ public interface LodgeRepository extends JpaRepository<Lodge, Long> {
             "l.fourBedroomNumber=?5, l.rulesOfConduct=?6 WHERE l.id=?7")
     void updateLodge(String description, String name, Integer singleBedroomNumber, Integer doubleBedroomNumber,
                      Integer fourBedroomNumber, String rulesOfConduct, Long id);
+
+    @Query(value = "SELECT l FROM Lodge l WHERE l.ownerId=?1", nativeQuery = false)
+    List<Lodge> getLodgeByUserId(Long id);
 }

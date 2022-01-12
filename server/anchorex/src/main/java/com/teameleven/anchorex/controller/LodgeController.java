@@ -28,9 +28,9 @@ public class LodgeController {
         return new ResponseEntity<>(lodge, HttpStatus.CREATED);
     }
 
-    @GetMapping(path="/lodges")
-    public ResponseEntity<List<LodgeDTO>> getLodges(){
-        var lodges = lodgeService.getLodges();
+    @GetMapping(path="/lodges/{id}")
+    public ResponseEntity<List<LodgeDTO>> getLodges(@PathVariable Long id){
+        var lodges = lodgeService.getLodges(id);
         return new ResponseEntity<>(lodges, HttpStatus.OK);
     }
 

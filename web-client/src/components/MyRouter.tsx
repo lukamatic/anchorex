@@ -1,20 +1,25 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import FishingLessons from './fishing-lessons/FishingLessons';
-import Lodges from './lodges/Lodges';
+import Lodges from './display-lodge/Lodges';
 import Login from './login/Login';
 import Navbar from './navbar/Navbar';
-import ReservationEntityDisplay from './display-entity/ReservationEntity';
-import ReservationEntityDisplayImages from './display-entity/ReservationEntityDisplayImages';
-import ReservationEntityDisplayPricelist from './display-entity/ReservationEntityDisplayPricelist';
-import ReservationEntityDisplayRules from './display-entity/ReservationEntityDisplayRules';
+import LodgeDisplay from './display-lodge/LodgeDisplay';
+import LodgeDisplayImages from './display-lodge/LodgeDisplayImages';
+import LodgeDisplayPricelist from './display-lodge/LodgeDisplayPricelist';
+import LodgeDisplayRules from './display-lodge/LodgeDisplayRules';
 import Signup from './signup/Signup';
 import SignupChoice from './signup/SignupChoice';
 import ReservationNewEntity from './reservation-entities/ReservationNewEntity';
-import ReservationEntityAction from './display-entity/ReservationEntityAction';
+import LodgeAction from './display-lodge/LodgeAction';
 import HomeScreen from './home/HomeScreen';
 import ListScreen from './display-list/ListScreen';
 import Verification from './login/Verification';
 import ServiceSignupRequests from './service-signup-requests/ServiceSignupRequests';
+import Ships from './ships/Ships';
+import ShipDisplay from './display-ship/ShipDisplay';
+import ShipDisplayRules from './display-ship/ShipDisplayRules';
+import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
+import ShipDisplayKit from './display-ship/ShipDisplayKit';
 
 const MyRouter = () => {
   return (
@@ -45,24 +50,42 @@ const MyRouter = () => {
         <Route path='/lodges'>
           <Lodges />
         </Route>
-        <Route path='/reservationEntities/:id'>
-          <ReservationEntityDisplay />
+        <Route path='/ships'>
+          <Ships/>
         </Route>
-        <Route path='/reservationEntitiesImages/:id'>
-          <ReservationEntityDisplayImages />
+        <Route path='/ship/:id'>
+        <ShipDisplay/>
         </Route>
-        <Route path='/reservationEntitiesPriceList/:id'>
-          <ReservationEntityDisplayPricelist />
+        <Route path='/lodge/:id'>
+          <LodgeDisplay />
         </Route>
-        <Route path='/reservationEntitiesRules/:id'>
-          <ReservationEntityDisplayRules />
+        <Route path='/lodgeImages/:id'>
+          <LodgeDisplayImages />
         </Route>
+        <Route path='/lodgePriceList/:id'>
+          <LodgeDisplayPricelist />
+        </Route>
+        <Route path='/shipPriceList/:id'>
+          <ShipDisplayPricelist/>
+        </Route>
+        <Route path='/lodgeRules/:id'>
+          <LodgeDisplayRules />
+        </Route>
+        <Route path='/shipRules/:id'>
+          <ShipDisplayRules/>
+        </Route>
+        <Route path='/lodgeAction/:id'>
+          <LodgeAction />
+        </Route>
+
+        <Route path='/shipKit/:id'>
+          <ShipDisplayKit/>
+        </Route>
+        
         <Route path='/reservationNewEntity'>
           <ReservationNewEntity />
         </Route>
-        <Route path='/reservationEntitiesAction/:id'>
-          <ReservationEntityAction />
-        </Route>
+        
         <Route path='/serviceSignupRequests'>
           <ServiceSignupRequests />
         </Route>

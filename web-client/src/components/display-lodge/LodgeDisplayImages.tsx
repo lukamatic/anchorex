@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 
-const ReservationEntityDisplayImages = () => {
+const LodgeDisplayImages = () => {
   const params: { id: string } = useParams();
   const ent1 = require("./../../images/ent1.jpg");
   const ent2 = require("./../../images/ent2.jpg");
@@ -15,7 +15,7 @@ const ReservationEntityDisplayImages = () => {
         <nav className="flex flex-col bg-blue-500 w-64 float-left h-screen px-4 tex-gray-900 border border-blue-900">
           <div className="mt-10 mb-4">
             <ul className="ml-4">
-              <Link to={"/reservationEntities/" + params.id}>
+              <Link to={"/lodge/" + params.id}>
                 <li
                   className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   
                 hover:bg-gray-300  hover:font-bold rounded rounded-lg"
@@ -41,7 +41,7 @@ const ReservationEntityDisplayImages = () => {
                 </li>
               </Link>
 
-              <Link to={"/reservationEntitiesImages/" + params.id}>
+              <Link to={"/lodgeImages/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-black-100 flex flex-row bg-gray-300 border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -63,7 +63,7 @@ const ReservationEntityDisplayImages = () => {
                   <span className="ml-2">Images</span>
                 </li>
               </Link>
-              <Link to={"/reservationEntitiesAction/" + params.id}>
+              <Link to={"/lodgeAction/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -93,7 +93,7 @@ const ReservationEntityDisplayImages = () => {
                   <span className="ml-2">Quick reservation</span>
                 </li>
               </Link>
-              <Link to={"/reservationEntitiesPricelist/" + params.id}>
+              <Link to={"/lodgePricelist/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -114,7 +114,7 @@ const ReservationEntityDisplayImages = () => {
                   <span className="ml-2">Pricelist</span>
                 </li>
               </Link>
-              <Link to={"/reservationEntitiesRules/" + params.id}>
+              <Link to={"/lodgeRules/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -164,4 +164,4 @@ const ReservationEntityDisplayImages = () => {
   );
 };
 
-export default ReservationEntityDisplayImages;
+export default LodgeDisplayImages;

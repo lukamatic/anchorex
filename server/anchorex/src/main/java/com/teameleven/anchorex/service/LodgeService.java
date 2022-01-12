@@ -10,7 +10,7 @@ import java.util.List;
 public interface LodgeService {
     Lodge create (CreateLodgeDTO createLodgeDTO);
 
-    List<LodgeDTO> getLodges();
+    List<LodgeDTO> getLodges(Long id);
 
     void deleteLodge(Long id);
 

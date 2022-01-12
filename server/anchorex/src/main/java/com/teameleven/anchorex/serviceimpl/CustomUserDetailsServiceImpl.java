@@ -2,7 +2,6 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.repository.UserRepository;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

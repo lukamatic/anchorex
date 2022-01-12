@@ -1,7 +1,6 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Lodge;
-import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;

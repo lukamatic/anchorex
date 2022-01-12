@@ -1,8 +1,5 @@
 package com.teameleven.anchorex.serviceimpl;
 
-import java.util.Collection;
-import java.util.UUID;
-
 import com.teameleven.anchorex.domain.Role;
 import com.teameleven.anchorex.domain.ServiceSignupRequest;
 import com.teameleven.anchorex.domain.User;
@@ -11,13 +8,15 @@ import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.repository.UserRepository;
 import com.teameleven.anchorex.service.*;
-
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Collection;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {

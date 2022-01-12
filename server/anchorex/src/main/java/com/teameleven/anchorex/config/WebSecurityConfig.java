@@ -4,7 +4,6 @@ import com.teameleven.anchorex.security.auth.RestAuthenticationEntryPoint;
 import com.teameleven.anchorex.security.auth.TokenAuthenticationFilter;
 import com.teameleven.anchorex.serviceimpl.CustomUserDetailsServiceImpl;
 import com.teameleven.anchorex.util.TokenUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

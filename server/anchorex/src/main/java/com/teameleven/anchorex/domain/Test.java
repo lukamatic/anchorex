@@ -1,12 +1,11 @@
 package com.teameleven.anchorex.domain;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-
 import com.teameleven.anchorex.dto.test.CreateTestDto;
-
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @SQLDelete(sql = "UPDATE test SET deleted = true WHERE id = ?")

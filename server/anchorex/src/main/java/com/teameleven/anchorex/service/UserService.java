@@ -1,10 +1,10 @@
 package com.teameleven.anchorex.service;
 
-import java.util.Collection;
-
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
+
+import java.util.Collection;
 
 public interface UserService {
 

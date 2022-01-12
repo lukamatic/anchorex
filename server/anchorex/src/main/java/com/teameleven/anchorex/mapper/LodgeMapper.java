@@ -2,7 +2,6 @@ package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
-import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 
 public class LodgeMapper {
     public static CreateLodgeDTO LodgeToLodgeDTO(Lodge lodge){

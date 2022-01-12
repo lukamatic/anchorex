@@ -15,8 +15,8 @@ import javax.mail.internet.MimeMessage;
 public class AuthServiceImpl implements AuthService {
     private final JavaMailSender javaMailSender;
 
-    public AuthServiceImpl(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
+    public AuthServiceImpl() {
+        this.javaMailSender = new JavaMailSenderImpl();
     }
 
     @Override

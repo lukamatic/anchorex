@@ -1,7 +1,5 @@
 package com.teameleven.anchorex.dto.reservationEntity;
 
-import com.teameleven.anchorex.domain.Service;
-
 import java.util.Set;
 
 public class CreateLodgeDTO {

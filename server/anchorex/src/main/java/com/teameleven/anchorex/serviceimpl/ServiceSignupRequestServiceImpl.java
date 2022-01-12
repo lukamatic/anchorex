@@ -8,6 +8,7 @@ import com.teameleven.anchorex.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,10 +21,10 @@ public class ServiceSignupRequestServiceImpl implements ServiceSignupRequestServ
     private final UserService userService;
     private final JavaMailSender javaMailSender;
 
-    public ServiceSignupRequestServiceImpl(ServiceSignupRequestRepository serviceSignupRequestRepository, UserService userService, JavaMailSender javaMailSender) {
+    public ServiceSignupRequestServiceImpl(ServiceSignupRequestRepository serviceSignupRequestRepository, UserService userService) {
         this.serviceSignupRequestRepository = serviceSignupRequestRepository;
         this.userService = userService;
-        this.javaMailSender = javaMailSender;
+        this.javaMailSender = new JavaMailSenderImpl();
     }
 
     @Override

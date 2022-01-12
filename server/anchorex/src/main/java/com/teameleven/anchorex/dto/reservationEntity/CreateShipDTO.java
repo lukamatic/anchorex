@@ -21,7 +21,7 @@ public class CreateShipDTO {
     private LocationDTO location;
 
     public CreateShipDTO() {
-
+        super();
     }
 
     public Long getOwnerId() {

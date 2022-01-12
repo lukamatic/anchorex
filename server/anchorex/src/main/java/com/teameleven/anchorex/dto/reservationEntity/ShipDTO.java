@@ -5,7 +5,7 @@ public class ShipDTO {
     private String name;
 
     public ShipDTO(){
-
+        super();
     }
 
     public Long getId() {

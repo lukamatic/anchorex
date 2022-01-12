@@ -54,15 +54,7 @@ public class ShipServiceImpl implements ShipService {
 
     @Override
     public Ship getShipById(Long id) {
-        if(checkIfShipExists(id))
-            return shipRepository.findById(id).get();
-        return null;
-    }
-
-    private boolean checkIfShipExists(Long id){
-        if(shipRepository.findById(id) != null)
-            return true;
-        return false;
+       return shipRepository.findById(id).get();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.teameleven.anchorex.domain;
 
-import com.teameleven.anchorex.enums.ReservationEntityType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +26,7 @@ public class Ship extends ReservationEntity{
     private double cancellationPercentage;
 
     public Ship(){
-
+        super();
     }
 
 

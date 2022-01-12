@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - cd/heroku-deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install npm dependencies for web-client
+        working-directory: ./web-client
+        run: npm ci
+
+      - name: Build web-client
+        working-directory: ./web-client
+        run: npm run build
+
+      - name: Move web-client build output to server/anchorex/src/main/resources/static directory
+        run: mv web-client/build server/anchorex/src/main/resources/static
+
+      - name: Deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          appdir: server/anchorex

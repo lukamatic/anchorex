@@ -2,17 +2,14 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.service.AuthService;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.InputStream;
 
 @Service
 public class AuthServiceImpl implements AuthService {

@@ -1,19 +1,13 @@
 package com.teameleven.anchorex.controller;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.LoginDto;
 import com.teameleven.anchorex.dto.UserTokenState;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
-
 import com.teameleven.anchorex.response.LoginResponse;
 import com.teameleven.anchorex.service.UserService;
 import com.teameleven.anchorex.util.TokenUtils;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -21,6 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")

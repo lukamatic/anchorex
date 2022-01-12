@@ -1,8 +1,6 @@
 package com.teameleven.anchorex.service;
 
-import com.teameleven.anchorex.domain.Test;
 import com.teameleven.anchorex.domain.UserValidationToken;
-import com.teameleven.anchorex.dto.test.UpdateTestDto;
 
 public interface UserValidationTokenService {
 

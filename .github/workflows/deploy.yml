@@ -14,7 +14,7 @@ jobs:
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: ${{ matrix.node-version }}
 
       - name: Install npm dependencies for web-client
         working-directory: ./web-client

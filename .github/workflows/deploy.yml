@@ -23,6 +23,8 @@ jobs:
       - name: Build web-client
         working-directory: ./web-client
         run: npm run build
+        env:
+          CI: false
 
       - name: Move web-client build output to server/anchorex/src/main/resources/static directory
         run: mv web-client/build server/anchorex/src/main/resources/static

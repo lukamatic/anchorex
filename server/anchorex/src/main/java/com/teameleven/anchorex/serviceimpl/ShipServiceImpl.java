@@ -9,6 +9,7 @@ import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.enums.ServiceType;
 import com.teameleven.anchorex.mapper.LocationMapper;
+import com.teameleven.anchorex.mapper.ServiceMapper;
 import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
@@ -49,6 +50,27 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public void deleteShip(Long id) {
         shipRepository.deleteShip(id);
+    }
+
+    @Override
+    public Ship getShipById(Long id) {
+        return shipRepository.findById(id).get();
+    }
+
+    @Override
+    public void updateShip(Ship ship) {
+        shipRepository.updateShip(ship.getDescription(),ship.getName(), ship.getLength(), ship.getEngineCount(),
+        ship.getEnginePower(), ship.getRulesOfConduct(), ship.getMaxSpeed(), ship.getNavigationKit(),
+        ship.getCapacity(), ship.getFishingKit(), ship.getCancellationPercentage(), ship.getShipType(), ship.getId());
+        locationRepository.updateLocation(ship.location.getLatitude(), ship.location.getLongitude(),
+                ship.location.getAddress(), ship.location.getCity(), ship.location.getCountry(), ship.getId());
+    }
+
+    @Override
+    public void addService(ServiceDTO serviceDTO, Long id) {
+        Service service = ServiceMapper.serviceDTOToService(serviceDTO);
+        service.setEntity(getShipById(id));
+        serviceRepository.save(service);
     }
 
     private void setLocation(LocationDTO locationDTO, Ship ship){

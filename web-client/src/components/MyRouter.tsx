@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import FishingLessons from './fishing-lessons/FishingLessons';
-import Lodges from './lodges/Lodges';
+import Lodges from './display-lodge/Lodges';
 import Login from './login/Login';
 import Navbar from './navbar/Navbar';
 import LodgeDisplay from './display-lodge/LodgeDisplay';
@@ -16,6 +16,10 @@ import ListScreen from './display-list/ListScreen';
 import Verification from './login/Verification';
 import ServiceSignupRequests from './service-signup-requests/ServiceSignupRequests';
 import Ships from './ships/Ships';
+import ShipDisplay from './display-ship/ShipDisplay';
+import ShipDisplayRules from './display-ship/ShipDisplayRules';
+import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
+import ShipDisplayKit from './display-ship/ShipDisplayKit';
 
 const MyRouter = () => {
   return (
@@ -49,6 +53,9 @@ const MyRouter = () => {
         <Route path='/ships'>
           <Ships/>
         </Route>
+        <Route path='/ship/:id'>
+        <ShipDisplay/>
+        </Route>
         <Route path='/lodge/:id'>
           <LodgeDisplay />
         </Route>
@@ -58,11 +65,21 @@ const MyRouter = () => {
         <Route path='/lodgePriceList/:id'>
           <LodgeDisplayPricelist />
         </Route>
+        <Route path='/shipPriceList/:id'>
+          <ShipDisplayPricelist/>
+        </Route>
         <Route path='/lodgeRules/:id'>
           <LodgeDisplayRules />
         </Route>
+        <Route path='/shipRules/:id'>
+          <ShipDisplayRules/>
+        </Route>
         <Route path='/lodgeAction/:id'>
           <LodgeAction />
+        </Route>
+
+        <Route path='/shipKit/:id'>
+          <ShipDisplayKit/>
         </Route>
         
         <Route path='/reservationNewEntity'>

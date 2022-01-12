@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Column;
 import java.util.List;
 
 public interface ShipRepository extends JpaRepository<Ship, Long> {
@@ -18,4 +19,13 @@ public interface ShipRepository extends JpaRepository<Ship, Long> {
     @Modifying
     @Query(value = "UPDATE ReservationEntity r SET r.deleted=true WHERE r.id=?1 ")
     void deleteShip (Long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE Ship s SET s.description=?1, s.name=?2, s.length=?3, s.engineCount=?4, s.enginePower=?5, " +
+            "s.rulesOfConduct=?6, s.maxSpeed=?7, s.navigationKit=?8, s.capacity=?9, s.fishingKit=?10, " +
+            "s.cancellationPercentage=?11, s.shipType=?12 WHERE s.id=?13")
+    void updateShip(String description, String name, double length, Integer engineCount,
+                     double enginePower, String rulesOfConduct, double maxSpeed, String navigationKit,
+                     Integer capacity, String fishingKit, double cancellationPercentage, String shipType, Long id);
 }

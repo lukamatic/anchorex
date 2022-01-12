@@ -1,8 +1,10 @@
 package com.teameleven.anchorex.controller;
 
+import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
+import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.service.ShipService;
 import org.springframework.http.HttpStatus;
@@ -38,5 +40,23 @@ public class ShipController {
     public ResponseEntity<Void> deleteShip(@PathVariable Long id){
         shipService.deleteShip(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(path="/ship/{id}")
+    public ResponseEntity<Ship> getShip(@PathVariable Long id){
+        Ship ship = shipService.getShipById(id);
+        return new ResponseEntity<>(ship, HttpStatus.OK);
+    }
+
+    @PutMapping(path="/updateShip", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updateShip(@RequestBody Ship ship){
+        shipService.updateShip(ship);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(path="/addShipService/{id}")
+    public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
+        shipService.addService(service, id);
+        return new ResponseEntity<>(service, HttpStatus.CREATED);
     }
 }

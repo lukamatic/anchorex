@@ -5,7 +5,7 @@ import AuthContext from "../../context/auth-context";
 import { UserRole } from "../../model/user-role.enum";
 import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
 
-const LodgeDisplayRules = () => {
+const ShipDisplayRules = () => {
   const params: { id: string } = useParams();
   const [rules, setRules] = useState([""]);
   const [currentRule, setCurrentRule] = useState("");
@@ -16,7 +16,7 @@ const LodgeDisplayRules = () => {
 
   useEffect(() => {
     axios
-      .get("/api/reservationEntity/lodge/" + params.id, {
+      .get("/api/reservationEntity/ship/" + params.id, {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -75,7 +75,7 @@ const LodgeDisplayRules = () => {
     }
     setRulesOfConduct(newRules)
     entity.rulesOfConduct = newRules
-    axios.put("/api/reservationEntity/updateLodge", entity, {
+    axios.put("/api/reservationEntity/updateShip", entity, {
         headers: {
           "Access-Control-Allow-Methods": "PUT",
           "Access-Control-Allow-Origin": "*",
@@ -96,7 +96,7 @@ const LodgeDisplayRules = () => {
         <nav className="flex flex-col bg-blue-500 w-64 float-left h-screen px-4 tex-gray-900 border border-blue-900">
           <div className="mt-10 mb-4">
             <ul className="ml-4">
-              <Link to={"/lodge/" + params.id}>
+              <Link to={"/ship/" + params.id}>
                 <li
                   className="mb-2 px-4 py-4 text-gray-100 flex flex-row border-gray-300 hover:text-black   
                 hover:bg-gray-300  hover:font-bold rounded rounded-lg"
@@ -122,7 +122,7 @@ const LodgeDisplayRules = () => {
                 </li>
               </Link>
 
-              <Link to={"/lodgeImages/" + params.id}>
+              <Link to={"/shipImages/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -144,7 +144,7 @@ const LodgeDisplayRules = () => {
                   <span className="ml-2">Images</span>
                 </li>
               </Link>
-              <Link to={"/lodgeAction/" + params.id}>
+              <Link to={"/shipAction/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -174,7 +174,7 @@ const LodgeDisplayRules = () => {
                   <span className="ml-2">Quick reservation</span>
                 </li>
               </Link>
-              <Link to={"/lodgePricelist/" + params.id}>
+              <Link to={"/shipPricelist/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -196,7 +196,7 @@ const LodgeDisplayRules = () => {
                 </li>
               </Link>
 
-              <Link to={"/lodgeRules/" + params.id}>
+              <Link to={"/shipRules/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-black-100 flex flex-row bg-gray-300 border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>
                     <svg
@@ -216,6 +216,33 @@ const LodgeDisplayRules = () => {
                     </svg>
                   </span>
                   <span className="ml-2">Conduct rules</span>
+                </li>
+              </Link>
+              <Link to={"/shipKit/" + params.id}>
+                <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
+                  <svg
+                    version="1.0"
+                    id="Layer_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                    x="0px"
+                    y="0px"
+                    fill="#FFFFFF"
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 100 100"
+                    enableBackground="new 0 0 100 100"
+                    xmlSpace="preserve"
+                  >
+                    <path
+                      d="M60,10.001c-7.363,0-13.333,5.97-13.333,13.333c0,6.204,4.258,11.373,10,12.861v35.471c0,6.445-5.225,11.666-11.667,11.666
+	c-6.445,0-11.667-5.221-11.667-11.666v-3.334H40L26.667,48.334v23.332c0,10.13,8.209,18.333,18.333,18.333
+	s18.333-8.203,18.333-18.333V36.195c5.739-1.488,10-6.657,10-12.861C73.333,15.971,67.363,10.001,60,10.001z M60,30
+	c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.667S63.682,30,60,30z"
+                    />
+                  </svg>
+
+                  <span className="ml-2">Ship kit</span>
                 </li>
               </Link>
             </ul>
@@ -242,7 +269,7 @@ const LodgeDisplayRules = () => {
                     </svg>
                   </span>
                   <p className="ml-2">{r}</p>
-                  {userRole === UserRole.LODGE_OWNER ?(
+                  {userRole === UserRole.SHIP_OWNER ?(
                     
                     <button
                       className="btnBlueWhite w-12 h-8 ml-8"
@@ -268,7 +295,7 @@ const LodgeDisplayRules = () => {
               ))}
             </ul>
           </div>
-          {userRole === UserRole.LODGE_OWNER ? (
+          {userRole === UserRole.SHIP_OWNER ? (
           <div className="flex flex-wrap items-center mb-4 mt-8">
             <input
               className="input resize-none w-3/5 ml-12 mb-4"
@@ -300,4 +327,4 @@ const LodgeDisplayRules = () => {
   );
 };
 
-export default LodgeDisplayRules;
+export default ShipDisplayRules;

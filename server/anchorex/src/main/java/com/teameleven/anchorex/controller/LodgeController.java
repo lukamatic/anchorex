@@ -1,12 +1,10 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Lodge;
-import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.service.LodgeService;
-import com.teameleven.anchorex.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +17,9 @@ import java.util.List;
 public class LodgeController {
 
     private final LodgeService lodgeService;
-    private final UserService userService;
 
-    public LodgeController(LodgeService lodgeService, UserService userService) {
+    public LodgeController(LodgeService lodgeService) {
         this.lodgeService = lodgeService;
-        this.userService = userService;
     }
 
     @PostMapping(path="/createLodge", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

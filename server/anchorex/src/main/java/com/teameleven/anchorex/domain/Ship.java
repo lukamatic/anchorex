@@ -31,22 +31,6 @@ public class Ship extends ReservationEntity{
     }
 
 
-    public Ship(Long id, Long ownerId, String name, String description, double averageRating, String rulesOfConduct,
-                ReservationEntityType reservationEntityType, boolean deleted, String shipType, double length,
-                Integer engineCount, double enginePower, double maxSpeed, String navigationKit, Integer capacity,
-                String fishingKit, double cancellationPercentage) {
-        super(id, ownerId, name, description, averageRating, rulesOfConduct, reservationEntityType, deleted);
-        this.shipType = shipType;
-        this.length = length;
-        this.engineCount = engineCount;
-        this.enginePower = enginePower;
-        this.maxSpeed = maxSpeed;
-        this.navigationKit = navigationKit;
-        this.capacity = capacity;
-        this.fishingKit = fishingKit;
-        this.cancellationPercentage = cancellationPercentage;
-    }
-
     public String getShipType() {
         return shipType;
     }

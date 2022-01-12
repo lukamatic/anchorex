@@ -4,7 +4,9 @@ public class ShipDTO {
     private Long id;
     private String name;
 
-    public ShipDTO(){}
+    public ShipDTO(){
+
+    }
 
     public Long getId() {
         return id;

@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShipMapper {
+
+    private ShipMapper(){
+
+    }
+
     public static Ship shipDTOToShip(CreateShipDTO shipDTO){
         Ship ship = new Ship();
         ship.setCapacity(shipDTO.getCapacity());

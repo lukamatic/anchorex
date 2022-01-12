@@ -2,7 +2,6 @@ package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 

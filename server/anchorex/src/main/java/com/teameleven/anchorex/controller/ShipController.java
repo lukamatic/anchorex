@@ -1,9 +1,7 @@
 package com.teameleven.anchorex.controller;
 
-import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.service.ShipService;
@@ -45,6 +43,8 @@ public class ShipController {
     @GetMapping(path="/ship/{id}")
     public ResponseEntity<Ship> getShip(@PathVariable Long id){
         Ship ship = shipService.getShipById(id);
+        if(ship == null)
+            return new ResponseEntity<>(ship, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(ship, HttpStatus.OK);
     }
 

@@ -13,4 +13,8 @@ public class LocationMapper {
         location.setLongitude(locationDTO.getLongitude());
         return location;
     }
+
+    private LocationMapper(){
+
+    }
 }

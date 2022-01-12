@@ -20,7 +20,9 @@ public class CreateShipDTO {
     private Set<ServiceDTO> additionalServices;
     private LocationDTO location;
 
-    public CreateShipDTO() {}
+    public CreateShipDTO() {
+
+    }
 
     public Long getOwnerId() {
         return ownerId;

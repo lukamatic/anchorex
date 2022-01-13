@@ -2,6 +2,7 @@ package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
+import com.teameleven.anchorex.dto.reservationEntity.FreePeriodDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 import com.teameleven.anchorex.service.LodgeService;
@@ -62,5 +63,11 @@ public class LodgeController {
     public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
         lodgeService.addService(service, id);
         return new ResponseEntity<>(service, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path="/addFreePeriod/{id}")
+    public ResponseEntity<FreePeriodDTO> addFreePeriod(@RequestBody FreePeriodDTO freePeriod, @PathVariable Long id){
+        lodgeService.addFreePeriod(freePeriod, id);
+        return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
     }
 }

@@ -36,12 +36,7 @@ const ReservationNewEntity = () => {
   const [capacity, setCapacity] = useState(0);
   const [fishingEquipment, setFishingEquipment] = useState([""]);
   const [cancellationPercentage, setCancellationPercentage] = useState(0);
-  const navigationKits =[
-    "GPS",
-    "RADAR",
-    "VHF-RADIO",
-    "FISHFINDER",
-  ];
+  const navigationKits = ["GPS", "RADAR", "VHF-RADIO", "FISHFINDER"];
 
   const [newRegularServices, setRegularService] = useState([""]);
   const [newRegularServicePrices, setRegularServicePrices] = useState([0]);
@@ -594,27 +589,34 @@ const ReservationNewEntity = () => {
       setErrorText("");
 
       var rulesOfConduct = "";
+
       for (let i = 0; i < conductRules.length; i++) {
-        rulesOfConduct += "#";
-        rulesOfConduct += conductRules[i];
+        if (conductRules[i] !== "") {
+          rulesOfConduct += "#";
+          rulesOfConduct += conductRules[i];
+        }
       }
       const regularServices = [];
       for (let i = 0; i < newRegularServices.length; i++) {
-        let info = newRegularServices[i];
-        let price = newRegularServicePrices[i];
-        regularServices[i] = {
-          info,
-          price,
-        };
+        if (newRegularServices[i] !== "") {
+          let info = newRegularServices[i];
+          let price = newRegularServicePrices[i];
+          regularServices[i] = {
+            info,
+            price,
+          };
+        }
       }
       const additionalServices = [];
       for (let i = 0; i < newAdditionalServices.length; i++) {
-        let info = newAdditionalServices[i];
-        let price = newAdditionalServicePrices[i];
-        additionalServices[i] = {
-          info,
-          price,
-        };
+        if (newAdditionalServices[i] !== "") {
+          let info = newAdditionalServices[i];
+          let price = newAdditionalServicePrices[i];
+          additionalServices[i] = {
+            info,
+            price,
+          };
+        }
       }
       const location = {
         latitude,
@@ -656,13 +658,17 @@ const ReservationNewEntity = () => {
       } else if (userRole === UserRole.SHIP_OWNER) {
         var fishingKit = "";
         for (let i = 0; i < fishingEquipment.length; i++) {
-          fishingKit += "#";
-          fishingKit += fishingEquipment[i];
+          if (fishingEquipment[i] !== "") {
+            fishingKit += "#";
+            fishingKit += fishingEquipment[i];
+          }
         }
         var navigationKit = "";
-        for(let i = 0; i < currentNavigation.length; i++){
-          navigationKit += "#";
-          navigationKit += currentNavigation[i]
+        for (let i = 0; i < currentNavigation.length; i++) {
+          if (currentNavigation[i] !== "") {
+            navigationKit += "#";
+            navigationKit += currentNavigation[i];
+          }
         }
         const newShip = {
           ownerId,
@@ -680,9 +686,9 @@ const ReservationNewEntity = () => {
           cancellationPercentage,
           regularServices,
           additionalServices,
-          location
+          location,
         };
-        console.log(newShip)
+        console.log(newShip);
         axios
           .post("/api/reservationEntity/createShip", newShip, {
             headers: {
@@ -694,7 +700,7 @@ const ReservationNewEntity = () => {
           })
           .then((response) => {
             window.alert("Poslato");
-            console.log(newShip)
+            console.log(newShip);
             history.push("/ships");
           })
           .catch((error) => {

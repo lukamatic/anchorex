@@ -2,6 +2,7 @@ package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
+import com.teameleven.anchorex.dto.reservationEntity.FreePeriodDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
 
@@ -21,4 +22,6 @@ public interface LodgeService {
     void deleteService(Long id);
 
     void addService(ServiceDTO service, Long id);
+
+    void addFreePeriod(FreePeriodDTO period, Long id);
 }

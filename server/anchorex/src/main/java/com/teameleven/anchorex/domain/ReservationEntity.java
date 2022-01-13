@@ -36,6 +36,10 @@ public class ReservationEntity {
     @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     public Set<Service> services = new HashSet<Service>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public Set<FreePeriod> periods = new HashSet<FreePeriod>();
+
     @OneToOne(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     public Location location;
 

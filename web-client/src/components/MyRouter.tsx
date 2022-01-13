@@ -20,6 +20,7 @@ import ShipDisplay from './display-ship/ShipDisplay';
 import ShipDisplayRules from './display-ship/ShipDisplayRules';
 import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
 import ShipDisplayKit from './display-ship/ShipDisplayKit';
+import LodgeCalendar from './display-lodge/LodgeCalendar';
 
 const MyRouter = () => {
   return (
@@ -76,6 +77,10 @@ const MyRouter = () => {
         </Route>
         <Route path='/lodgeAction/:id'>
           <LodgeAction />
+        </Route>
+
+        <Route path ='/lodgeCalendar/:id'>
+          <LodgeCalendar/>
         </Route>
 
         <Route path='/shipKit/:id'>

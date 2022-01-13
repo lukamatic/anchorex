@@ -1,8 +1,8 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Ship;
-import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
+import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
+import com.teameleven.anchorex.dto.reservationentity.ShipDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 
 import java.util.ArrayList;

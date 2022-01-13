@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto.reservationEntity;
+package com.teameleven.anchorex.dto.reservationentity;
 
 import com.teameleven.anchorex.enums.ServiceType;
 
@@ -7,6 +7,7 @@ public class ServiceDTO {
     private double price;
     private ServiceType type;
     public ServiceDTO() {
+        super();
     }
 
     public ServiceType getType() {

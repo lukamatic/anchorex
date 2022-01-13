@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto.reservationEntity;
+package com.teameleven.anchorex.dto.reservationentity;
 
 import java.util.Set;
 
@@ -16,6 +16,7 @@ public class CreateLodgeDTO {
 
 
     public CreateLodgeDTO() {
+        super();
     }
 
     public LocationDTO getLocation() {

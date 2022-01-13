@@ -5,6 +5,7 @@ public class LodgeDTO {
     private String name;
 
     public LodgeDTO() {
+        super();
     }
 
     public LodgeDTO(Long id, String name) {

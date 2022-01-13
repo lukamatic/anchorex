@@ -8,6 +8,7 @@ public class LocationDTO {
     private String country;
 
     public LocationDTO() {
+        super();
     }
 
     public double getLatitude() {

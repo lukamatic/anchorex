@@ -7,6 +7,7 @@ public class ServiceDTO {
     private double price;
     private ServiceType type;
     public ServiceDTO() {
+        super();
     }
 
     public ServiceType getType() {

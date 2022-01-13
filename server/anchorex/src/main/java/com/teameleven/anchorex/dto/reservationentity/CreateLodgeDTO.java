@@ -16,6 +16,7 @@ public class CreateLodgeDTO {
 
 
     public CreateLodgeDTO() {
+        super();
     }
 
     public LocationDTO getLocation() {

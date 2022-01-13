@@ -4,7 +4,7 @@ import com.teameleven.anchorex.domain.FreePeriod;
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Service;
-import com.teameleven.anchorex.dto.reservationEntity.*;
+import com.teameleven.anchorex.dto.reservationentity.*;
 import com.teameleven.anchorex.enums.ServiceType;
 import com.teameleven.anchorex.mapper.LocationMapper;
 import com.teameleven.anchorex.mapper.LodgeMapper;
@@ -33,7 +33,7 @@ public class LodgeServiceImpl implements LodgeService {
 
     @Override
     public Lodge create(CreateLodgeDTO createLodgeDTO){
-        Lodge lodge = LodgeMapper.LodgeDTOToLodge(createLodgeDTO);
+        Lodge lodge = LodgeMapper.lodgeDTOToLodge(createLodgeDTO);
         lodgeRepository.save(lodge);
         setLocation(createLodgeDTO.getLocation(), lodge);
         setAdditionalServices(createLodgeDTO.getAdditionalServices(), lodge);

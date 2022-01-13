@@ -1,9 +1,9 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Ship;
-import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
-import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
+import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
+import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationentity.ShipDTO;
 import com.teameleven.anchorex.service.ShipService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

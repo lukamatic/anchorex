@@ -1,7 +1,7 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Location;
-import com.teameleven.anchorex.dto.reservationEntity.LocationDTO;
+import com.teameleven.anchorex.dto.reservationentity.LocationDTO;
 
 public class LocationMapper {
     public static Location locationDTOToLocation(LocationDTO locationDTO){

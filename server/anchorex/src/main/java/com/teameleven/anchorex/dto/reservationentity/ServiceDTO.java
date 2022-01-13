@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto.reservationEntity;
+package com.teameleven.anchorex.dto.reservationentity;
 
 import com.teameleven.anchorex.enums.ServiceType;
 

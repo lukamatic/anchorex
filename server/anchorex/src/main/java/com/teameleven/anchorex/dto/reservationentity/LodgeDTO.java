@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto.reservationEntity;
+package com.teameleven.anchorex.dto.reservationentity;
 
 public class LodgeDTO {
     private Long id;

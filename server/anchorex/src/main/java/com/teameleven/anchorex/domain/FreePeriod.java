@@ -1,7 +1,6 @@
 package com.teameleven.anchorex.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.teameleven.anchorex.domain.ReservationEntity;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Lodge;
-import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
+import com.teameleven.anchorex.dto.reservationentity.CreateLodgeDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 
 public class LodgeMapper {
@@ -17,7 +17,7 @@ public class LodgeMapper {
         return dto;
     }
 
-    public static Lodge LodgeDTOToLodge(CreateLodgeDTO createLodgeDTO){
+    public static Lodge lodgeDTOToLodge(CreateLodgeDTO createLodgeDTO){
         Lodge lodge = new Lodge();
         lodge.setDescription(createLodgeDTO.getDescription());
         lodge.setDeleted(false);

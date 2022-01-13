@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto.reservationEntity;
+package com.teameleven.anchorex.dto.reservationentity;
 
 public class LocationDTO {
     private double latitude;

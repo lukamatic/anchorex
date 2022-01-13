@@ -1,7 +1,7 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Service;
-import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
 
 public class ServiceMapper {
     public static Service serviceDTOToService(ServiceDTO serviceDTO){

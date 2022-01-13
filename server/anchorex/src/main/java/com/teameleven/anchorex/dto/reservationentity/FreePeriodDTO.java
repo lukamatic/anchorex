@@ -1,14 +1,14 @@
-package com.teameleven.anchorex.dto.reservationEntity;
+package com.teameleven.anchorex.dto.reservationentity;
 
 import java.util.Date;
 
 public class FreePeriodDTO {
-    public Date startDate;
-    public Date endDate;
+    private Date startDate;
+    private Date endDate;
 
 
     public FreePeriodDTO() {
-
+        super();
     }
 
     public Date getStartDate() {

@@ -1,10 +1,14 @@
 package com.teameleven.anchorex.controller;
 
+import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
+import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;
 import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationentity.ShipDTO;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ShipService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reservationEntity")
+@RequestMapping("/api/ship")
 public class ShipController {
 
     private final ShipService shipService;
+
+    @Autowired
+    private FreePeriodService freePeriodService;
 
     public ShipController(ShipService shipService) {
         this.shipService = shipService;
@@ -40,7 +47,7 @@ public class ShipController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path="/ship/{id}")
+    @GetMapping(path="/{id}")
     public ResponseEntity<Ship> getShip(@PathVariable Long id){
         Ship ship = shipService.getShipById(id);
         if(ship == null)
@@ -58,5 +65,12 @@ public class ShipController {
     public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
         shipService.addService(service, id);
         return new ResponseEntity<>(service, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path="/addFreePeriod/{id}")
+    public ResponseEntity<FreePeriodDTO> addFreePeriod(@RequestBody FreePeriodDTO freePeriod, @PathVariable Long id){
+        Ship ship = shipService.getShipById(id);
+        freePeriodService.addFreePeriod(freePeriod, ship);
+        return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
     }
 }

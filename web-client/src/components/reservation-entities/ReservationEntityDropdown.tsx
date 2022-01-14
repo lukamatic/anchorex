@@ -20,11 +20,11 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
 
   const remove =
     (id: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      var url = "/api/reservationEntity/";
+      var url = "/api/";
       if (userRole === UserRole.LODGE_OWNER) {
-        url += "deleteLodge/";
+        url += "lodge/deleteLodge/";
       } else if (userRole === UserRole.SHIP_OWNER) {
-        url += "deleteShip/";
+        url += "ship/deleteShip/";
       }
       axios
         .delete(url + id, {

@@ -16,7 +16,7 @@ const LodgeDisplayRules = () => {
 
   useEffect(() => {
     axios
-      .get("/api/reservationEntity/lodge/" + params.id, {
+      .get("/api/lodge/" + params.id, {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -75,7 +75,7 @@ const LodgeDisplayRules = () => {
     }
     setRulesOfConduct(newRules)
     entity.rulesOfConduct = newRules
-    axios.put("/api/reservationEntity/updateLodge", entity, {
+    axios.put("/api/lodge/updateLodge", entity, {
         headers: {
           "Access-Control-Allow-Methods": "PUT",
           "Access-Control-Allow-Origin": "*",

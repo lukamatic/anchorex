@@ -40,7 +40,7 @@ const LodgeDisplay = () => {
 
   useEffect(() => {
     axios
-      .get("/api/reservationEntity/lodge/" + parameters.id, {
+      .get("/api/lodge/" + parameters.id, {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -159,7 +159,7 @@ const LodgeDisplay = () => {
     entity.location = location;
 
     axios
-      .put("/api/reservationEntity/updateLodge", entity, {
+      .put("/api/lodge/updateLodge", entity, {
         headers: {
           "Access-Control-Allow-Methods": "PUT",
           "Access-Control-Allow-Origin": "*",

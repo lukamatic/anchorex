@@ -23,5 +23,4 @@ public interface LodgeService {
 
     void addService(ServiceDTO service, Long id);
 
-    void addFreePeriod(FreePeriodDTO period, Long id);
 }

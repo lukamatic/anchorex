@@ -19,7 +19,7 @@ const LodgeDisplayPricelist = () => {
   const [services, setServices] = useState([{id:0, info, price, type }]);
   useEffect(() => {
     axios
-      .get("/api/reservationEntity/lodge/" + params.id, {
+      .get("/api/lodge/" + params.id, {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -64,7 +64,7 @@ const LodgeDisplayPricelist = () => {
     (service: { info: string; price: number; type: string }) =>
     (event: React.MouseEvent<HTMLButtonElement>) => {
       axios
-      .post("/api/reservationEntity/addService/" + params.id, service, {
+      .post("/api/lodge/addService/" + params.id, service, {
         headers: {
           Accept: "application/json",
           "Content-type": "application/json",
@@ -82,7 +82,7 @@ const LodgeDisplayPricelist = () => {
 
   const removeService =
     (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      axios.delete("/api/reservationEntity/deleteService/" + index,{
+      axios.delete("/api/lodge/deleteService/" + index,{
         headers:{
            Accept : 'application/json',
           'Content-type': 'application/json',

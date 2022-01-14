@@ -15,12 +15,13 @@ import HomeScreen from './home/HomeScreen';
 import ListScreen from './display-list/ListScreen';
 import Verification from './login/Verification';
 import ServiceSignupRequests from './service-signup-requests/ServiceSignupRequests';
-import Ships from './ships/Ships';
 import ShipDisplay from './display-ship/ShipDisplay';
 import ShipDisplayRules from './display-ship/ShipDisplayRules';
 import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
 import ShipDisplayKit from './display-ship/ShipDisplayKit';
 import LodgeCalendar from './display-lodge/LodgeCalendar';
+import Ships from './display-ship/Ships';
+import ShipCalendar from './display-ship/ShipCalendar';
 
 const MyRouter = () => {
   return (
@@ -79,8 +80,12 @@ const MyRouter = () => {
           <LodgeAction />
         </Route>
 
-        <Route path ='/lodgeCalendar/:id'>
+        <Route path='/lodgeCalendar/:id'>
           <LodgeCalendar/>
+        </Route>
+
+        <Route path='/shipCalendar/:id'>
+          <ShipCalendar/>
         </Route>
 
         <Route path='/shipKit/:id'>

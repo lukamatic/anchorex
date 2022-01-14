@@ -22,13 +22,11 @@ public class LodgeServiceImpl implements LodgeService {
     private final LodgeRepository lodgeRepository;
     private final ServiceRepository serviceRepository;
     private final LocationRepository locationRepository;
-    private final FreePeriodRepository freePeriodRepository;
 
-    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository, FreePeriodRepository freePeriodRepository) {
+    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository) {
         this.lodgeRepository = lodgeRepository;
         this.serviceRepository = additionalServiceRepository;
         this.locationRepository = locationRepository;
-        this.freePeriodRepository = freePeriodRepository;
     }
 
     @Override
@@ -77,90 +75,7 @@ public class LodgeServiceImpl implements LodgeService {
         serviceRepository.save(service);
     }
 
-    @Override
-    public void addFreePeriod(FreePeriodDTO periodDTO, Long id) {
-        if(checkIfPeriodIsValid(periodDTO, id)) {
-            checkForOverlapingPeriods(periodDTO, id);
-            checkForInbetweenPeriods(periodDTO, id);
-        }
-    }
 
-    private void checkForInbetweenPeriods(FreePeriodDTO periodDTO, Long id){
-
-        List<FreePeriod> busyPeriods = new ArrayList<>();
-        List<FreePeriod> newPeriods = new ArrayList<>();
-        for (FreePeriod freePeriod : freePeriodRepository.getFreePeriods(id)){
-            if(((periodDTO.getEndDate().after(freePeriod.getStartDate())) ||
-                    (periodDTO.getEndDate().compareTo(freePeriod.getStartDate()) == 0))
-                    &&(periodDTO.getEndDate().before(freePeriod.getEndDate()))){
-                busyPeriods.add(freePeriod);
-                FreePeriod newPeriod = new FreePeriod();
-                newPeriod.setEntity(getLodgeById(id));
-                newPeriod.setStartDate(periodDTO.getStartDate());
-                newPeriod.setEndDate(freePeriod.getEndDate());
-                newPeriods.add(newPeriod);
-            }
-            else if(((freePeriod.getEndDate().after(periodDTO.getStartDate())) ||
-                    (freePeriod.getEndDate().compareTo(periodDTO.getStartDate()) == 0))
-            &&(freePeriod.getEndDate().before(periodDTO.getEndDate()))){
-                busyPeriods.add(freePeriod);
-                FreePeriod newPeriod = new FreePeriod();
-                newPeriod.setEntity(getLodgeById(id));
-                newPeriod.setStartDate(freePeriod.getStartDate());
-                newPeriod.setEndDate(periodDTO.getEndDate());
-                newPeriods.add(newPeriod);
-            }
-        }
-        if(newPeriods.isEmpty()){
-            FreePeriod newPeriod = new FreePeriod();
-            newPeriod.setEntity(getLodgeById(id));
-            newPeriod.setEndDate(periodDTO.getEndDate());
-            newPeriod.setStartDate(periodDTO.getStartDate());
-            freePeriodRepository.save(newPeriod);
-        }
-        else if(newPeriods.size()>1){
-            FreePeriod newPeriod = new FreePeriod();
-            newPeriod.setEntity(getLodgeById(id));
-            newPeriod.setStartDate(newPeriods.get(0).getStartDate());
-            newPeriod.setEndDate(newPeriods.get(0).getEndDate());
-            for(FreePeriod period: newPeriods){
-                if(period.getStartDate().before(newPeriod.getStartDate())){
-                    newPeriod.setStartDate(period.getStartDate());
-                }
-                if(period.getEndDate().after(newPeriod.getEndDate())){
-                    newPeriod.setEndDate(period.getEndDate());
-                }
-            }
-            freePeriodRepository.save(newPeriod);
-        }
-        else{
-            freePeriodRepository.saveAll(newPeriods);
-        }
-        freePeriodRepository.deleteAll(busyPeriods);
-    }
-
-    private void checkForOverlapingPeriods(FreePeriodDTO periodDTO, Long id){
-        List<FreePeriod> busyPeriods = new ArrayList<>();
-        for (FreePeriod freePeriod : freePeriodRepository.getFreePeriods(id)) {
-            if(freePeriod.getStartDate().after(periodDTO.getStartDate())
-            && freePeriod.getEndDate().before(periodDTO.getEndDate())){
-                busyPeriods.add(freePeriod);
-            }
-        }
-        freePeriodRepository.deleteAll(busyPeriods);
-    }
-    private boolean checkIfPeriodIsValid(FreePeriodDTO periodDTO, Long id) {
-        List<FreePeriod> freePeriods = freePeriodRepository.getFreePeriods(id);
-        for (FreePeriod freePeriod : freePeriods) {
-            if ((freePeriod.getStartDate().before(periodDTO.getStartDate()) ||
-                    freePeriod.getStartDate().compareTo(periodDTO.getStartDate()) == 0) &&
-            (freePeriod.getEndDate().after(periodDTO.getEndDate()) ||
-                    freePeriod.getEndDate().compareTo(periodDTO.getEndDate()) == 0)){
-                return false;
-            }
-        }
-        return true;
-    }
 
     private List<LodgeDTO> getLodgesDTO(List<Lodge> lodges) {
         List<LodgeDTO> lodgesDTO = new ArrayList<>();

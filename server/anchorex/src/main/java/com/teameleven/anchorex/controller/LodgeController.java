@@ -5,7 +5,9 @@ import com.teameleven.anchorex.dto.reservationentity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;
 import com.teameleven.anchorex.dto.reservationentity.LodgeDTO;
 import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.LodgeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reservationEntity")
+@RequestMapping("/api/lodge")
 public class LodgeController {
 
     private final LodgeService lodgeService;
+
+    @Autowired
+    private FreePeriodService freePeriodService;
 
     public LodgeController(LodgeService lodgeService) {
         this.lodgeService = lodgeService;
@@ -41,7 +46,7 @@ public class LodgeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path="/lodge/{id}")
+    @GetMapping(path="/{id}")
     public ResponseEntity<Lodge> getLodge(@PathVariable Long id){
         Lodge lodge = lodgeService.getLodgeById(id);
         return new ResponseEntity<>(lodge, HttpStatus.OK);
@@ -67,7 +72,8 @@ public class LodgeController {
 
     @PostMapping(path="/addFreePeriod/{id}")
     public ResponseEntity<FreePeriodDTO> addFreePeriod(@RequestBody FreePeriodDTO freePeriod, @PathVariable Long id){
-        lodgeService.addFreePeriod(freePeriod, id);
+        Lodge lodge = lodgeService.getLodgeById(id);
+        freePeriodService.addFreePeriod(freePeriod, lodge);
         return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
     }
 }

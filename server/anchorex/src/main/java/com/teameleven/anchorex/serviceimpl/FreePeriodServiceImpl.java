@@ -1,7 +1,6 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.FreePeriod;
-import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.ReservationEntity;
 import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;
 import com.teameleven.anchorex.repository.FreePeriodRepository;

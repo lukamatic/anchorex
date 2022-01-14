@@ -1,6 +1,5 @@
 package com.teameleven.anchorex.controller;
 
-import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
 import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;

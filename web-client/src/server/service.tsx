@@ -82,7 +82,7 @@ export const getUserByTokenAsync = async (): Promise<httpResponse> => {
 	return axios(options)
 		.then((response) => {
 			console.log(response);
-			return { status: response?.status, message: response?.data };
+			return { status: response?.status, data: response?.data };
 		})
 		.catch((error) => {
 			console.log('error: ', error.response);

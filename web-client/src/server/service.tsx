@@ -16,7 +16,6 @@ export const validateUserTokenAsync = async (token: string | null): Promise<http
 
 	return axios(options)
 		.then((response) => {
-			console.log(response);
 			return { status: response?.status, message: response?.data };
 		})
 		.catch((error) => {
@@ -81,7 +80,6 @@ export const getUserByTokenAsync = async (): Promise<httpResponse> => {
 
 	return axios(options)
 		.then((response) => {
-			console.log(response);
 			return { status: response?.status, data: response?.data };
 		})
 		.catch((error) => {

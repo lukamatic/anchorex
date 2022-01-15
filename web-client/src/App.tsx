@@ -8,15 +8,16 @@ import { getUserByTokenAsync } from './server/service';
 import SplashScreen from './components/SplashScreen';
 
 function App() {
+	const userToken = localStorageUtil.getAccessToken();
 	const [userRole, setUserRole] = useState(localStorageUtil.getUserRole());
 	const [user, setUser] = useState<CreateUserDto>({} as CreateUserDto);
-	const [isLoading, setLoading] = useState(true);
+	const [isLoading, setLoading] = useState(!!userToken);
 	useEffect(() => {
 		if (!user.firstName && isLoading) {
 			checkUserAuth();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [userToken]);
 
 	const checkUserAuth = async () => {
 		const resp = await getUserByTokenAsync();

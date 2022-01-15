@@ -7,9 +7,8 @@ import HouseIcon from './button-icons/HouseIcon';
 import './Home.css';
 const HomeScreen = () => {
 	const history = useHistory();
-	const authorized = true;
 	const { user } = useContext(AuthContext);
-	console.log(user);
+	const authorized = !!user.firstName;
 
 	const buttons = [
 		{

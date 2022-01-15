@@ -23,7 +23,7 @@ function App() {
 		if (resp.status === HttpStatusCode.OK) {
 			setUser(resp.data);
 		} else {
-			// setUser({} as CreateUserDto);
+			localStorage.clear();
 		}
 		setLoading(false);
 	};

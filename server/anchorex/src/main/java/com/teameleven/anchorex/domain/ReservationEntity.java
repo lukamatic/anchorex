@@ -43,6 +43,8 @@ public class ReservationEntity {
     @OneToOne(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     public Location location;
 
+
+
     public ReservationEntity() {
         super();
     }

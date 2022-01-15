@@ -1,5 +1,6 @@
-import { cloneElement } from 'react';
+import { cloneElement, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import AuthContext from '../../context/auth-context';
 import CoachingIcon from './button-icons/CoachingIcon';
 import FishingIcon from './button-icons/FishingIcon';
 import HouseIcon from './button-icons/HouseIcon';
@@ -7,10 +8,9 @@ import './Home.css';
 const HomeScreen = () => {
 	const history = useHistory();
 	const authorized = true;
-	const user = {
-		firstName: 'Petar',
-		lastName: 'Obradovic',
-	};
+	const { user } = useContext(AuthContext);
+	console.log(user);
+
 	const buttons = [
 		{
 			title: 'Fishing lessons',

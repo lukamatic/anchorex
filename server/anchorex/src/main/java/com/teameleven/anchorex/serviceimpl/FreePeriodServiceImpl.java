@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -107,4 +108,49 @@ public class FreePeriodServiceImpl implements FreePeriodService {
         }
         return true;
     }
+
+    @Override
+    public boolean checkReservationDates(Date startDate, Date endDate, Long id){
+        List<FreePeriod> freePeriods = freePeriodRepository.getFreePeriods(id);
+        for(FreePeriod freePeriod: freePeriods) {
+            if ((freePeriod.getStartDate().before(startDate) || freePeriod.getStartDate().compareTo(startDate) == 0) &&
+                    (freePeriod.getEndDate().after(endDate) || freePeriod.getEndDate().compareTo(endDate) == 0)) {
+                removeFreePeriodFromReservationDates(freePeriod, startDate, endDate);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void removeFreePeriodFromReservationDates(FreePeriod freePeriod, Date startDate, Date endDate){
+        freePeriodRepository.delete(freePeriod);
+        if(freePeriod.getStartDate().before(startDate) && freePeriod.getEndDate().after(endDate)){
+            createNewFreePeriodFromReservationStartDate(freePeriod, startDate);
+            createNewFreePeriodFromReservationEndDate(freePeriod, endDate);
+        }
+        else if(freePeriod.getStartDate().before(startDate) && freePeriod.getEndDate().compareTo(endDate) == 0){
+            createNewFreePeriodFromReservationStartDate(freePeriod, startDate);
+        }
+        else if(freePeriod.getStartDate().compareTo(startDate) == 0 && freePeriod.getEndDate().after(endDate)){
+            createNewFreePeriodFromReservationEndDate(freePeriod, endDate);
+        }
+    }
+
+    private void createNewFreePeriodFromReservationEndDate(FreePeriod freePeriod, Date endDate) {
+        FreePeriod newPeriod = new FreePeriod();
+        newPeriod.setEntity(freePeriod.getEntity());
+        newPeriod.setStartDate(endDate);
+        newPeriod.setEndDate(freePeriod.getEndDate());
+        freePeriodRepository.save(newPeriod);
+    }
+
+    private void createNewFreePeriodFromReservationStartDate(FreePeriod freePeriod, Date startDate) {
+        FreePeriod newPeriod = new FreePeriod();
+        newPeriod.setEntity(freePeriod.getEntity());
+        newPeriod.setStartDate(freePeriod.getStartDate());
+        newPeriod.setEndDate(startDate);
+        freePeriodRepository.save(newPeriod);
+    }
+
+
 }

@@ -98,6 +98,7 @@ const LodgeCalendar = () => {
                   <span className="ml-2">Images</span>
                 </li>
               </Link>
+              <Link to={'/lodgeAction/' + params.id}>
               <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                 <span>
                   <svg
@@ -126,6 +127,7 @@ const LodgeCalendar = () => {
                 </span>
                 <span className="ml-2">Quick reservation</span>
               </li>
+              </Link>
               <Link to={"/lodgePricelist/" + params.id}>
                 <li className="mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg">
                   <span>

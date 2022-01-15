@@ -32,7 +32,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> create(@RequestBody ReservationDTO reservationDTO){
         if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
                 reservationDTO.getReservationEntityId())) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         var reservation = reservationService.createReservation(reservationDTO);
         return new ResponseEntity<>(reservation, HttpStatus.CREATED);

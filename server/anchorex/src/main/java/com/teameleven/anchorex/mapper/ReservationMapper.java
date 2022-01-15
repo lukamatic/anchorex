@@ -5,6 +5,10 @@ import com.teameleven.anchorex.dto.ReservationDTO;
 
 public class ReservationMapper {
 
+    private ReservationMapper(){
+        
+    }
+
     public static Reservation reservationDTOToReservation(ReservationDTO reservationDTO){
         Reservation reservation = new Reservation();
         reservation.setDiscount(reservationDTO.getDiscount());

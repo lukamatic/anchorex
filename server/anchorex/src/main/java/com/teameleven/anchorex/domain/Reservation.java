@@ -43,17 +43,6 @@ public class Reservation {
         this.services = services;
     }
 
-    public Reservation(Long id, Date startDate, Date endDate, Integer maxPersonNumber, double discount, double price, Long userId, Long reservationEntityId) {
-        this.id = id;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.maxPersonNumber = maxPersonNumber;
-        this.discount = discount;
-        this.price = price;
-        this.userId = userId;
-        this.reservationEntityId = reservationEntityId;
-    }
-
     public Long getReservationEntityId() {
         return reservationEntityId;
     }

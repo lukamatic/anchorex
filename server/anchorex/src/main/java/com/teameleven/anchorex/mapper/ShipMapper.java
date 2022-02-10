@@ -1,12 +1,14 @@
 package com.teameleven.anchorex.mapper;
 
+import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.domain.Ship;
-import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationentity.ShipDTO;
+import com.teameleven.anchorex.dto.reservationentity.*;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ShipMapper {
 
@@ -44,5 +46,42 @@ public class ShipMapper {
             shipsDTO.add(shipDTO);
         }
         return shipsDTO;
+    }
+
+    public static ShipDisplayDTO shipToShipDisplayDTO(Ship ship){
+        ShipDisplayDTO dto = new ShipDisplayDTO();
+        dto.setCapacity(ship.getCapacity());
+        dto.setDescription(ship.getDescription());
+        dto.setEngineCount(ship.getEngineCount());
+        dto.setCancellationPercentage(ship.getCancellationPercentage());
+        dto.setEnginePower(ship.getEnginePower());
+        dto.setId(ship.getId());
+        dto.setLength(ship.getLength());
+        dto.setMaxSpeed(ship.getMaxSpeed());
+        dto.setShipType(ship.getShipType());
+        dto.setFishingKit(ship.getFishingKit());
+        dto.setOwnerId(ship.getOwnerId());
+        dto.setName(ship.getName());
+        dto.setRulesOfConduct(ship.getRulesOfConduct());
+        dto.setNavigationKit(ship.getNavigationKit());
+        Set<ServiceDTO> services = new HashSet<>();
+        for(Service service: ship.getServices()){
+            ServiceDTO serviceDTO = new ServiceDTO();
+            serviceDTO.setId(service.getId());
+            serviceDTO.setInfo(service.getInfo());
+            serviceDTO.setPrice(service.getPrice());
+            serviceDTO.setType(service.getType());
+            services.add(serviceDTO);
+        }
+        dto.setServices(services);
+
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setAddress(ship.getLocation().getAddress());
+        locationDTO.setCity(ship.getLocation().getCity());
+        locationDTO.setCountry(ship.getLocation().getCountry());
+        locationDTO.setLongitude(ship.getLocation().getLongitude());
+        locationDTO.setLatitude(ship.getLocation().getLatitude());
+        dto.setLocation(locationDTO);
+        return dto;
     }
 }

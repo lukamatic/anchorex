@@ -13,9 +13,18 @@ public class ReservationDTO {
     private double price;
     private Set<Service> services;
     private Long reservationEntityId;
+    private boolean captain;
 
     public ReservationDTO(){
         super();
+    }
+
+    public boolean isCaptain() {
+        return captain;
+    }
+
+    public void setCaptain(boolean captain) {
+        this.captain = captain;
     }
 
     public Long getReservationEntityId() {

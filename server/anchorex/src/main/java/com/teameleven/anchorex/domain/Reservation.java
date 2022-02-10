@@ -24,15 +24,33 @@ public class Reservation {
     private Long userId;
     @Column
     private Long reservationEntityId;
-
+    @Column
+    private Long ownerId;
+    @Column
+    private boolean captain;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "reservation_service", joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     private Set<Service> services = new HashSet<>();
 
-
     public Reservation() {
         super();
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public boolean isCaptain() {
+        return captain;
+    }
+
+    public void setCaptain(boolean captain) {
+        this.captain = captain;
     }
 
     public Set<Service> getServices() {

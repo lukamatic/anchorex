@@ -1,10 +1,8 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Lodge;
-import com.teameleven.anchorex.dto.reservationentity.CreateLodgeDTO;
-import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;
-import com.teameleven.anchorex.dto.reservationentity.LodgeDTO;
-import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationentity.*;
+import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.LodgeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +45,10 @@ public class LodgeController {
     }
 
     @GetMapping(path="/{id}")
-    public ResponseEntity<Lodge> getLodge(@PathVariable Long id){
+    public ResponseEntity<LodgeDisplayDTO> getLodge(@PathVariable Long id){
         Lodge lodge = lodgeService.getLodgeById(id);
-        return new ResponseEntity<>(lodge, HttpStatus.OK);
+        LodgeDisplayDTO lodgeDTO = LodgeMapper.lodgeToLodgeDisplayDTO(lodge);
+        return new ResponseEntity<>(lodgeDTO, HttpStatus.OK);
     }
 
     @PutMapping(path="/updateLodge", consumes = MediaType.APPLICATION_JSON_VALUE)

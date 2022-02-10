@@ -3,6 +3,7 @@ package com.teameleven.anchorex.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.teameleven.anchorex.enums.ServiceType;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 
@@ -18,8 +19,7 @@ public class Service {
     @Column
     private ServiceType type;
 
-    @JsonBackReference
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name= "reservation_entity_id")
     private ReservationEntity entity;
 

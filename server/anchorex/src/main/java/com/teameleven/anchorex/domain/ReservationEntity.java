@@ -32,18 +32,14 @@ public class ReservationEntity {
     @Column
     public boolean deleted;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "entity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Set<Service> services = new HashSet<>();
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "entity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Set<FreePeriod> periods = new HashSet<>();
 
-    @OneToOne(mappedBy = "entity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "entity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Location location;
-
-
 
     public ReservationEntity() {
         super();
@@ -61,6 +57,14 @@ public class ReservationEntity {
         this.rulesOfConduct = rulesOfConduct;
         this.reservationEntityType = reservationEntityType;
         this.deleted = deleted;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public Long getId() {
@@ -134,4 +138,5 @@ public class ReservationEntity {
     public void setServices(Set<Service> services) {
         this.services = services;
     }
+
 }

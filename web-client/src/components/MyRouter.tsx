@@ -22,6 +22,7 @@ import ShipDisplayKit from './display-ship/ShipDisplayKit';
 import LodgeCalendar from './display-lodge/LodgeCalendar';
 import Ships from './display-ship/Ships';
 import ShipCalendar from './display-ship/ShipCalendar';
+import ShipAction from './display-ship/ShipAction';
 
 const MyRouter = () => {
   return (
@@ -49,35 +50,49 @@ const MyRouter = () => {
         <Route path='/fishingLessons'>
           <FishingLessons />
         </Route>
+
         <Route path='/lodges'>
           <Lodges />
         </Route>
+
         <Route path='/ships'>
           <Ships/>
         </Route>
+
         <Route path='/ship/:id'>
         <ShipDisplay/>
         </Route>
+
         <Route path='/lodge/:id'>
           <LodgeDisplay />
         </Route>
+
         <Route path='/lodgeImages/:id'>
           <LodgeDisplayImages />
         </Route>
+
         <Route path='/lodgePriceList/:id'>
           <LodgeDisplayPricelist />
         </Route>
+
         <Route path='/shipPriceList/:id'>
           <ShipDisplayPricelist/>
         </Route>
+
         <Route path='/lodgeRules/:id'>
           <LodgeDisplayRules />
         </Route>
+
         <Route path='/shipRules/:id'>
           <ShipDisplayRules/>
         </Route>
+
         <Route path='/lodgeAction/:id'>
           <LodgeAction />
+        </Route>
+
+        <Route path ='/shipAction/:id'>
+          <ShipAction />
         </Route>
 
         <Route path='/lodgeCalendar/:id'>

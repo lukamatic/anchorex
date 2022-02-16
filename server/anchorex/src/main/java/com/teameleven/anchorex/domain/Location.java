@@ -20,8 +20,7 @@ public class Location{
     @Column
     private String country;
 
-    @JsonBackReference
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "reservation_entity_id")
     private ReservationEntity entity;
 

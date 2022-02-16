@@ -18,6 +18,7 @@ public class ReservationMapper {
         reservation.setStartDate(reservationDTO.getStartDate());
         reservation.setServices(reservationDTO.getServices());
         reservation.setMaxPersonNumber(reservationDTO.getMaxPersonNumber());
+        reservation.setCaptain(reservationDTO.isCaptain());
         return reservation;
     }
 }

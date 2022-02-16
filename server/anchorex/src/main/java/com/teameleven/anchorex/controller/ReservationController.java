@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Reservation;
+import com.teameleven.anchorex.dto.DateRangeDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ReservationService;
@@ -8,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reservation")
@@ -35,6 +33,12 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         var reservation = reservationService.createReservation(reservationDTO);
+
         return new ResponseEntity<>(reservation, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path="/checkCaptainAvailability", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public boolean checkCaptainAvailability(@RequestBody DateRangeDTO dateRange){
+        return reservationService.checkCaptainAvailability(dateRange);
     }
 }

@@ -7,7 +7,6 @@ import com.teameleven.anchorex.dto.reservationentity.LocationDTO;
 import com.teameleven.anchorex.dto.reservationentity.LodgeDisplayDTO;
 import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
-import com.teameleven.anchorex.enums.ServiceType;
 
 import java.util.HashSet;
 import java.util.Set;

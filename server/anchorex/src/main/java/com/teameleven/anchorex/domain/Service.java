@@ -1,10 +1,6 @@
 package com.teameleven.anchorex.domain;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.teameleven.anchorex.enums.ServiceType;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.*;
 
 @Entity

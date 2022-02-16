@@ -1,6 +1,5 @@
 package com.teameleven.anchorex.dto.reservationentity;
 
-import javax.persistence.Column;
 import java.util.Set;
 
 public class ShipDisplayDTO {

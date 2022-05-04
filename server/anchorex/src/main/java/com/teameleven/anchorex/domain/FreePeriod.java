@@ -1,7 +1,5 @@
 package com.teameleven.anchorex.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -18,7 +16,7 @@ public class FreePeriod {
    // @JsonBackReference
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name= "reservation_entity_id")
-    private ReservationEntity entity;
+    private ReservationEntity reservationEntity;
 
     public FreePeriod() {
         super();
@@ -54,11 +52,11 @@ public class FreePeriod {
         this.endDate = endDate;
     }
 
-    public ReservationEntity getEntity() {
-        return entity;
+    public ReservationEntity getReservationEntity() {
+        return reservationEntity;
     }
 
-    public void setEntity(ReservationEntity entity) {
-        this.entity = entity;
+    public void setReservationEntity(ReservationEntity reservationEntity) {
+        this.reservationEntity = reservationEntity;
     }
 }

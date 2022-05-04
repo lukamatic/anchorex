@@ -2,10 +2,10 @@ package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Service;
-import com.teameleven.anchorex.dto.reservationentity.CreateLodgeDTO;
-import com.teameleven.anchorex.dto.reservationentity.LocationDTO;
-import com.teameleven.anchorex.dto.reservationentity.LodgeDisplayDTO;
-import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
+import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
+import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 
 import java.util.HashSet;

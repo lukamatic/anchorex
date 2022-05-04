@@ -2,7 +2,7 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.FreePeriod;
 import com.teameleven.anchorex.domain.ReservationEntity;
-import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;
+import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.repository.FreePeriodRepository;
 import com.teameleven.anchorex.service.FreePeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ public class FreePeriodServiceImpl implements FreePeriodService {
             FreePeriod newPeriod = new FreePeriod();
             newPeriod.setEndDate(periodDTO.getEndDate());
             newPeriod.setStartDate(periodDTO.getStartDate());
-            newPeriod.setEntity(entity);
+            newPeriod.setReservationEntity(entity);
             freePeriodRepository.save(newPeriod);
         }
         else if(newPeriods.size()>1){
@@ -73,11 +73,11 @@ public class FreePeriodServiceImpl implements FreePeriodService {
                     newPeriod.setEndDate(period.getEndDate());
                 }
             }
-            newPeriod.setEntity(entity);
+            newPeriod.setReservationEntity(entity);
             freePeriodRepository.save(newPeriod);
         }
         else{
-            newPeriods.get(0).setEntity(entity);
+            newPeriods.get(0).setReservationEntity(entity);
             freePeriodRepository.saveAll(newPeriods);
         }
         freePeriodRepository.deleteAll(busyPeriods);
@@ -138,7 +138,7 @@ public class FreePeriodServiceImpl implements FreePeriodService {
 
     private void createNewFreePeriodFromReservationEndDate(FreePeriod freePeriod, Date endDate) {
         FreePeriod newPeriod = new FreePeriod();
-        newPeriod.setEntity(freePeriod.getEntity());
+        newPeriod.setReservationEntity(freePeriod.getReservationEntity());
         newPeriod.setStartDate(endDate);
         newPeriod.setEndDate(freePeriod.getEndDate());
         freePeriodRepository.save(newPeriod);
@@ -146,7 +146,7 @@ public class FreePeriodServiceImpl implements FreePeriodService {
 
     private void createNewFreePeriodFromReservationStartDate(FreePeriod freePeriod, Date startDate) {
         FreePeriod newPeriod = new FreePeriod();
-        newPeriod.setEntity(freePeriod.getEntity());
+        newPeriod.setReservationEntity(freePeriod.getReservationEntity());
         newPeriod.setStartDate(freePeriod.getStartDate());
         newPeriod.setEndDate(startDate);
         freePeriodRepository.save(newPeriod);

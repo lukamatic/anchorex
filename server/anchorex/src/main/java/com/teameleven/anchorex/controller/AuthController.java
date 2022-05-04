@@ -71,7 +71,7 @@ public class AuthController {
 		var accessToken = new UserTokenState(jwt, expiresIn);
 
 		String userRole = user.getRoles().iterator().next().getName();
-		var loginResponse = new LoginResponse(accessToken, userRole);
+		var loginResponse = new LoginResponse(accessToken, user.getId(), userRole);
 
 		return ResponseEntity.ok(loginResponse);
 	}

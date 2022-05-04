@@ -15,14 +15,12 @@ import HomeScreen from './home/HomeScreen';
 import ListScreen from './display-list/ListScreen';
 import Verification from './login/Verification';
 import ServiceSignupRequests from './service-signup-requests/ServiceSignupRequests';
+import Ships from './ships/Ships';
 import ShipDisplay from './display-ship/ShipDisplay';
 import ShipDisplayRules from './display-ship/ShipDisplayRules';
 import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
 import ShipDisplayKit from './display-ship/ShipDisplayKit';
-import LodgeCalendar from './display-lodge/LodgeCalendar';
-import Ships from './display-ship/Ships';
-import ShipCalendar from './display-ship/ShipCalendar';
-import ShipAction from './display-ship/ShipAction';
+import FishingLessonDisplay from './display-fishing-lesson/FishingLessonDisplay';
 
 const MyRouter = () => {
   return (
@@ -50,67 +48,48 @@ const MyRouter = () => {
         <Route path='/fishingLessons'>
           <FishingLessons />
         </Route>
-
         <Route path='/lodges'>
           <Lodges />
         </Route>
-
         <Route path='/ships'>
-          <Ships/>
+          <Ships />
         </Route>
-
         <Route path='/ship/:id'>
-        <ShipDisplay/>
+          <ShipDisplay />
         </Route>
-
         <Route path='/lodge/:id'>
           <LodgeDisplay />
         </Route>
-
+        <Route path='/fishingLesson/:id'>
+          <FishingLessonDisplay />
+        </Route>
         <Route path='/lodgeImages/:id'>
           <LodgeDisplayImages />
         </Route>
-
         <Route path='/lodgePriceList/:id'>
           <LodgeDisplayPricelist />
         </Route>
-
         <Route path='/shipPriceList/:id'>
-          <ShipDisplayPricelist/>
+          <ShipDisplayPricelist />
         </Route>
-
         <Route path='/lodgeRules/:id'>
           <LodgeDisplayRules />
         </Route>
-
         <Route path='/shipRules/:id'>
-          <ShipDisplayRules/>
+          <ShipDisplayRules />
         </Route>
-
         <Route path='/lodgeAction/:id'>
           <LodgeAction />
         </Route>
 
-        <Route path ='/shipAction/:id'>
-          <ShipAction />
-        </Route>
-
-        <Route path='/lodgeCalendar/:id'>
-          <LodgeCalendar/>
-        </Route>
-
-        <Route path='/shipCalendar/:id'>
-          <ShipCalendar/>
-        </Route>
-
         <Route path='/shipKit/:id'>
-          <ShipDisplayKit/>
+          <ShipDisplayKit />
         </Route>
-        
+
         <Route path='/reservationNewEntity'>
           <ReservationNewEntity />
         </Route>
-        
+
         <Route path='/serviceSignupRequests'>
           <ServiceSignupRequests />
         </Route>

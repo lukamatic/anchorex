@@ -1,13 +1,19 @@
-package com.teameleven.anchorex.dto.reservationentity;
+package com.teameleven.anchorex.dto.reservationEntity;
+
+import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
 
 import java.util.Set;
 
-public class CreateShipDTO {
+public class ShipDisplayDTO {
+    private Long id;
     private Long ownerId;
     private String name;
     private String description;
     private String rulesOfConduct;
-    private String type;
+    private Set<ServiceDTO> services;
+    private LocationDTO location;
+    private String shipType;
     private double length;
     private Integer engineCount;
     private double enginePower;
@@ -16,12 +22,17 @@ public class CreateShipDTO {
     private Integer capacity;
     private String fishingKit;
     private double cancellationPercentage;
-    private Set<ServiceDTO> regularServices;
-    private Set<ServiceDTO> additionalServices;
-    private LocationDTO location;
 
-    public CreateShipDTO() {
+    public ShipDisplayDTO(){
         super();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getOwnerId() {
@@ -56,12 +67,28 @@ public class CreateShipDTO {
         this.rulesOfConduct = rulesOfConduct;
     }
 
-    public String getType() {
-        return type;
+    public Set<ServiceDTO> getServices() {
+        return services;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setServices(Set<ServiceDTO> services) {
+        this.services = services;
+    }
+
+    public LocationDTO getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationDTO location) {
+        this.location = location;
+    }
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
     }
 
     public double getLength() {
@@ -126,29 +153,5 @@ public class CreateShipDTO {
 
     public void setCancellationPercentage(double cancellationPercentage) {
         this.cancellationPercentage = cancellationPercentage;
-    }
-
-    public Set<ServiceDTO> getRegularServices() {
-        return regularServices;
-    }
-
-    public void setRegularServices(Set<ServiceDTO> regularServices) {
-        this.regularServices = regularServices;
-    }
-
-    public Set<ServiceDTO> getAdditionalServices() {
-        return additionalServices;
-    }
-
-    public void setAdditionalServices(Set<ServiceDTO> additionalServices) {
-        this.additionalServices = additionalServices;
-    }
-
-    public LocationDTO getLocation() {
-        return location;
-    }
-
-    public void setLocation(LocationDTO location) {
-        this.location = location;
     }
 }

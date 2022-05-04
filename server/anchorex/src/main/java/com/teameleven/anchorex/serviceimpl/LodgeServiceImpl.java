@@ -1,15 +1,16 @@
 package com.teameleven.anchorex.serviceimpl;
 
-import com.teameleven.anchorex.domain.FreePeriod;
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Service;
-import com.teameleven.anchorex.dto.reservationentity.*;
+import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.enums.ServiceType;
 import com.teameleven.anchorex.mapper.LocationMapper;
 import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ServiceMapper;
-import com.teameleven.anchorex.repository.FreePeriodRepository;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.LodgeRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
@@ -71,7 +72,7 @@ public class LodgeServiceImpl implements LodgeService {
     @Override
     public void addService(ServiceDTO serviceDTO, Long id) {
         Service service = ServiceMapper.serviceDTOToService(serviceDTO);
-        service.setEntity(getLodgeById(id));
+        service.setReservationEntity(getLodgeById(id));
         serviceRepository.save(service);
     }
 
@@ -94,7 +95,7 @@ public class LodgeServiceImpl implements LodgeService {
             Service service = new Service();
             service.setInfo(serviceDTO.getInfo());
             service.setPrice(serviceDTO.getPrice());
-            service.setEntity(lodge);
+            service.setReservationEntity(lodge);
             service.setType(ServiceType.ADDITIONAL);
             serviceRepository.save(service);
         }
@@ -104,7 +105,7 @@ public class LodgeServiceImpl implements LodgeService {
             Service service = new Service();
             service.setInfo(serviceDTO.getInfo());
             service.setPrice(serviceDTO.getPrice());
-            service.setEntity(lodge);
+            service.setReservationEntity(lodge);
             service.setType(ServiceType.REGULAR);
             serviceRepository.save(service);
         }
@@ -112,7 +113,7 @@ public class LodgeServiceImpl implements LodgeService {
 
     private void setLocation(LocationDTO locationDTO, Lodge lodge){
         Location location = LocationMapper.locationDTOToLocation(locationDTO);
-        location.setEntity(lodge);
+        location.setReservationEntity(lodge);
         locationRepository.save(location);
     }
 }

@@ -1,7 +1,7 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Location;
-import com.teameleven.anchorex.dto.reservationentity.LocationDTO;
+import com.teameleven.anchorex.dto.LocationDTO;
 
 public class LocationMapper {
     public static Location locationDTOToLocation(LocationDTO locationDTO){
@@ -14,7 +14,13 @@ public class LocationMapper {
         return location;
     }
 
-    private LocationMapper(){
-
+    public static LocationDTO toDto(Location model) {
+        return LocationDTO.builder()
+                .address(model.getAddress())
+                .city(model.getCity())
+                .country(model.getCountry())
+                .latitude(model.getLatitude())
+                .longitude(model.getLongitude())
+                .build();
     }
 }

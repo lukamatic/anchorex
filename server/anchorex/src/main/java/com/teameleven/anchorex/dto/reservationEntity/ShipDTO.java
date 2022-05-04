@@ -1,16 +1,11 @@
-package com.teameleven.anchorex.dto.reservationentity;
+package com.teameleven.anchorex.dto.reservationEntity;
 
-public class LodgeDTO {
+public class ShipDTO {
     private Long id;
     private String name;
 
-    public LodgeDTO() {
+    public ShipDTO(){
         super();
-    }
-
-    public LodgeDTO(Long id, String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public Long getId() {
@@ -28,6 +23,4 @@ public class LodgeDTO {
     public void setName(String name) {
         this.name = name;
     }
-
-
 }

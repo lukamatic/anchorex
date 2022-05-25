@@ -1,13 +1,17 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { HttpStatusCode } from "../../utils/http-status-code.enum";
 import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
 import DatePicker from "../common/DatePicker";
+import AuthContext from "../../context/auth-context";
+import { UserRole } from "../../model/user-role.enum";
+import { format } from 'date-fns';
 
 const LodgeAction = () => {
   const params: { id: string } = useParams();
-
+  const authContext = useContext(AuthContext);
+  const userRole = authContext.userRole;
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [maxPersonNumber, setMaxPersonNumber] = useState(0);
@@ -34,6 +38,16 @@ const LodgeAction = () => {
   const [additionalServices, setAdditionalServices] = useState([
     { id: 0, type: "", info: "", price: 0 },
   ]);
+  const [reservations, setReservations] = useState([
+    {
+      startDate,
+      endDate,
+      maxPersonNumber,
+      price: 0,
+      discount,
+      services,
+    },
+  ]);
 
   useEffect(() => {
     axios
@@ -46,7 +60,6 @@ const LodgeAction = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         var singleRooms = response.data.singleBedroomNumber;
         var doubleRooms = response.data.doubleBedroomNumber * 2;
         var fourRooms = response.data.fourBedroomNumber * 4;
@@ -55,7 +68,46 @@ const LodgeAction = () => {
         setLodgeServices(response.data.services);
         setServices([]);
       });
+
+    axios
+      .get("/api/reservation/openReservations/" + params.id, {
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization:
+            "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setReservations(response.data);
+        
+      });
   }, []);
+
+  
+  const getReservations = reservations.map((reservation) => (
+    <tr className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
+      <td className="px-6 py-4">{format(reservation.startDate, 'dd.MM.yyyy.')}</td>
+      <td className="px-6 py-4">{format(reservation.endDate, 'dd.MM.yyyy.')}</td>
+      <td className="px-6 py-4">{reservation.services.map((service)=>{
+        return (
+        service.info
+        )
+      })}</td>
+      <td className="px-6 py-4">dodatan servis</td>
+      <td className="px-6 py-4">{reservation.discount}</td>
+      <td className="px-6 py-4">{reservation.price}</td>
+      <td className="px-6 py-4 text-right">
+        <a
+          href="#"
+          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        >
+          Reserve
+        </a>
+      </td>
+    </tr>
+  ));
 
   const setLodgeServices = (
     services: [{ id: number; info: string; price: number; type: string }]
@@ -69,9 +121,8 @@ const LodgeAction = () => {
         newAdditionalServices.push(services[i]);
       }
     }
-    console.log(newRegularServices[newRegularServices.length-1]);
-    setRegularService(newRegularServices[newRegularServices.length-1]);
-    
+    console.log(newRegularServices[newRegularServices.length - 1]);
+    setRegularService(newRegularServices[newRegularServices.length - 1]);
 
     setRegularServices(newRegularServices);
     setAdditionalServices(newAdditionalServices);
@@ -105,7 +156,7 @@ const LodgeAction = () => {
     });
     for (let i = 0; i < regularServices.length; i++) {
       if (regularServices[i].info === info) {
-        setRegularService(regularServices[i])
+        setRegularService(regularServices[i]);
         break;
       }
     }
@@ -140,7 +191,7 @@ const LodgeAction = () => {
     if (checkConditions()) {
       var days = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
       var price = 0;
-      console.log(regularService)
+      console.log(regularService);
       services.push(regularService);
       for (let i = 0; i < services.length; i++) {
         price += services[i].price * days * personNumber;
@@ -174,7 +225,6 @@ const LodgeAction = () => {
           }
         })
         .catch((error) => {
-           
           if (error.status == HttpStatusCode.NOT_ACCEPTABLE) {
             window.alert("There are no free periods for this action!");
           }
@@ -342,122 +392,160 @@ const LodgeAction = () => {
           </div>
         </nav>
       </div>
-      <div className="w-full mt-12 mx-auto max-w-xl">
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-              Action start date
-            </label>
+      {userRole === UserRole.LODGE_OWNER ? (
+        <div className="w-full mt-12 mx-auto max-w-xl">
+          <div className="md:flex md:items-center mb-6">
+            <div className="md:w-1/3">
+              <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
+                Action start date
+              </label>
+            </div>
+            <div className="md:w-2/3">
+              <DatePicker
+                value={startDate}
+                onValueChange={function (d: Date): void {
+                  setStartDate(d);
+                }}
+              ></DatePicker>
+            </div>
           </div>
-          <div className="md:w-2/3">
-            <DatePicker
-              value={startDate}
-              onValueChange={function (d: Date): void {
-                setStartDate(d);
-              }}
-            ></DatePicker>
+          <div className="md:flex md:items-center mb-6">
+            <div className="md:w-1/3">
+              <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
+                Action end date
+              </label>
+            </div>
+            <div className="md:w-2/3">
+              <DatePicker
+                value={endDate}
+                onValueChange={function (d: Date): void {
+                  setEndDate(d);
+                }}
+              ></DatePicker>
+            </div>
           </div>
-        </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-              Action end date
-            </label>
-          </div>
-          <div className="md:w-2/3">
-            <DatePicker
-              value={endDate}
-              onValueChange={function (d: Date): void {
-                setEndDate(d);
-              }}
-            ></DatePicker>
-          </div>
-        </div>
 
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
-              Max person number
-            </label>
+          <div className="md:flex md:items-center mb-6">
+            <div className="md:w-1/3">
+              <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
+                Max person number
+              </label>
+            </div>
+            <div className="md:w-2/3">
+              <input
+                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                id="inline-full-name"
+                type="number"
+                min="1"
+                step="1"
+                max={maxPersonNumber}
+                value={personNumber}
+                name="personNumber"
+                onChange={personNumberChangeHandler}
+              ></input>
+            </div>
           </div>
-          <div className="md:w-2/3">
-            <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-              id="inline-full-name"
-              type="number"
-              min="1"
-              step="1"
-              max={maxPersonNumber}
-              value={personNumber}
-              name="personNumber"
-              onChange={personNumberChangeHandler}
-            ></input>
+          <div className="md:flex md:items-center mb-6">
+            <div className="md:w-1/3">
+              <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
+                Regular service
+              </label>
+            </div>
+            <div className="inline-block relative md:w-2/3">
+              <select
+                onChange={regularServiceChangeHandler}
+                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              >
+                {regularServices.map((newService) => (
+                  <option key={newService.id} value={newService.info} selected>
+                    {newService.info}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
-              Regular service
-            </label>
+          <div className="md:flex md:items-center mb-6">
+            <div className="md:w-1/3">
+              <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
+                Additional services
+              </label>
+            </div>
+            <div className="inline-block relative md:w-2/3">
+              <select
+                multiple
+                onChange={(e) => additionalServiceChangeHandler(e)}
+                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              >
+                {additionalServices.map((newService) => (
+                  <option key={newService.id} value={newService.id}>
+                    {newService.info}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div className="inline-block relative md:w-2/3">
-            <select
-              onChange={regularServiceChangeHandler}
-              className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              {regularServices.map((newService) => (
-                <option key={newService.id} value={newService.info} selected>
-                  {newService.info}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4">
-              Additional services
-            </label>
-          </div>
-          <div className="inline-block relative md:w-2/3">
-            <select
-              multiple
-              onChange={(e) => additionalServiceChangeHandler(e)}
-              className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            >
-              {additionalServices.map((newService) => (
-                <option key={newService.id} value={newService.id} >
-                  {newService.info}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
 
-        <div className="md:flex md:items-center mb-6">
-          <div className="md:w-1/3">
-            <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-              Discount
-            </label>
+          <div className="md:flex md:items-center mb-6">
+            <div className="md:w-1/3">
+              <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
+                Discount
+              </label>
+            </div>
+            <div className="md:w-2/3">
+              <input
+                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                id="inline-full-name"
+                type="number"
+                min="0"
+                max="100"
+                name="discount"
+                value={discount}
+                onChange={discountChangeHandler}
+              ></input>
+            </div>
           </div>
-          <div className="md:w-2/3">
-            <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-              id="inline-full-name"
-              type="number"
-              min="0"
-              max="100"
-              name="discount"
-              value={discount}
-              onChange={discountChangeHandler}
-            ></input>
-          </div>
-        </div>
 
-        <button className="btnBlueWhite w-72 ml-60" onClick={createReservation}>
-          Add quick reservation
-        </button>
-      </div>
+          <button
+            className="btnBlueWhite w-72 ml-60"
+            onClick={createReservation}
+          >
+            Add quick reservation
+          </button>
+        </div>
+      ) : (
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Start date
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    End date
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Regular service
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Additional services
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Discount
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Price
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    <span className="sr-only">Reserve</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {getReservations}
+              </tbody>
+            </table>
+          </div>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ package com.teameleven.anchorex.controller;
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.dto.DateRangeDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
+import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservation")
@@ -40,5 +43,11 @@ public class ReservationController {
     @PostMapping(path="/checkCaptainAvailability", consumes = MediaType.APPLICATION_JSON_VALUE)
     public boolean checkCaptainAvailability(@RequestBody DateRangeDTO dateRange){
         return reservationService.checkCaptainAvailability(dateRange);
+    }
+
+    @GetMapping(path="/openReservations/{id}")
+    public ResponseEntity<List<ClientReservationDTO>> getOpenReservations(@PathVariable Long id){
+        var reservations = reservationService.getFreeReservations(id);
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 }

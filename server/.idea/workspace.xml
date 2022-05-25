@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e8874bcf-1b75-4099-99ce-6bd1b10b6806" name="Changes" comment="" />
+    <list default="true" id="e8874bcf-1b75-4099-99ce-6bd1b10b6806" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/dto/reservationentity/ClientReservationDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/controller/ReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/controller/ReservationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/mapper/ReservationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/mapper/ReservationMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/repository/ReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/repository/ReservationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/service/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/service/ReservationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/serviceimpl/ReservationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/anchorex/src/main/java/com/teameleven/anchorex/serviceimpl/ReservationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-client/src/components/display-lodge/LodgeAction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../web-client/src/components/display-lodge/LodgeAction.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -1,5 +1,4 @@
 package com.teameleven.anchorex.dto;
-import com.teameleven.anchorex.domain.User;
 
 public class ReservationReportDTO {
     private Long ownerId;

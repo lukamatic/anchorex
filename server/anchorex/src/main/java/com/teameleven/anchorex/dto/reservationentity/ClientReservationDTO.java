@@ -12,8 +12,26 @@ public class ClientReservationDTO {
     private double discount;
     private double price;
     private Set<ServiceDTO> services;
-    private Long reservationEntityId;
+    private Long userId;
     private boolean captain;
+    private Long reservationEntityId;
+    private String userFullname;
+
+    public String getUserFullname() {
+        return userFullname;
+    }
+
+    public void setUserFullname(String userFullname) {
+        this.userFullname = userFullname;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public ClientReservationDTO(){
         super();

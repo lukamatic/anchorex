@@ -10,7 +10,11 @@ import java.util.List;
 public interface ReservationService {
     Reservation createReservation(ReservationDTO reservationDTO);
 
+    Reservation createPersonalReservation(ReservationDTO reservationDTO);
+
     boolean checkCaptainAvailability(DateRangeDTO dateRangeDTO);
 
     List<ClientReservationDTO> getFreeReservations(Long id);
+
+    List<ClientReservationDTO> getBookedReservations(Long id);
 }

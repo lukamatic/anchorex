@@ -14,4 +14,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(value = "SELECT r FROM Reservation r where r.reservationEntityId=?1 and r.userId=null")
     List<Reservation> getEntityReservations(Long id);
 
+    @Query(value = "SELECT r FROM Reservation r where r.reservationEntityId=?1 and r.userId!=null")
+    List<Reservation> getBookedReservations(Long id);
+
 }

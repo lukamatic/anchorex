@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -34,6 +36,15 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setOwnerId(entityRepository.getOwnerId(reservation.getReservationEntityId()));
         reservationRepository.save(reservation);
         return reservation;
+    }
+
+    @Override
+    public Reservation createPersonalReservation(ReservationDTO reservationDTO) {
+        Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
+        personalReservation.setUserId(reservationDTO.getUserId());
+        personalReservation.setOwnerId(entityRepository.getOwnerId(personalReservation.getReservationEntityId()));
+        reservationRepository.save(personalReservation);
+        return personalReservation;
     }
 
     @Override
@@ -59,6 +70,16 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ClientReservationDTO> getFreeReservations(Long id) {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getEntityReservations(id);
+        for(Reservation reservation: reservations){
+            reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
+        }
+        return reservationDTOS;
+    }
+
+    @Override
+    public List<ClientReservationDTO> getBookedReservations(Long id) {
+        List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
+        var reservations =  reservationRepository.getBookedReservations(id);
         for(Reservation reservation: reservations){
             reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
         }

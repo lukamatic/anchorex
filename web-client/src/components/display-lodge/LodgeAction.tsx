@@ -85,19 +85,30 @@ const LodgeAction = () => {
       });
   }, []);
 
-  
+ 
   const getReservations = reservations.map((reservation) => (
     <tr className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
       <td className="px-6 py-4">{format(reservation.startDate, 'dd.MM.yyyy.')}</td>
       <td className="px-6 py-4">{format(reservation.endDate, 'dd.MM.yyyy.')}</td>
       <td className="px-6 py-4">{reservation.services.map((service)=>{
         return (
-        service.info
-        )
-      })}</td>
-      <td className="px-6 py-4">dodatan servis</td>
-      <td className="px-6 py-4">{reservation.discount}</td>
-      <td className="px-6 py-4">{reservation.price}</td>
+          service.type === 'REGULAR'? (
+            service.info 
+          ):(" ")
+        ) 
+      })}
+      </td>
+      <td className="px-6 py-4">{reservation.services.map((service)=>{
+        return (
+          service.type === 'ADDITIONAL'? (
+            service.info + " "
+          ):(" ")
+        ) 
+      })}
+      </td>
+      <td className="px-6 py-4">{reservation.discount} %</td>
+      <td className="px-6 py-4">{reservation.price} $</td>
+      <td className="px-6 py-4">{reservation.maxPersonNumber}</td>
       <td className="px-6 py-4 text-right">
         <a
           href="#"
@@ -161,6 +172,7 @@ const LodgeAction = () => {
       }
     }
   };
+  
   const discountChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -534,6 +546,9 @@ const LodgeAction = () => {
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Price
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Person number
                   </th>
                   <th scope="col" className="px-6 py-3">
                     <span className="sr-only">Reserve</span>

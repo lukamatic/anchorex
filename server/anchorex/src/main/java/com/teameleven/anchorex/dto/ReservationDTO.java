@@ -12,6 +12,16 @@ public class ReservationDTO {
     private double discount;
     private double price;
     private Set<Service> services;
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     private Long reservationEntityId;
     private boolean captain;
 

@@ -1,8 +1,11 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Reservation;
+import com.teameleven.anchorex.domain.ReservationReport;
+import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.DateRangeDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
+import com.teameleven.anchorex.dto.ReservationReportDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ReservationService;
@@ -77,4 +80,24 @@ public class ReservationController {
         }
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
+
+    @GetMapping(path="/closedReservations")
+    public ResponseEntity<List<ClientReservationDTO>> getClosedReservations(@RequestParam String email){
+        var user = userService.findByEmail(email);
+        var reservations = reservationService.getClosedReservations(user.getId());
+        for(ClientReservationDTO reservationDTO: reservations){
+            reservationDTO.setUserFullname(userService.findOneById(reservationDTO.getUserId()).getFirstName()
+                    + " " + userService.findOneById(reservationDTO.getUserId()).getLastName());
+        }
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
+
+    @PostMapping(path="/report", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReservationReport> createReport(@RequestParam String email, @RequestBody ReservationReportDTO reportDTO){
+        reportDTO.setOwnerId(userService.findByEmail(email).getId());
+        var report = reservationService.createReport(reportDTO);
+        return new ResponseEntity<>(report, HttpStatus.CREATED);
+    }
+
+
 }

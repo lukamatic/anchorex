@@ -23,6 +23,7 @@ import LodgeCalendar from './display-lodge/LodgeCalendar';
 import Ships from './display-ship/Ships';
 import ShipCalendar from './display-ship/ShipCalendar';
 import ShipAction from './display-ship/ShipAction';
+import ReservationHistory from './reservation-entities/ReservationHistory';
 
 const MyRouter = () => {
   return (
@@ -113,6 +114,10 @@ const MyRouter = () => {
         
         <Route path='/serviceSignupRequests'>
           <ServiceSignupRequests />
+        </Route>
+
+        <Route path='/reservations'>
+          <ReservationHistory/>
         </Route>
       </Switch>
     </Router>

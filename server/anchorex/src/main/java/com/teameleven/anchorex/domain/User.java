@@ -62,6 +62,9 @@ public class User implements UserDetails {
 	@Column
 	private boolean deleted;
 
+	@OneToOne(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	public ReservationReport report;
+
 	public User() {
 	}
 

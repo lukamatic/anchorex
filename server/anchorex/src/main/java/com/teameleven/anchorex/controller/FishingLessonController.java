@@ -2,9 +2,12 @@ package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.FishingLesson;
 import com.teameleven.anchorex.domain.Test;
+import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDisplayDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
+import com.teameleven.anchorex.dto.test.TestDto;
+import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.FishingLessonService;
@@ -54,6 +57,12 @@ public class FishingLessonController {
         return new ResponseEntity<>(fishingLessonDto, HttpStatus.OK);
     }
 
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FishingLesson> update(@Valid @RequestBody FishingLesson fishingLesson) throws Exception {
+        var updatedFishingLesson = fishingLessonService.update(fishingLesson);
+        return new ResponseEntity<>(updatedFishingLesson, HttpStatus.OK);
+    }
+
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Test> delete(@PathVariable("id") Long id) {
         try {
@@ -63,5 +72,17 @@ public class FishingLessonController {
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping(path="/addService/{id}")
+    public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
+        fishingLessonService.addService(service, id);
+        return new ResponseEntity<>(service, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path="/deleteService/{id}")
+    public ResponseEntity<Void> deleteService(@PathVariable Long id){
+        fishingLessonService.deleteService(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

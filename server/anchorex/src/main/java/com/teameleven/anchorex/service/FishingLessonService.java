@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.FishingLesson;
+import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.dto.fishingLesson.UpdateFishingLessonDto;
 
@@ -16,7 +17,11 @@ public interface FishingLessonService {
 
     FishingLesson findOneById(Long id);
 
-    FishingLesson update(UpdateFishingLessonDto updateFishingLessonDto) throws Exception;
+    FishingLesson update(FishingLesson fishingLesson) throws Exception;
 
     void delete(Long id);
+
+    void addService(ServiceDTO service, Long id);
+
+    void deleteService(Long id);
 }

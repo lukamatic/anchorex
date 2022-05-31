@@ -20,13 +20,8 @@ const FishingLessonDisplay = () => {
   const [description, setDescription] = useState('');
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
-  const [length, setLength] = useState(0);
-  const [engineCount, setEngineCount] = useState(0);
-  const [enginePower, setEnginePower] = useState(0);
-  const [maxSpeed, setMaxSpeed] = useState(0);
   const [capacity, setCapacity] = useState(0);
   const [cancellationPercentage, setCancellationPercentage] = useState(0);
-  const [shipType, setShipType] = useState('SHIP');
 
   const [entity, setEntity] = useState({
     name,
@@ -59,13 +54,8 @@ const FishingLessonDisplay = () => {
         setAddress(response.data.location.address);
         setCity(response.data.location.city);
         setCountry(response.data.location.country);
-        setLength(response.data.length);
-        setEngineCount(response.data.engineCount);
-        setEnginePower(response.data.enginePower);
-        setMaxSpeed(response.data.maxSpeed);
         setCapacity(response.data.capacity);
         setCancellationPercentage(response.data.cancellationPercentage);
-        setShipType(response.data.shipType);
         var mymap = L.map('mapid').setView(
           [response.data.location.latitude, response.data.location.longitude],
           13
@@ -196,11 +186,12 @@ const FishingLessonDisplay = () => {
         crossOrigin=''
       />
       <script src='https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js'></script>
+
       <div>
         <nav className='flex flex-col bg-blue-500 w-64 float-left h-screen px-4 tex-gray-900 border border-blue-900'>
           <div className='mt-10 mb-4'>
             <ul className='ml-4'>
-              <Link to={'/ship/' + params.id}>
+              <Link to={'/fishingLesson/' + params.id}>
                 <li
                   className='mb-2 px-4 py-4 text-black-100 flex flex-row bg-gray-300 border-gray-300 hover:text-black   
             hover:bg-gray-300  hover:font-bold rounded'
@@ -226,7 +217,7 @@ const FishingLessonDisplay = () => {
                 </li>
               </Link>
 
-              <Link to={'/shipImages/' + params.id}>
+              <Link to={'/fishingLessonImages/' + params.id}>
                 <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded'>
                   <span>
                     <svg
@@ -248,7 +239,7 @@ const FishingLessonDisplay = () => {
                   <span className='ml-2'>Images</span>
                 </li>
               </Link>
-              <Link to={'/shipAction/' + params.id}>
+              <Link to={'/fishingLessonAction/' + params.id}>
                 <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded'>
                   <span>
                     <svg
@@ -278,7 +269,7 @@ const FishingLessonDisplay = () => {
                   <span className='ml-2'>Quick reservation</span>
                 </li>
               </Link>
-              <Link to={'/shipPricelist/' + params.id}>
+              <Link to={'/fishingLessonPricelist/' + params.id}>
                 <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded'>
                   <span>
                     <svg
@@ -299,8 +290,7 @@ const FishingLessonDisplay = () => {
                   <span className='ml-2'>Pricelist</span>
                 </li>
               </Link>
-
-              <Link to={'/shipRules/' + params.id}>
+              <Link to={'/fishingLessonRules/' + params.id}>
                 <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded'>
                   <span>
                     <svg
@@ -322,7 +312,7 @@ const FishingLessonDisplay = () => {
                   <span className='ml-2'>Conduct rules</span>
                 </li>
               </Link>
-              <Link to={'/shipKit/' + params.id}>
+              <Link to={'/fishingLessonKit/' + params.id}>
                 <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded'>
                   <svg
                     version='1.0'
@@ -346,7 +336,7 @@ const FishingLessonDisplay = () => {
                     />
                   </svg>
 
-                  <span className='ml-2'>Ship kit</span>
+                  <span className='ml-2'>FishingLesson kit</span>
                 </li>
               </Link>
             </ul>

@@ -745,13 +745,6 @@ const ReservationNewEntity = () => {
     rulesOfConduct: string,
     location: any
   ) => {
-    const services: any[] = [];
-    regularServices.map((service: any) => {
-      services.push(service);
-    });
-    additionalServices.map((service: any) => {
-      services.push(service);
-    });
     var fishingKit = '';
     for (let i = 0; i < fishingEquipment.length; i++) {
       fishingKit += '#';
@@ -765,7 +758,8 @@ const ReservationNewEntity = () => {
       capacity,
       fishingKit,
       cancellationPercentage,
-      services,
+      regularServices,
+      additionalServices,
       location,
     };
   };

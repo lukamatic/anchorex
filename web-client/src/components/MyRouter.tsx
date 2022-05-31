@@ -21,6 +21,9 @@ import ShipDisplayRules from './display-ship/ShipDisplayRules';
 import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
 import ShipDisplayKit from './display-ship/ShipDisplayKit';
 import FishingLessonDisplay from './display-fishing-lesson/FishingLessonDisplay';
+import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesssonDisplayPricelist';
+import FishingLessonDisplayRules from './display-fishing-lesson/FishingLessonDisplayRules';
+import FishingLessonDisplayKit from './display-fishing-lesson/FishingLessonDisplayKit';
 
 const MyRouter = () => {
   return (
@@ -60,9 +63,7 @@ const MyRouter = () => {
         <Route path='/lodge/:id'>
           <LodgeDisplay />
         </Route>
-        <Route path='/fishingLesson/:id'>
-          <FishingLessonDisplay />
-        </Route>
+
         <Route path='/lodgeImages/:id'>
           <LodgeDisplayImages />
         </Route>
@@ -84,6 +85,19 @@ const MyRouter = () => {
 
         <Route path='/shipKit/:id'>
           <ShipDisplayKit />
+        </Route>
+
+        <Route path='/fishingLesson/:id'>
+          <FishingLessonDisplay />
+        </Route>
+        <Route path='/fishingLessonPriceList/:id'>
+          <FishingLessonDisplayPricelist />
+        </Route>
+        <Route path='/fishingLessonRules/:id'>
+          <FishingLessonDisplayRules />
+        </Route>
+        <Route path='/fishingLessonKit/:id'>
+          <FishingLessonDisplayKit />
         </Route>
 
         <Route path='/reservationNewEntity'>

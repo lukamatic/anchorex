@@ -6,6 +6,7 @@ import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDisplayDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
 import com.teameleven.anchorex.dto.test.TestDto;
 import com.teameleven.anchorex.enums.ReservationEntityType;
+import com.teameleven.anchorex.enums.ServiceType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +26,16 @@ public class FishingLessonMapper {
                 .fishingKit(dto.getFishingKit())
                 .services(new HashSet<>())
                 .build();
-        dto.getServices().forEach(fishingLesson::addService);
+        dto.getRegularServices().forEach(serviceDTO -> {
+            serviceDTO.setType(ServiceType.REGULAR);
+            var service = ServiceMapper.serviceDTOToService(serviceDTO);
+            fishingLesson.addService(service);
+        });
+        dto.getAdditionalServices().forEach(serviceDTO -> {
+            serviceDTO.setType(ServiceType.ADDITIONAL);
+            var service = ServiceMapper.serviceDTOToService(serviceDTO);
+            fishingLesson.addService(service);
+        });
         fishingLesson.setLocation(dto.getLocation());
         return fishingLesson;
     }

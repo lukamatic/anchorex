@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.User;
+import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UserDto;
 import com.teameleven.anchorex.mapper.UserMapper;
 import com.teameleven.anchorex.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -41,6 +43,12 @@ public class UserController {
 
         var userDto = UserMapper.UserToUserDto(user);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<User> patchUser(@Valid @RequestBody CreateUserDto createUserDto) throws Exception {
+        var user = userService.update(createUserDto);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
     
     @DeleteMapping(path = "/{id}")

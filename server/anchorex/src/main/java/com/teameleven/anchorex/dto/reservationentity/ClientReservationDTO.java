@@ -1,18 +1,29 @@
-package com.teameleven.anchorex.dto;
+package com.teameleven.anchorex.dto.reservationentity;
 
 import com.teameleven.anchorex.domain.Service;
 
 import java.util.Date;
 import java.util.Set;
 
-public class ReservationDTO {
+public class ClientReservationDTO {
     private Date startDate;
     private Date endDate;
     private Integer maxPersonNumber;
     private double discount;
     private double price;
-    private Set<Service> services;
+    private Set<ServiceDTO> services;
     private Long userId;
+    private boolean captain;
+    private Long reservationEntityId;
+    private String userFullname;
+
+    public String getUserFullname() {
+        return userFullname;
+    }
+
+    public void setUserFullname(String userFullname) {
+        this.userFullname = userFullname;
+    }
 
     public Long getUserId() {
         return userId;
@@ -22,10 +33,7 @@ public class ReservationDTO {
         this.userId = userId;
     }
 
-    private Long reservationEntityId;
-    private boolean captain;
-
-    public ReservationDTO(){
+    public ClientReservationDTO(){
         super();
     }
 
@@ -85,11 +93,11 @@ public class ReservationDTO {
         this.price = price;
     }
 
-    public Set<Service> getServices() {
+    public Set<ServiceDTO> getServices() {
         return services;
     }
 
-    public void setServices(Set<Service> services) {
+    public void setServices(Set<ServiceDTO> services) {
         this.services = services;
     }
 }

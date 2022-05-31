@@ -1,10 +1,8 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Ship;
-import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;
-import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
-import com.teameleven.anchorex.dto.reservationentity.ShipDTO;
+import com.teameleven.anchorex.dto.reservationentity.*;
+import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +45,12 @@ public class ShipController {
     }
 
     @GetMapping(path="/{id}")
-    public ResponseEntity<Ship> getShip(@PathVariable Long id){
+    public ResponseEntity<ShipDisplayDTO> getShip(@PathVariable Long id){
         Ship ship = shipService.getShipById(id);
+        ShipDisplayDTO shipDTO = ShipMapper.shipToShipDisplayDTO(ship);
         if(ship == null)
-            return new ResponseEntity<>(ship, HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(ship, HttpStatus.OK);
+            return new ResponseEntity<>(shipDTO, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(shipDTO, HttpStatus.OK);
     }
 
     @PutMapping(path="/updateShip", consumes = MediaType.APPLICATION_JSON_VALUE)

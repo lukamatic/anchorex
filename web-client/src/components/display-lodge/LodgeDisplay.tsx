@@ -51,14 +51,15 @@ const LodgeDisplay = () => {
       .then((response) => {
         setName(response.data.name);
         setDescription(response.data.description);
+        setSingleBedroomNumber(response.data.singleBedroomNumber);
+        setDoubleBedroomNumber(response.data.doubleBedroomNumber);
+        setFourBedroomNumber(response.data.fourBedroomNumber);
         setLatitude(response.data.location.latitude);
         setLongitude(response.data.location.longitude);
         setAddress(response.data.location.address);
         setCity(response.data.location.city);
         setCountry(response.data.location.country);
-        setSingleBedroomNumber(response.data.singleBedroomNumber);
-        setDoubleBedroomNumber(response.data.doubleBedroomNumber);
-        setFourBedroomNumber(response.data.fourBedroomNumber);
+       
         var mymap = L.map("mapid").setView(
           [response.data.location.latitude, response.data.location.longitude],
           13

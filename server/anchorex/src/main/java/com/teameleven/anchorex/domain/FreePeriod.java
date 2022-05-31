@@ -15,8 +15,8 @@ public class FreePeriod {
     @Column
     private Date endDate;
 
-    @JsonBackReference
-    @ManyToOne (fetch = FetchType.EAGER)
+   // @JsonBackReference
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name= "reservation_entity_id")
     private ReservationEntity entity;
 

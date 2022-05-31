@@ -38,13 +38,8 @@ const FishingLessonDisplay = () => {
       city,
       country,
     },
-    length,
-    engineCount,
-    enginePower,
-    maxSpeed,
     capacity,
     cancellationPercentage,
-    shipType,
   });
 
   useEffect(() => {
@@ -133,40 +128,6 @@ const FishingLessonDisplay = () => {
     console.log(entity);
   };
 
-  const lengthChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-    setLength(value);
-    entity.length = value;
-    console.log(entity);
-  };
-
-  const engineCountChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = Number(event.target.value);
-    setEngineCount(value);
-    entity.engineCount = value;
-    console.log(entity);
-  };
-
-  const enginePowerChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = Number(event.target.value);
-    setEnginePower(value);
-    entity.enginePower = value;
-    console.log(entity);
-  };
-
-  const maxSpeedChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = Number(event.target.value);
-    setMaxSpeed(value);
-    entity.maxSpeed = value;
-    console.log(entity);
-  };
-
   const capacityChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -185,15 +146,6 @@ const FishingLessonDisplay = () => {
     console.log(entity);
   };
 
-  const shipTypeChangeHandler = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const value = event.target.value;
-    setShipType(value);
-    entity.shipType = value;
-    console.log(entity);
-  };
-
   const changeEntity = () => {
     const location = {
       latitude,
@@ -205,7 +157,7 @@ const FishingLessonDisplay = () => {
     entity.location = location;
 
     axios
-      .put('/api/reservationEntity/updateShip', entity, {
+      .put('/api/fishingLessons/', entity, {
         headers: {
           'Access-Control-Allow-Methods': 'PUT',
           'Access-Control-Allow-Origin': '*',
@@ -450,118 +402,6 @@ const FishingLessonDisplay = () => {
         <div className='md:flex md:items-center mb-6'>
           <div className='md:w-1/3'>
             <label className='block text-gray-500 font-bold md:text-right ml-32 mb-1 md:mb-0 pr-4'>
-              Length
-            </label>
-          </div>
-          {userRole === UserRole.INSTRUCTOR ? (
-            <input
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='length'
-              min='0'
-              step='0.01'
-              value={length}
-              onChange={lengthChangeHandler}
-            ></input>
-          ) : (
-            <input
-              disabled
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='length'
-              value={entity.length}
-            ></input>
-          )}
-        </div>
-        <div className='md:flex md:items-center mb-6'>
-          <div className='md:w-1/3'>
-            <label className='block text-gray-500 font-bold md:text-right ml-32 mb-1 md:mb-0 pr-4'>
-              Engine number
-            </label>
-          </div>
-          {userRole === UserRole.INSTRUCTOR ? (
-            <input
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='engineCount'
-              min='0'
-              step='1'
-              value={engineCount}
-              onChange={engineCountChangeHandler}
-            ></input>
-          ) : (
-            <input
-              disabled
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='length'
-              value={entity.engineCount}
-            ></input>
-          )}
-        </div>
-        <div className='md:flex md:items-center mb-6'>
-          <div className='md:w-1/3'>
-            <label className='block text-gray-500 font-bold md:text-right ml-32 mb-1 md:mb-0 pr-4'>
-              Engine power
-            </label>
-          </div>
-          {userRole === UserRole.INSTRUCTOR ? (
-            <input
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='enginePower'
-              min='0'
-              step='1'
-              value={enginePower}
-              onChange={enginePowerChangeHandler}
-            ></input>
-          ) : (
-            <input
-              disabled
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='enginePower'
-              value={entity.enginePower}
-            ></input>
-          )}
-        </div>
-        <div className='md:flex md:items-center mb-6'>
-          <div className='md:w-1/3'>
-            <label className='block text-gray-500 font-bold md:text-right ml-32 mb-1 md:mb-0 pr-4'>
-              Max speed
-            </label>
-          </div>
-          {userRole === UserRole.INSTRUCTOR ? (
-            <input
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='maxSpeed'
-              min='0'
-              step='0.1'
-              value={maxSpeed}
-              onChange={maxSpeedChangeHandler}
-            ></input>
-          ) : (
-            <input
-              disabled
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              name='maxSpeed'
-              value={entity.maxSpeed}
-            ></input>
-          )}
-        </div>
-        <div className='md:flex md:items-center mb-6'>
-          <div className='md:w-1/3'>
-            <label className='block text-gray-500 font-bold md:text-right ml-32 mb-1 md:mb-0 pr-4'>
               Capacity
             </label>
           </div>
@@ -647,43 +487,12 @@ const FishingLessonDisplay = () => {
             </svg>
           </div>
         </div>
-        <div className='md:flex md:items-center mb-6'>
-          <div className='md:w-1/3'>
-            <label className='block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4'>
-              Ship type
-            </label>
-          </div>
-          {userRole === UserRole.INSTRUCTOR ? (
-            <select
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded ml-4 w-24 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 input'
-              value={shipType}
-              onChange={shipTypeChangeHandler}
-            >
-              <option value='SHIP'>Ship</option>
-              <option value='BOAT'>Boat</option>
-            </select>
-          ) : (
-            <div></div>
-          )}
-
-          <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 '>
-            <svg
-              className='fill-current h-4 w-4'
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 20 20'
-            >
-              <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-            </svg>
-          </div>
-        </div>
-        {userRole === UserRole.INSTRUCTOR ? (
+        {userRole === UserRole.INSTRUCTOR && (
           <div>
             <button className='btnBlueWhite w-72 ml-60' onClick={changeEntity}>
               Submit changes
             </button>
           </div>
-        ) : (
-          <div></div>
         )}
       </div>
     </div>

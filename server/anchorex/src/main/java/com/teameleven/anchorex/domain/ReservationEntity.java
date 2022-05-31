@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@SQLDelete(sql = "UPDATE reservationEntity SET deleted = true WHERE id = ?")
+//@SQLDelete(sql = "UPDATE reservation_entity SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor

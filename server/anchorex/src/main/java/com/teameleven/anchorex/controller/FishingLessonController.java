@@ -1,12 +1,14 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.FishingLesson;
+import com.teameleven.anchorex.domain.Test;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDisplayDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.FishingLessonService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +52,16 @@ public class FishingLessonController {
 
         var fishingLessonDto = FishingLessonMapper.toDisplayDto(fishingLesson);
         return new ResponseEntity<>(fishingLessonDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Test> delete(@PathVariable("id") Long id) {
+        try {
+            fishingLessonService.delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Fishing lesson with id %d doesn't exist.", id));
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

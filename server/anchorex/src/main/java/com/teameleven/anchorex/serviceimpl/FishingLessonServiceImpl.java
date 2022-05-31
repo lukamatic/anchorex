@@ -60,7 +60,8 @@ public class FishingLessonServiceImpl implements FishingLessonService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        fishingLessonRepository.deleteById(id);
+        fishingLessonRepository.deleteFishingLesson(id);
     }
 }

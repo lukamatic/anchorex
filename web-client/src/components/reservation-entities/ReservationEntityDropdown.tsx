@@ -3,7 +3,9 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
 import { UserRole } from '../../model/user-role.enum';
+import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
 
 const ReservationEntityDropdown = (props: { entityId: number }) => {
   const authContext = useContext(AuthContext);
@@ -19,7 +21,26 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
   };
 
   const remove =
-    (id: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    (id: number) => async (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (userRole === UserRole.INSTRUCTOR) {
+        const response = await fetch(`/api/fishingLessons/${props.entityId}`, {
+          method: 'DELETE',
+          headers: [
+            ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+          ],
+        });
+
+        switch (response.status) {
+          case HttpStatusCode.NO_CONTENT:
+            alert('Fishing lesson successfully deleted.');
+            window.location.reload();
+            return;
+          default:
+            alert('Unknown error occurred.');
+            return;
+        }
+      }
+
       var url = '/api/reservationEntity/';
       if (userRole === UserRole.LODGE_OWNER) {
         url += 'deleteLodge/';

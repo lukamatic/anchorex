@@ -1,4 +1,4 @@
-package com.teameleven.anchorex.dto.reservationentity;
+package com.teameleven.anchorex.dto;
 
 import java.util.Date;
 

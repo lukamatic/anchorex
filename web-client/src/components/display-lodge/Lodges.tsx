@@ -1,21 +1,21 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { ReservationEntityType } from "../../model/reservation-entity-type.enum";
-import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
-import ReservationEntities from "../reservation-entities/ReservationEnities";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { ReservationEntityType } from '../../model/reservation-entity-type.enum';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
+import ReservationEntities from '../reservation-entities/ReservationEnities';
 const Lodges = () => {
   const [lodges, setLodges] = useState([]);
   useEffect(() => {
     axios
-      .get("api/auth/email", {
+      .get('api/auth/email', {
         params: {
-          email: localStorage.getItem(LocalStorageItem.email),
+          email: localStorage.getItem(LocalStorageItem.EMAIL),
         },
         headers: {
-          Accept: "application/json",
-          "Content-type": "application/json",
+          Accept: 'application/json',
+          'Content-type': 'application/json',
           Authorization:
-            "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+            'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
         },
       })
       .then((response) => {
@@ -24,19 +24,19 @@ const Lodges = () => {
 
     const findLodge = (id: number) => {
       axios
-        .get("/api/lodge/lodges/" + id, {
+        .get('/api/reservationEntity/lodges/' + id, {
           headers: {
-            Accept: "application/json",
-            "Content-type": "application/json",
+            Accept: 'application/json',
+            'Content-type': 'application/json',
             Authorization:
-              "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+              'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
           },
         })
         .then((response) => {
           setLodges(response.data);
         });
     };
-  },[]);
+  }, []);
 
   return (
     <ReservationEntities

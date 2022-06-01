@@ -1,4 +1,7 @@
-package com.teameleven.anchorex.dto.reservationentity;
+package com.teameleven.anchorex.dto.reservationEntity;
+
+import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
 
 import java.util.Set;
 

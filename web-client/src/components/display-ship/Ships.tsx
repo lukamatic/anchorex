@@ -4,19 +4,19 @@ import { ReservationEntityType } from '../../model/reservation-entity-type.enum'
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 import ReservationEntities from '../reservation-entities/ReservationEnities';
 const Ships = () => {
-  const [ships, setShips] = useState([])
+  const [ships, setShips] = useState([]);
 
   useEffect(() => {
     axios
-      .get("api/auth/email", {
+      .get('api/auth/email', {
         params: {
-          email: localStorage.getItem(LocalStorageItem.email),
+          email: localStorage.getItem(LocalStorageItem.EMAIL),
         },
         headers: {
-          Accept: "application/json",
-          "Content-type": "application/json",
+          Accept: 'application/json',
+          'Content-type': 'application/json',
           Authorization:
-            "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+            'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
         },
       })
       .then((response) => {
@@ -25,19 +25,19 @@ const Ships = () => {
 
     const findShips = (id: number) => {
       axios
-        .get("/api/ship/ships/" + id, {
+        .get('/api/ship/ships/' + id, {
           headers: {
-            Accept: "application/json",
-            "Content-type": "application/json",
+            Accept: 'application/json',
+            'Content-type': 'application/json',
             Authorization:
-              "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+              'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
           },
         })
         .then((response) => {
           setShips(response.data);
         });
     };
-  },[]);
+  }, []);
 
   return (
     <ReservationEntities

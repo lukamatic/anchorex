@@ -11,7 +11,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE Location l SET l.latitude=?1, l.longitude=?2, l.address=?3, l.city=?4, " +
-            "l.country=?5 WHERE l.entity.id=?6")
+            "l.country=?5 WHERE l.reservationEntity.id=?6")
     void updateLocation(double latitude, double longitude, String address, String city,
                      String country, Long id);
 }

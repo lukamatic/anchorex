@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.dto.reservationentity;
 
 import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.dto.ServiceDTO;
 
 import java.util.Date;
 import java.util.Set;

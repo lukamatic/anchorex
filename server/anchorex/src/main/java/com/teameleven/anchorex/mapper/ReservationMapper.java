@@ -3,8 +3,8 @@ package com.teameleven.anchorex.mapper;
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.dto.ReservationDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
-import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
 
 import java.util.HashSet;
 import java.util.Set;

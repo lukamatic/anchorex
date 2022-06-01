@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.FishingLesson;
+import com.teameleven.anchorex.dto.ReservationEntityImageDto;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDisplayDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
@@ -11,6 +12,7 @@ import com.teameleven.anchorex.enums.ServiceType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 public class FishingLessonMapper {
     public static FishingLesson toModel(CreateFishingLessonDto dto) {
@@ -67,6 +69,7 @@ public class FishingLessonMapper {
                 .fishingKit(model.getFishingKit())
                 .services(ServiceMapper.toDtos(model.getServices()))
                 .location(LocationMapper.toDto(model.getLocation()))
+                .images(ReservationEntityImageMapper.toDtos(model.getImages()))
                 .build();
     }
 }

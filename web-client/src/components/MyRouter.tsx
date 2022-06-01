@@ -24,6 +24,7 @@ import FishingLessonDisplay from './display-fishing-lesson/FishingLessonDisplay'
 import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesssonDisplayPricelist';
 import FishingLessonDisplayRules from './display-fishing-lesson/FishingLessonDisplayRules';
 import FishingLessonDisplayKit from './display-fishing-lesson/FishingLessonDisplayKit';
+import FishingLessonDisplayImages from './display-fishing-lesson/FishingLessonDisplayImages';
 
 const MyRouter = () => {
   return (
@@ -89,6 +90,9 @@ const MyRouter = () => {
 
         <Route path='/fishingLesson/:id'>
           <FishingLessonDisplay />
+        </Route>
+        <Route path='/fishingLessonImages/:id'>
+          <FishingLessonDisplayImages />
         </Route>
         <Route path='/fishingLessonPriceList/:id'>
           <FishingLessonDisplayPricelist />

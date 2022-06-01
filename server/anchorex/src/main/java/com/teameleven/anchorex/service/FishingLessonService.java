@@ -28,5 +28,5 @@ public interface FishingLessonService {
 
     void addImages(Long id, MultipartFile[] files);
 
-    void deleteImages(String[] imageIds);
+    void removeImage(Long imageId);
 }

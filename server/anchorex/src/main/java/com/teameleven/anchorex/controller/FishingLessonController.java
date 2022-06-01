@@ -93,4 +93,10 @@ public class FishingLessonController {
         this.fishingLessonService.addImages(id, files);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping(path = "images/remove/{imageId}")
+    public ResponseEntity<Void> removeImage(@PathVariable("imageId") Long imageId) {
+        this.fishingLessonService.removeImage(imageId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

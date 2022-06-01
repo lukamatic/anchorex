@@ -8,6 +8,7 @@ import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.ServiceMapper;
 import com.teameleven.anchorex.repository.FishingLessonRepository;
 import com.teameleven.anchorex.repository.LocationRepository;
+import com.teameleven.anchorex.repository.ReservationEntityImageRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.service.FishingLessonService;
 import com.teameleven.anchorex.service.ImageService;
@@ -26,13 +27,16 @@ public class FishingLessonServiceImpl implements FishingLessonService {
     private final FishingLessonRepository fishingLessonRepository;
     private final LocationRepository locationRepository;
     private final ServiceRepository serviceRepository;
+    private final ReservationEntityImageRepository reservationEntityImageRepository;
 
     public FishingLessonServiceImpl(ImageService imageService, FishingLessonRepository fishingLessonRepository,
-                                    LocationRepository locationRepository, ServiceRepository serviceRepository) {
+                                    LocationRepository locationRepository, ServiceRepository serviceRepository,
+                                    ReservationEntityImageRepository reservationEntityImageRepository) {
         this.imageService = imageService;
         this.fishingLessonRepository = fishingLessonRepository;
         this.locationRepository = locationRepository;
         this.serviceRepository = serviceRepository;
+        this.reservationEntityImageRepository = reservationEntityImageRepository;
     }
 
     @Override
@@ -117,7 +121,7 @@ public class FishingLessonServiceImpl implements FishingLessonService {
     }
 
     @Override
-    public void deleteImages(String[] imageIds) {
-
+    public void removeImage(Long imageId) {
+        reservationEntityImageRepository.deleteById(imageId);
     }
 }

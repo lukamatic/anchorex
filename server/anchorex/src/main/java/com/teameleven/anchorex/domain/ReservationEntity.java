@@ -54,6 +54,9 @@ public class ReservationEntity {
     @OneToOne(mappedBy = "reservationEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Location location;
 
+    @OneToMany(mappedBy = "reservationEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    public Set<ReservationEntityImage> images = new HashSet<>();
+
     public void addService(Service service) {
         this.services.add(service);
         service.setReservationEntity(this);
@@ -67,5 +70,15 @@ public class ReservationEntity {
     public void setLocation(Location location) {
         this.location = location;
         location.setReservationEntity(this);
+    }
+
+    public void addImage(ReservationEntityImage image) {
+        this.images.add(image);
+        image.setReservationEntity(this);
+    }
+
+    public void removeImage(ReservationEntityImage image) {
+        this.images.remove(image);
+        image.setReservationEntity(null);
     }
 }

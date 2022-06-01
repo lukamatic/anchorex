@@ -1,34 +1,35 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.FishingLesson;
+import com.teameleven.anchorex.domain.ReservationEntityImage;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
-import com.teameleven.anchorex.dto.fishingLesson.UpdateFishingLessonDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.ServiceMapper;
 import com.teameleven.anchorex.repository.FishingLessonRepository;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.service.FishingLessonService;
-import org.hibernate.cfg.NotYetImplementedException;
+import com.teameleven.anchorex.service.ImageService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 
 @Service
 public class FishingLessonServiceImpl implements FishingLessonService {
+    private final ImageService imageService;
     private final FishingLessonRepository fishingLessonRepository;
     private final LocationRepository locationRepository;
     private final ServiceRepository serviceRepository;
 
-    public FishingLessonServiceImpl(FishingLessonRepository fishingLessonRepository, LocationRepository locationRepository, ServiceRepository serviceRepository) {
+    public FishingLessonServiceImpl(ImageService imageService, FishingLessonRepository fishingLessonRepository,
+                                    LocationRepository locationRepository, ServiceRepository serviceRepository) {
+        this.imageService = imageService;
         this.fishingLessonRepository = fishingLessonRepository;
         this.locationRepository = locationRepository;
         this.serviceRepository = serviceRepository;
@@ -100,5 +101,23 @@ public class FishingLessonServiceImpl implements FishingLessonService {
     @Override
     public void deleteService(Long id){
         serviceRepository.deleteService(id);
+    }
+
+    @Override
+    public void addImages(Long id, MultipartFile[] files) {
+        var fishingLessonToUpdate = findOneById(id);
+
+        if (fishingLessonToUpdate == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Fishing lesson with id %d doesn't exist.", id));
+        }
+
+        var urls = this.imageService.uploadImages(files);
+        urls.forEach(url -> fishingLessonToUpdate.addImage(ReservationEntityImage.builder().url(url).build()));
+        fishingLessonRepository.save(fishingLessonToUpdate);
+    }
+
+    @Override
+    public void deleteImages(String[] imageIds) {
+
     }
 }

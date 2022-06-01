@@ -11,11 +11,13 @@ import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.FishingLessonService;
+import com.teameleven.anchorex.service.ImageService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -83,6 +85,12 @@ public class FishingLessonController {
     @DeleteMapping(path="/deleteService/{id}")
     public ResponseEntity<Void> deleteService(@PathVariable Long id){
         fishingLessonService.deleteService(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/{id}/images/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> addImages(@PathVariable("id") Long id, @RequestParam("files") MultipartFile[] files) {
+        this.fishingLessonService.addImages(id, files);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -24,6 +24,7 @@ import Ships from './display-ship/Ships';
 import ShipCalendar from './display-ship/ShipCalendar';
 import ShipAction from './display-ship/ShipAction';
 import ReservationHistory from './reservation-entities/ReservationHistory';
+import BusinessReport from './report/BusinessReport';
 
 const MyRouter = () => {
   return (
@@ -118,6 +119,10 @@ const MyRouter = () => {
 
         <Route path='/reservations'>
           <ReservationHistory/>
+        </Route>
+
+        <Route path='/report'>
+          <BusinessReport/>
         </Route>
       </Switch>
     </Router>

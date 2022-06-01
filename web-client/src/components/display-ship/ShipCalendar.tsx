@@ -1,13 +1,53 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
 
 const ShipCalendar = () => {
   const params: { id: string } = useParams();
-
+  
+  const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date);
   const [endDate, setEndDate] = useState(new Date);
+  const [maxPersonNumber, setMaxPersonNumber] = useState(0);
+  const [userId, setUserID] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [services, setServices] = useState([
+    {
+      id: 0,
+      info: "",
+      price: 0,
+      type: "",
+    },
+  ]);
+  const [reservations, setReservations] = useState([
+    {
+      startDate,
+      endDate,
+      maxPersonNumber,
+      price: 0,
+      discount,
+      services,
+      userId: userId,
+      userFullname: String
+    },
+  ]);
+
+  useEffect(() => {
+    axios
+    .get("/api/reservation/bookedReservations/" + params.id, {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization:
+          "Bearer " + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+      },
+    })
+    .then((response) => {
+      setReservations(response.data);
+    });
+}, []);
 
   const startDateChangeHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -44,6 +84,53 @@ const ShipCalendar = () => {
         });
     }
   }
+
+  const getReservations = reservations.map((reservation) => (
+    <tr className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
+      <td className="px-6 py-4">
+        {reservation.userFullname}
+      </td>
+      <td className="px-6 py-4">
+        {format(reservation.startDate, "dd.MM.yyyy.")}
+      </td>
+      <td className="px-6 py-4">
+        {format(reservation.endDate, "dd.MM.yyyy.")}
+      </td>
+      <td className="px-6 py-4">
+        {reservation.services.map((service) => {
+          return service.type === "REGULAR" ? service.info : " ";
+        })}
+      </td>
+      <td className="px-6 py-4">
+        {reservation.services.map((service) => {
+          return service.type === "ADDITIONAL" ? service.info + " " : " ";
+        })}
+      </td>
+      <td className="px-6 py-4">{reservation.discount}%</td>
+      <td className="px-6 py-4">{reservation.price}$</td>
+      <td className="px-6 py-4">{reservation.maxPersonNumber}</td>
+      <td className="px-6 py-4">
+        <button
+          type="button"
+          className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+          onClick={function(): void {
+           if(reservation.startDate <= new Date() && new Date() <= reservation.endDate){
+            setUserID(reservation.userId)
+            setShowModal(true)
+           }
+           
+          }}
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModalScrollable"
+        >
+          Personal reservation
+        </button>
+      </td>
+    </tr>
+  ));
+
+
+
   return (
     <div>
       <div>
@@ -269,6 +356,43 @@ const ShipCalendar = () => {
             </button>
           </div>
         </form>
+        <h2 className="text-xl font-bold leading-7 text-gray-900 mb-8 sm:text-3xl sm:truncate">
+          All reservations
+        </h2>
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                User
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Start date
+              </th>
+              <th scope="col" className="px-6 py-3">
+                End date
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Regular service
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Additional services
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Discount
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Price
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Person number
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Personal reservation
+              </th>
+            </tr>
+          </thead>
+          <tbody>{getReservations}</tbody>
+        </table>
       </div>
     </div>
   );

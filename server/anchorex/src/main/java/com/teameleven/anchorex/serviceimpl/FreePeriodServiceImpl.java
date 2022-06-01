@@ -1,9 +1,11 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.FreePeriod;
+import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationEntity;
 import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.repository.FreePeriodRepository;
+import com.teameleven.anchorex.repository.ReservationRepository;
 import com.teameleven.anchorex.service.FreePeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,17 @@ public class FreePeriodServiceImpl implements FreePeriodService {
     @Autowired
     private final FreePeriodRepository freePeriodRepository;
 
-    public FreePeriodServiceImpl(FreePeriodRepository freePeriodRepository) {
+    @Autowired
+    private final ReservationRepository reservationRepository;
+
+    public FreePeriodServiceImpl(FreePeriodRepository freePeriodRepository, ReservationRepository reservationRepository) {
         this.freePeriodRepository = freePeriodRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
     public void addFreePeriod(FreePeriodDTO periodDTO, ReservationEntity entity) {
-        if(checkIfPeriodIsValid(periodDTO, entity.getId())) {
+        if(checkIfPeriodIsValid(periodDTO, entity.getId()) && checkReservationPeriods(periodDTO, entity.getId())) {
             checkForOverlapingPeriods(periodDTO, entity.getId());
             checkForInbetweenPeriods(periodDTO, entity);
         }
@@ -150,6 +156,25 @@ public class FreePeriodServiceImpl implements FreePeriodService {
         newPeriod.setStartDate(freePeriod.getStartDate());
         newPeriod.setEndDate(startDate);
         freePeriodRepository.save(newPeriod);
+    }
+
+    private boolean checkReservationPeriods(FreePeriodDTO periodDTO, Long id){
+        List<Reservation> reservations = reservationRepository.getEntityReservations(id);
+        for(Reservation reservation: reservations) {
+            if(periodDTO.getEndDate().after(reservation.getStartDate()) &&
+                    periodDTO.getEndDate().before(reservation.getEndDate())){
+                return false;
+            }
+            if(periodDTO.getStartDate().after(reservation.getStartDate()) &&
+                    periodDTO.getStartDate().before(reservation.getEndDate())) {
+                return false;
+            }
+            if(periodDTO.getStartDate().before(reservation.getStartDate()) &&
+                    periodDTO.getEndDate().after(reservation.getEndDate())) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

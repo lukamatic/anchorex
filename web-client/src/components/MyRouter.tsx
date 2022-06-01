@@ -21,10 +21,11 @@ import ShipDisplayRules from './display-ship/ShipDisplayRules';
 import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
 import ShipDisplayKit from './display-ship/ShipDisplayKit';
 import FishingLessonDisplay from './display-fishing-lesson/FishingLessonDisplay';
-import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesssonDisplayPricelist';
-import FishingLessonDisplayRules from './display-fishing-lesson/FishingLessonDisplayRules';
-import FishingLessonDisplayKit from './display-fishing-lesson/FishingLessonDisplayKit';
 import FishingLessonDisplayImages from './display-fishing-lesson/FishingLessonDisplayImages';
+import FishingLessonDisplayKit from './display-fishing-lesson/FishingLessonDisplayKit';
+import FishingLessonDisplayRules from './display-fishing-lesson/FishingLessonDisplayRules';
+import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesssonDisplayPricelist';
+import ReservationHistory from './reservation-entities/ReservationHistory';
 
 const MyRouter = () => {
   return (
@@ -110,6 +111,10 @@ const MyRouter = () => {
 
         <Route path='/serviceSignupRequests'>
           <ServiceSignupRequests />
+        </Route>
+
+        <Route path='/reservations'>
+          <ReservationHistory />
         </Route>
       </Switch>
     </Router>

@@ -98,5 +98,23 @@ public class ReservationController {
         return new ResponseEntity<>(report, HttpStatus.CREATED);
     }
 
+    @GetMapping(path="/monthly")
+    public int[] reservationNumberByMonth(@RequestParam int year, @RequestParam String email){
+        Long id = userService.findByEmail(email).getId();
+        return reservationService.getReservationNumberByMonth(year, id);
+    }
+
+    @GetMapping(path="/yearly")
+    public int[] reservationNumberByYear(@RequestParam String email){
+        Long id = userService.findByEmail(email).getId();
+        return reservationService.getReservationNumberByYear(id);
+    }
+
+    @GetMapping(path="/weekly")
+    public int[] reservationNumberByWeek(@RequestParam String email){
+        Long id = userService.findByEmail(email).getId();
+        return reservationService.getReservationNumberByWeek(id);
+    }
+
 
 }

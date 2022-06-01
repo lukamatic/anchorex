@@ -20,4 +20,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(value = "SELECT r FROM Reservation r where r.ownerId=?1 and r.userId!=null")
     List<Reservation> getClosedReservations(Long id);
 
+    @Query(value = "SELECT count(*) FROM Reservation r where extract(month from r.startDate) = ?1 and extract(year from r.endDate) = ?2 and r.ownerId=?3")
+    int getReservationNumberByMonth(int month, int year, Long id);
+
+    @Query(value = "SELECT count(*) FROM Reservation r where extract(year from r.startDate) = ?1 and r.ownerId=?2")
+    int getReservationNumberByYear(int year, Long id);
+
+    @Query(value = "SELECT r FROM Reservation r where extract(month from r.startDate) = ?1 and extract(year from r.endDate) = ?2 and r.ownerId=?3")
+    List<Reservation> getReservationsByMonth(int month, int year, Long id);
 }

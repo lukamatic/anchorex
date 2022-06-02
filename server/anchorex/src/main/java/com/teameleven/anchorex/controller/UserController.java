@@ -1,7 +1,9 @@
 package com.teameleven.anchorex.controller;
 
+import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
+import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.dto.user.UserDto;
 import com.teameleven.anchorex.mapper.UserMapper;
 import com.teameleven.anchorex.service.UserService;
@@ -45,10 +47,17 @@ public class UserController {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<User> patchUser(@Valid @RequestBody CreateUserDto createUserDto) throws Exception {
-        var user = userService.update(createUserDto);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<User> patchUser(@Valid @RequestBody UpdateUserDto updateUserDto) throws Exception {
+        try{
+            userService.update(updateUserDto);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        }catch (Exception ex){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
     
     @DeleteMapping(path = "/{id}")
@@ -62,4 +71,6 @@ public class UserController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }

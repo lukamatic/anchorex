@@ -7,6 +7,8 @@ import TextInput from '../common/TextInput';
 import SignupValidation from '../../validations/signup-validation';
 import LeftArrow from '../../icons/LeftArrow';
 import { useHistory } from 'react-router-dom';
+import { patchUser } from '../../server/service';
+import { HttpStatusCode } from '../../utils/http-status-code.enum';
 const ProfileScreen = () => {
 	const history = useHistory();
 	const { user } = useContext(AuthContext);
@@ -31,9 +33,17 @@ const ProfileScreen = () => {
 		setErrorMessage(newErrorMessages);
 		console.log(newErrorMessages);
 		console.log(newUserData);
+		setUserData(newUserData);
 	};
 
-	const save = () => {};
+	const save = async () => {
+		const user = userData;
+
+		const resp = await patchUser(user);
+		if (resp.status === HttpStatusCode.OK) {
+			alert('Ok');
+		}
+	};
 	const changePassword = () => {
 		history.push('/changePassword');
 	};
@@ -61,7 +71,7 @@ const ProfileScreen = () => {
 							placeholder='first name'
 							onChange={(e: any) => {
 								console.log(e);
-								handleChange(e, 'first_name', signUpValidation.validateFirstName);
+								handleChange(e, 'firstName', signUpValidation.validateFirstName);
 							}}
 						/>
 						<ErrorLabel text={errorMessage?.firstName} />
@@ -91,24 +101,24 @@ const ProfileScreen = () => {
 								<p className='ml-2 text-gray-500'>(optional)</p>
 								<textarea className='input resize-none w-full h-40' maxLength={150} placeholder='Say something about yourself' onChange={(e: any) => handleChange(e, 'biography', null)} />
 							</div>
+							<div className=' bg-white  shadow-md rounded-md w-72 border-4 border-blue-200 flex flex-col top-8 p-8'>
+								<div>
+									<p className='text-3xl text-gray-500'>Loyalty program</p>
+									<p className='text-xl text-gray-500 text-bold'>GOLD</p>
+								</div>
+								<div>
+									<p className='text-2xl text-gray-500'>Points</p>
+									<p className='text-xl text-gray-500 text-bold'>30</p>
+								</div>
+							</div>
 							<div className='flex-1'></div>
-							<button className='btnWhiteBlue w-full mb-3' onClick={changePassword}>
+							{/* <button className='btnWhiteBlue w-full mb-3' onClick={changePassword}>
 								Change password
-							</button>
+							</button> */}
 							<button className='btnBlueWhite w-full' onClick={save}>
 								Save
 							</button>
 						</div>
-					</div>
-				</div>
-				<div className='absolute p-8 bg-white -right-56 shadow-md rounded-md w-72 border-4 border-blue-200 flex flex-col top-8'>
-					<div>
-						<p className='text-3xl text-gray-500'>Loyalty program</p>
-						<p className='text-xl text-gray-500 text-bold'>GOLD</p>
-					</div>
-					<div>
-						<p className='text-2xl text-gray-500'>Points</p>
-						<p className='text-xl text-gray-500 text-bold'>30</p>
 					</div>
 				</div>
 			</div>

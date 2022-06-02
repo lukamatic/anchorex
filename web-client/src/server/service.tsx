@@ -1,5 +1,6 @@
 import axios from 'axios';
 import searchDto, { searchResponseDto } from '../dtos/search.dto';
+import { LocalStorageItem } from '../utils/local-storage/local-storage-item.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
 
 interface httpResponse {
@@ -53,8 +54,10 @@ export const searchDataAsync = async (data: searchDto): Promise<httpResponse> =>
 	const options: any = {
 		method: 'POST',
 		url: `/api/search/entities`,
-		header: {
-			'Content-Type': 'application/json',
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
 		},
 		data,
 	};
@@ -84,6 +87,33 @@ export const getUserByTokenAsync = async (): Promise<httpResponse> => {
 		})
 		.catch((error) => {
 			console.log('error: ', error.response);
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+
+export const patchUser = async (user: any | null): Promise<httpResponse> => {
+	console.log(Object.keys(user));
+
+	const token = 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN);
+	const options: any = {
+		method: 'PUT',
+		url: `/api/users/${user?.id}`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+		data: user,
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, message: response?.data };
+		})
+		.catch((error) => {
 			return {
 				status: error?.response?.status,
 				message: error?.response?.data,

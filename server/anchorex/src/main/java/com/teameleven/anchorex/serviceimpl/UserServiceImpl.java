@@ -72,9 +72,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(UpdateUserDto updateUserDto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void update(UpdateUserDto updateUserDto) throws Exception {
+		this.userRepository.updateUser(	updateUserDto.getId(),
+													updateUserDto.getAddress(),
+													updateUserDto.getBiography(),
+													updateUserDto.getCity(),
+													updateUserDto.getEmail(),
+													updateUserDto.getCountry(),
+													updateUserDto.getFirstName(),
+													updateUserDto.getLastName(),
+													updateUserDto.getPhoneNumber()
+													);
+		return;
+//		return success != 0;
 	}
 
 	@Override

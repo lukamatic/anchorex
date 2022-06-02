@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [master, cd/heroku-deploy]
+    branches: [master]
 
 jobs:
   build:

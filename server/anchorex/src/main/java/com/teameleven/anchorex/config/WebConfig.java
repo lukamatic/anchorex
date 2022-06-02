@@ -14,6 +14,6 @@ public class WebConfig implements WebMvcConfigurer {
 	// @CrossOrigin anotaciju da koristimo nad svakim kontrolerom
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins(String.format("http://localhost:%d", webClientPort));
+		registry.addMapping("/**").allowedOrigins(String.format("https://teameleven-anchorex.herokuapp.com/", webClientPort));
 	}
 }

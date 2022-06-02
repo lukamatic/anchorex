@@ -5,11 +5,11 @@ import { Bar } from "react-chartjs-2";
 import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.enum";
 
 
-const YearlyReservationsGraph = () => {
+const YearlySalaryGraph = () => {
     Chart.register(CategoryScale);
-    const [yearlyReservations, setYearlyReservations] = useState([]);
+    const [yearlySalary, setYearlySalaries] = useState([]);
     useEffect(() => {
-           axios.get("/api/reservation/yearly?email="
+           axios.get("/api/reservation/salaryYearly?email="
            + localStorage.getItem(LocalStorageItem.EMAIL), {
               headers: {
                 Accept: "application/json",
@@ -20,7 +20,7 @@ const YearlyReservationsGraph = () => {
               
           })
           .then((response) => {
-              setYearlyReservations(response.data)
+              setYearlySalaries(response.data)
           })
        }, []);
    
@@ -28,7 +28,7 @@ const YearlyReservationsGraph = () => {
      return (
        <div className="w-full mt-12 ml-36 mx-auto max-w-xl">
            <h2 className="text-xl font-bold leading-7 text-gray-900 mb-8 sm:text-3xl sm:truncate">
-           Yearly reservations
+           Yearly salaries
          </h2>
            <Bar
              data={{
@@ -37,9 +37,9 @@ const YearlyReservationsGraph = () => {
                datasets: [
                  {
                    // Label for bars
-                   label: "reservation number",
+                   label: "money earned in $",
                    // Data or value of your each variable
-                   data: yearlyReservations,
+                   data: yearlySalary,
                    // Color of each bar
                    backgroundColor: ["red" , "lightblue", "yellow", "lightgreen", "orange"],
                    // Border color of each bar
@@ -56,4 +56,4 @@ const YearlyReservationsGraph = () => {
      );
 };
 
-export default YearlyReservationsGraph;
+export default YearlySalaryGraph;

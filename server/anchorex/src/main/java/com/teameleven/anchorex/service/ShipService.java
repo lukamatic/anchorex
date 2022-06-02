@@ -20,5 +20,5 @@ public interface ShipService {
 
     void addService(ServiceDTO service, Long id);
 
-
+    void deleteService(Long id);
 }

@@ -145,9 +145,13 @@ public class ReservationServiceImpl implements ReservationService {
         int[] weeklyReservations = new int[4];
         int index = 0;
         ZoneId defaultZoneId = ZoneId.systemDefault();
-        for(int i = 1; i<= 28; i+=7){
+        for(int i = 1; i<= 29; i+=7){
             LocalDate localBeggining = LocalDate.of(2022,5,i);
-            LocalDate localEnding = LocalDate.of(2022,5,i+6);
+            int endDayOfMonth = i + 6;
+            if (i < 29){
+                endDayOfMonth = 31;
+            }
+            LocalDate localEnding = LocalDate.of(2022,5,endDayOfMonth);
             Date begginingOfTheWeek = Date.from(localBeggining.atStartOfDay(defaultZoneId).toInstant());
             Date endingOfTheWeek = Date.from(localEnding.atStartOfDay(defaultZoneId).toInstant());
             for(Reservation reservation: monthlyReservations){
@@ -158,5 +162,27 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         return weeklyReservations;
+    }
+
+    @Override
+    public double[] getSalaryByYear(Long id) {
+        double[] yearlySalaries = new double[5];
+        int index = 0;
+        for(int i = 2018; i <= 2022; i++){
+            yearlySalaries[index] = reservationRepository.getSalaryByYear(i, id);
+            index++;
+        }
+        return yearlySalaries;
+    }
+
+    @Override
+    public boolean checkIfEntityIsAvailable(Long id){
+        List<Reservation> bookedReservations = reservationRepository.getBookedReservations(id);
+        for(Reservation reservation: bookedReservations){
+            if(reservation.getStartDate().before(new Date()) && reservation.getEndDate().after(new Date())){
+                return false;
+            }
+        }
+        return true;
     }
 }

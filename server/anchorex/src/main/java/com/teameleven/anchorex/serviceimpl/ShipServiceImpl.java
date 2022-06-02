@@ -73,6 +73,11 @@ public class ShipServiceImpl implements ShipService {
         serviceRepository.save(service);
     }
 
+    @Override
+    public void deleteService(Long id) {
+        serviceRepository.deleteService(id);
+    }
+
     private void setLocation(LocationDTO locationDTO, Ship ship){
         Location location = LocationMapper.locationDTOToLocation(locationDTO);
         location.setReservationEntity(ship);

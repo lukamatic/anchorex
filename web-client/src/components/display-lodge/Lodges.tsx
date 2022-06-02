@@ -24,7 +24,7 @@ const Lodges = () => {
 
     const findLodge = (id: number) => {
       axios
-        .get('/api/reservationEntity/lodges/' + id, {
+        .get('/api/lodge/lodges/' + id, {
           headers: {
             Accept: 'application/json',
             'Content-type': 'application/json',

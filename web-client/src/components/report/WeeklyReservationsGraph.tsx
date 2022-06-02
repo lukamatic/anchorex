@@ -9,7 +9,7 @@ const WeeklyReservationsGraph = () => {
     const [weeklyReservations, setWeeklyReservations] = useState([]);
     useEffect(() => {
            axios.get("/api/reservation/weekly?email="
-           + localStorage.getItem(LocalStorageItem.email), {
+           + localStorage.getItem(LocalStorageItem.EMAIL), {
               headers: {
                 Accept: "application/json",
                 "Content-type": "application/json",

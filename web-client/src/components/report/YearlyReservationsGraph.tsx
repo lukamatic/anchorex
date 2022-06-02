@@ -10,7 +10,7 @@ const YearlyReservationsGraph = () => {
     const [yearlyReservations, setYearlyReservations] = useState([]);
     useEffect(() => {
            axios.get("/api/reservation/yearly?email="
-           + localStorage.getItem(LocalStorageItem.email), {
+           + localStorage.getItem(LocalStorageItem.EMAIL), {
               headers: {
                 Accept: "application/json",
                 "Content-type": "application/json",

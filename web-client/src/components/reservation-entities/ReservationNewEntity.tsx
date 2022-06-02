@@ -561,7 +561,7 @@ const ReservationNewEntity = () => {
       setCancellationPercentageErrorText('This field is required.');
     }
 
-    if (!name || !address || !description || !conductRules || !capacity) {
+    if (!name || !address || !description || !conductRules) {
       return false;
     }
 
@@ -641,7 +641,7 @@ const ReservationNewEntity = () => {
           location,
         };
         axios
-          .post('api/reservationEntity/createLodge', newLodge, {
+          .post('api/lodge/createLodge', newLodge, {
             headers: {
               Accept: 'application/json',
               'Content-type': 'application/json',
@@ -687,7 +687,7 @@ const ReservationNewEntity = () => {
         };
         console.log(newShip);
         axios
-          .post('/api/reservationEntity/createShip', newShip, {
+          .post('/api/ship/createShip', newShip, {
             headers: {
               Accept: 'application/json',
               'Content-type': 'application/json',

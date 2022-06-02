@@ -25,7 +25,7 @@ const Ships = () => {
 
     const findShips = (id: number) => {
       axios
-        .get('/api/reservationEntity/ships/' + id, {
+        .get('/api/ship/ships/' + id, {
           headers: {
             Accept: 'application/json',
             'Content-type': 'application/json',

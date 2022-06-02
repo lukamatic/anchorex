@@ -1,6 +1,5 @@
 package com.teameleven.anchorex.serviceimpl;
 
-import com.teameleven.anchorex.domain.FreePeriod;
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Service;
@@ -9,7 +8,6 @@ import com.teameleven.anchorex.enums.ServiceType;
 import com.teameleven.anchorex.mapper.LocationMapper;
 import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ServiceMapper;
-import com.teameleven.anchorex.repository.FreePeriodRepository;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.LodgeRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
@@ -42,6 +40,12 @@ public class LodgeServiceImpl implements LodgeService {
     @Override
     public List<LodgeDTO> getLodges(Long id) {
         List<Lodge> lodges = lodgeRepository.getLodgeByUserId(id);
+        return getLodgesDTO(lodges);
+    }
+
+    @Override
+    public List<LodgeDTO> getAllLodges() {
+        List<Lodge> lodges = lodgeRepository.getLodges();
         return getLodgesDTO(lodges);
     }
 

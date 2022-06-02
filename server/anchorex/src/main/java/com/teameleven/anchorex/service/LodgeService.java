@@ -13,6 +13,9 @@ public interface LodgeService {
 
     List<LodgeDTO> getLodges(Long id);
 
+    List<LodgeDTO> getAllLodges();
+
+
     void deleteLodge(Long id);
 
     Lodge getLodgeById(Long id);

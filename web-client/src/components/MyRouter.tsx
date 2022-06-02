@@ -27,6 +27,9 @@ import FishingLessonDisplayRules from './display-fishing-lesson/FishingLessonDis
 import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesssonDisplayPricelist';
 import ReservationHistory from './reservation-entities/ReservationHistory';
 import BusinessReport from './report/BusinessReport';
+import LodgeCalendar from './display-lodge/LodgeCalendar';
+import ShipAction from './display-ship/ShipAction';
+import ShipCalendar from './display-ship/ShipCalendar';
 
 const MyRouter = () => {
   return (
@@ -116,6 +119,19 @@ const MyRouter = () => {
 
         <Route path='/reservations'>
           <ReservationHistory />
+        </Route>
+
+        <Route path='/lodgeCalendar/:id'>
+          <LodgeCalendar/>
+        </Route>
+
+        
+        <Route path ='/shipAction/:id'>
+          <ShipAction />
+        </Route>
+
+        <Route path='/shipCalendar/:id'>
+          <ShipCalendar/>
         </Route>
 
         <Route path='/report'>

@@ -200,19 +200,18 @@ const ShipAction = () => {
       price += 20;
     }
     price = price * (1 - discount / 100);
-    setPrice(price);
+    return price;
   };
 
   const createReservation = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (checkConditions()) {
-      calculatePrice();
       var maxPersonNumber = personNumber;
       const reservation = {
         startDate,
         endDate,
         maxPersonNumber,
         discount,
-        price,
+        price: calculatePrice(),
         services,
         reservationEntityId: params.id,
         captain,
@@ -366,6 +365,7 @@ const ShipAction = () => {
                   <span className='ml-2'>Conduct rules</span>
                 </li>
               </Link>
+              
               <Link to={'/shipKit/' + params.id}>
                 <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded'>
                   <svg
@@ -592,25 +592,7 @@ const ShipAction = () => {
             </label>
           </div>
         )}
-        <div className='md:flex md:items-center mb-6'>
-          <div className='md:w-1/3'>
-            <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
-              Price
-            </label>
-          </div>
-          <div className='md:w-2/3'>
-            <input
-              className='bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-              id='inline-full-name'
-              type='number'
-              min='0'
-              max='100'
-              name='price'
-              value={price}
-            ></input>
-          </div>
-        </div>
-
+      
         <button className='btnBlueWhite w-72 ml-60' onClick={createReservation}>
           Add quick reservation
         </button>

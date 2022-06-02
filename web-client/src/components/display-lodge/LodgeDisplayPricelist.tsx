@@ -19,7 +19,7 @@ const LodgeDisplayPricelist = () => {
   const [services, setServices] = useState([{ id: 0, info, price, type }]);
   useEffect(() => {
     axios
-      .get('/api/reservationEntity/lodge/' + params.id, {
+      .get('/api/lodge/' + params.id, {
         headers: {
           Accept: 'application/json',
           'Content-type': 'application/json',
@@ -64,7 +64,7 @@ const LodgeDisplayPricelist = () => {
     (service: { info: string; price: number; type: string }) =>
     (event: React.MouseEvent<HTMLButtonElement>) => {
       axios
-        .post('/api/reservationEntity/addService/' + params.id, service, {
+        .post('/api/lodge/addService/' + params.id, service, {
           headers: {
             Accept: 'application/json',
             'Content-type': 'application/json',
@@ -83,7 +83,7 @@ const LodgeDisplayPricelist = () => {
   const removeService =
     (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
       axios
-        .delete('/api/reservationEntity/deleteService/' + index, {
+        .delete('/api/lodge/deleteService/' + index, {
           headers: {
             Accept: 'application/json',
             'Content-type': 'application/json',
@@ -221,6 +221,36 @@ const LodgeDisplayPricelist = () => {
                     </svg>
                   </span>
                   <span className='ml-2'>Conduct rules</span>
+                </li>
+              </Link>
+              <Link to={'/lodgeCalendar/' + params.id}>
+                <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg'>
+                  <span>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      stroke='#FFFFFF'
+                      strokeWidth='2'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    >
+                      <rect
+                        x='3'
+                        y='4'
+                        width='18'
+                        height='18'
+                        rx='2'
+                        ry='2'
+                      ></rect>
+                      <line x1='16' y1='2' x2='16' y2='6'></line>
+                      <line x1='8' y1='2' x2='8' y2='6'></line>
+                      <line x1='3' y1='10' x2='21' y2='10'></line>
+                    </svg>
+                  </span>
+                  <span className='ml-2'>Calendar</span>
                 </li>
               </Link>
             </ul>

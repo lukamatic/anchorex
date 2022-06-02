@@ -5,6 +5,7 @@ import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.dto.user.UserDto;
+import com.teameleven.anchorex.dto.user.UserPasswordDto;
 import com.teameleven.anchorex.mapper.UserMapper;
 import com.teameleven.anchorex.service.UserService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -52,6 +53,17 @@ public class UserController {
         try{
             userService.update(updateUserDto);
 
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        }catch (Exception ex){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+    @PutMapping(path = "/changePassword")
+    public ResponseEntity<User> changePassword(@Valid @RequestBody UserPasswordDto userPasswordDto) throws Exception {
+        try{
+            userService.updatePassword(userPasswordDto.getId(), userPasswordDto.getPassword());
             return new ResponseEntity<>(HttpStatus.OK);
 
         }catch (Exception ex){

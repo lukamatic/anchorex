@@ -12,4 +12,5 @@ export default interface CreateUserDto {
 	phoneNumber?: string;
 	biography?: string;
 	signupExplanation?: string;
+	id?: number;
 }

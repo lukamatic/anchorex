@@ -23,4 +23,5 @@ public interface UserService {
 	User findByEmail(String email);
 	
     void enableUser(Long id);
+	void updatePassword(Long userId, String password) throws Exception;
 }

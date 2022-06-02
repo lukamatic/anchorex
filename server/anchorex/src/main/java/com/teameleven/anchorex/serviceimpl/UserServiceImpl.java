@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -85,6 +86,16 @@ public class UserServiceImpl implements UserService {
 													);
 		return;
 //		return success != 0;
+	}
+
+	@Override
+	public void updatePassword(Long userId, String password) throws  Exception{
+
+		User user = this.userRepository.findOneById(userId);
+		user.setPassword(password);
+		user.encodePassword();
+		this.userRepository.updateUser(user.getId(), user.getPassword());
+
 	}
 
 	@Override

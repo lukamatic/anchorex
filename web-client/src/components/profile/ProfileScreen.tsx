@@ -9,12 +9,16 @@ import LeftArrow from '../../icons/LeftArrow';
 import { useHistory } from 'react-router-dom';
 import { patchUser } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
+import LoadingSpinner from '../common/LoadingSpinner';
 const ProfileScreen = () => {
 	const history = useHistory();
 	const { user } = useContext(AuthContext);
 
 	const [userData, setUserData] = useState<CreateUserDto>(user);
 	const [errorMessage, setErrorMessage] = useState<any>({});
+	const [errorText, setErrorText] = useState<string>('');
+	const [successText, setSuccessText] = useState<string>('');
+	const [fetching, setFetching] = useState(false);
 	const signUpValidation = new SignupValidation();
 
 	const handleChange = (e: any, field: string, validation: any) => {
@@ -38,11 +42,15 @@ const ProfileScreen = () => {
 
 	const save = async () => {
 		const user = userData;
+		setFetching(true);
 
 		const resp = await patchUser(user);
 		if (resp.status === HttpStatusCode.OK) {
-			alert('Ok');
+			setSuccessText('User data has been updated');
+		} else {
+			setErrorText('Internal server error');
 		}
+		setFetching(false);
 	};
 	const changePassword = () => {
 		history.push('/changePassword');
@@ -112,12 +120,31 @@ const ProfileScreen = () => {
 								</div>
 							</div>
 							<div className='flex-1'></div>
-							{/* <button className='btnWhiteBlue w-full mb-3' onClick={changePassword}>
-								Change password
-							</button> */}
-							<button className='btnBlueWhite w-full' onClick={save}>
-								Save
-							</button>
+							<div className='flex flex-col items-center'>
+								<p className='text-red-600 text-center text' hidden={!errorText}>
+									{errorText}
+								</p>
+								<button className='btnWhiteBlue w-full mb-3' onClick={changePassword}>
+									Change password
+								</button>
+								{fetching ? (
+									<div className='mt-4'>
+										<LoadingSpinner />
+									</div>
+								) : (
+									<div className='flex flex-col w-full px-16 md:px-0 text-lg'>
+										<p className='text-red-600 text-center text' hidden={!errorText}>
+											{errorText}
+										</p>
+										<p className='text-green-600 text-center text' hidden={!successText}>
+											{successText}
+										</p>
+										<button className='btnBlueWhite w-full mb-3' onClick={save}>
+											Change password
+										</button>
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 				</div>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import searchDto, { searchResponseDto } from '../dtos/search.dto';
+import { UserPasswordDto } from '../dtos/user';
 import { LocalStorageItem } from '../utils/local-storage/local-storage-item.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
 
@@ -107,6 +108,29 @@ export const patchUser = async (user: any | null): Promise<httpResponse> => {
 			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
 		},
 		data: user,
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, message: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+export const changePasswordAsync = async (userPassword: UserPasswordDto): Promise<httpResponse> => {
+	const options: any = {
+		method: 'PUT',
+		url: `/api/users/changePassword`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+		data: userPassword,
 	};
 
 	return axios(options)

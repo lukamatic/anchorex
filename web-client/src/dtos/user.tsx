@@ -10,4 +10,15 @@ export default interface User {
 	country?: string;
 	phoneNumber?: string;
 	biography?: string;
+	id?: number;
+}
+
+export interface UserPasswordDto {
+	id: number | undefined;
+	password: string;
+}
+
+export interface UserConfirmPassword {
+	password: string;
+	repeatedPassword: string;
 }

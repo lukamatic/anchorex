@@ -1,10 +1,15 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Lodge;
+import com.teameleven.anchorex.dto.FreePeriodDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
-import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
+import com.teameleven.anchorex.mapper.LodgeMapper;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.LodgeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reservationEntity")
+@RequestMapping("/api/lodge")
 public class LodgeController {
 
     private final LodgeService lodgeService;
+
+    @Autowired
+    private FreePeriodService freePeriodService;
 
     public LodgeController(LodgeService lodgeService) {
         this.lodgeService = lodgeService;
@@ -28,9 +36,9 @@ public class LodgeController {
         return new ResponseEntity<>(lodge, HttpStatus.CREATED);
     }
 
-    @GetMapping(path="/lodges")
-    public ResponseEntity<List<LodgeDTO>> getLodges(){
-        var lodges = lodgeService.getLodges();
+    @GetMapping(path="/lodges/{id}")
+    public ResponseEntity<List<LodgeDTO>> getLodges(@PathVariable Long id){
+        var lodges = lodgeService.getLodges(id);
         return new ResponseEntity<>(lodges, HttpStatus.OK);
     }
 
@@ -40,10 +48,11 @@ public class LodgeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path="/lodge/{id}")
-    public ResponseEntity<Lodge> getLodge(@PathVariable Long id){
+    @GetMapping(path="/{id}")
+    public ResponseEntity<LodgeDisplayDTO> getLodge(@PathVariable Long id){
         Lodge lodge = lodgeService.getLodgeById(id);
-        return new ResponseEntity<>(lodge, HttpStatus.OK);
+        LodgeDisplayDTO lodgeDTO = LodgeMapper.lodgeToLodgeDisplayDTO(lodge);
+        return new ResponseEntity<>(lodgeDTO, HttpStatus.OK);
     }
 
     @PutMapping(path="/updateLodge", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -62,5 +71,12 @@ public class LodgeController {
     public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
         lodgeService.addService(service, id);
         return new ResponseEntity<>(service, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path="/addFreePeriod/{id}")
+    public ResponseEntity<FreePeriodDTO> addFreePeriod(@RequestBody FreePeriodDTO freePeriod, @PathVariable Long id){
+        Lodge lodge = lodgeService.getLodgeById(id);
+        freePeriodService.addFreePeriod(freePeriod, lodge);
+        return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
     }
 }

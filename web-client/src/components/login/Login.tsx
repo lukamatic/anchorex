@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import AuthContext from '../../context/auth-context';
+import AuthContext, { AuthContextUser } from '../../context/auth-context';
 import { UserRole } from '../../model/user-role.enum';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
@@ -45,15 +45,23 @@ const Login = () => {
         setErrorLabelText('');
 
         var content = await response.json();
-        localStorageUtil.setAccessToken(content.userTokenState.accessToken);
-        localStorageUtil.setUserRole(content.userRole);
-        localStorageUtil.setEmail(email)
-        console.log(localStorageUtil.getAccessToken())
-        authContext.setUserRole(localStorageUtil.getUserRole());
-        if(localStorageUtil.getUserRole() === UserRole.LODGE_OWNER){
-          history.push('/lodges')
-        }
-        else{
+
+        const user: AuthContextUser = {
+          accessToken: content.userTokenState.accessToken,
+          loggedIn: true,
+          id: content.userId,
+          email: email,
+          role: content.userRole,
+        };
+
+        authContext.updateAuthContext(user);
+        localStorageUtil.setUser(user);
+
+        if (localStorageUtil.getUserRole() === UserRole.LODGE_OWNER) {
+          history.push('/lodges');
+        } else if (localStorageUtil.getUserRole() === UserRole.SHIP_OWNER) {
+          history.push('/ships');
+        } else {
           history.push('/');
         }
         break;

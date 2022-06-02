@@ -1,9 +1,6 @@
 package com.teameleven.anchorex.domain;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.teameleven.anchorex.enums.ServiceType;
-
 import javax.persistence.*;
 
 @Entity
@@ -11,17 +8,19 @@ public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     private String info;
+
     @Column
     private double price;
+
     @Column
     private ServiceType type;
 
-    @JsonBackReference
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name= "reservation_entity_id")
-    private ReservationEntity entity;
+    private ReservationEntity reservationEntity;
 
     public Service() {
         super();
@@ -66,11 +65,11 @@ public class Service {
         this.type = type;
     }
 
-    public ReservationEntity getEntity() {
-        return entity;
+    public ReservationEntity getReservationEntity() {
+        return reservationEntity;
     }
 
-    public void setEntity(ReservationEntity entity) {
-        this.entity = entity;
+    public void setReservationEntity(ReservationEntity reservationEntity) {
+        this.reservationEntity = reservationEntity;
     }
 }

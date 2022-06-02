@@ -3,14 +3,14 @@ package com.teameleven.anchorex.service;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
-import com.teameleven.anchorex.dto.reservationEntity.ServiceDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
 
 import java.util.List;
 
 public interface LodgeService {
     Lodge create (CreateLodgeDTO createLodgeDTO);
 
-    List<LodgeDTO> getLodges();
+    List<LodgeDTO> getLodges(Long id);
 
     void deleteLodge(Long id);
 
@@ -21,4 +21,5 @@ public interface LodgeService {
     void deleteService(Long id);
 
     void addService(ServiceDTO service, Long id);
+
 }

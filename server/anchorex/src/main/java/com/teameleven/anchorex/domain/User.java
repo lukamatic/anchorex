@@ -1,24 +1,21 @@
 package com.teameleven.anchorex.domain;
 
+import com.teameleven.anchorex.dto.user.CreateUserDto;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
-
-import com.teameleven.anchorex.dto.user.CreateUserDto;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 @Entity
-/*
- * @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
- * 
- * @Where(clause = "deleted = false")
- */
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Table(name = "users")
 public class User implements UserDetails {
 	@Id
@@ -28,7 +25,7 @@ public class User implements UserDetails {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles;
-
+	
 	@Column(unique = true)
 	private String email;
 
@@ -59,11 +56,21 @@ public class User implements UserDetails {
 	@Column
 	private Timestamp lastPasswordResetDate;
 
+	@Column
+	private boolean enabled;
+
+	@Column
+	private boolean deleted;
+
+	@Transient
+	@OneToOne(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	public ReservationReport report;
+
 	public User() {
 	}
 
 	public User(Long id, HashSet<Role> roles, String email, String password, String firstName, String lastName,
-			String address, String city, String country, String phoneNumber, String biography) {
+			String address, String city, String country, String phoneNumber, String biography, boolean enabled) {
 		this.id = id;
 		this.roles = roles;
 		this.email = email;
@@ -75,6 +82,7 @@ public class User implements UserDetails {
 		this.country = country;
 		this.phoneNumber = phoneNumber;
 		this.biography = biography;
+		this.enabled = enabled;
 	}
 
 	public User(CreateUserDto createUserDto) {
@@ -88,6 +96,7 @@ public class User implements UserDetails {
 		this.country = createUserDto.getCountry();
 		this.phoneNumber = createUserDto.getPhoneNumber();
 		this.biography = createUserDto.getBiography();
+		this.enabled = false;
 	}
 
 	public Long getId() {
@@ -178,6 +187,10 @@ public class User implements UserDetails {
 		this.biography = biography;
 	}
 
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public Timestamp getLastPasswordResetDate() {
 		return this.lastPasswordResetDate;
 	}
@@ -213,10 +226,34 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return this.enabled;
 	}
 
 	public void encodePassword() {
 		this.password = new BCryptPasswordEncoder().encode(this.password);
+	}
+
+	public boolean isClient() {
+		for (var role : roles) {
+			if (role.getName().equals("ROLE_CLIENT")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isService() {
+		for (var role : roles) {
+			if (role.getName().equals("ROLE_LODGE_OWNER")) {
+				return true;
+			}
+			if (role.getName().equals("ROLE_SHIP_OWNER")) {
+				return true;
+			}
+			if (role.getName().equals("ROLE_INSTRUCTOR")) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

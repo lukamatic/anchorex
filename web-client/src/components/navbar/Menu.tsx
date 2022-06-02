@@ -1,15 +1,14 @@
 import { useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import AuthContext from '../../context/auth-context';
+import AuthContext, { unsignedUser } from '../../context/auth-context';
 import { UserRole } from '../../model/user-role.enum';
-import LocalStorageUtil from '../../utils/local-storage-util';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import { MenuLinksGenerator } from '../../utils/menu/menu-links-generator';
 import MenuToggleButton from './MenuToggleButton';
 
 const Menu = (props: { toggleMenu: () => void }) => {
   const authContext = useContext(AuthContext);
-  const menuLinks = new MenuLinksGenerator().generate(authContext.userRole);
-  const storage = new LocalStorageUtil();
+  const menuLinks = new MenuLinksGenerator().generate(authContext.user.role);
   const history = useHistory();
 
   const renderMenuLinks = () => {
@@ -27,8 +26,8 @@ const Menu = (props: { toggleMenu: () => void }) => {
   };
 
   const signOut = () => {
-    authContext.setUserRole(UserRole.UNDEFINED);
-    storage.setUserRole(UserRole.UNDEFINED);
+    authContext.updateAuthContext(unsignedUser);
+    localStorageUtil.setUser(unsignedUser);
     props.toggleMenu();
     history.push('/');
   };

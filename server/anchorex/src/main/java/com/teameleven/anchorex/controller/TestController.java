@@ -6,7 +6,6 @@ import com.teameleven.anchorex.dto.test.TestDto;
 import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.TestService;
-
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -78,8 +77,7 @@ public class TestController {
         try {
             testService.delete(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Test with id %d doesn't exist.", id));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Test with id %d doesn't exist.", id));
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

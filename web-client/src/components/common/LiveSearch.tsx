@@ -14,8 +14,8 @@ const LiveSearch = (props: { value: string; callback: (text: string) => void }) 
 	const debouncedChangeHandler = useCallback(debounce(changeHandler, 500), []);
 
 	return (
-		<div className='flex flex-row justify-between w-full'>
-			<input className='border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent flex-1 mr-8 rounded-md px-3 shadow-md py-1' placeholder='Search...' onChange={debouncedChangeHandler} />
+		<div className=' w-full'>
+			<input className='border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent flex-1 rounded-md px-3 shadow-md py-1' placeholder='Search...' onChange={debouncedChangeHandler} />
 		</div>
 	);
 };

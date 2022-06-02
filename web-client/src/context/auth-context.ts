@@ -1,12 +1,25 @@
 import React from 'react';
-import CreateUserDto from '../dtos/create-user.dto';
 import { UserRole } from '../model/user-role.enum';
 
+export interface AuthContextUser {
+  accessToken: string;
+  loggedIn: boolean;
+  id: number;
+  email: string;
+  role: UserRole;
+}
+
+export const unsignedUser: AuthContextUser = {
+  accessToken: '',
+  loggedIn: false,
+  id: -1,
+  email: '',
+  role: UserRole.UNDEFINED,
+};
+
 const AuthContext = React.createContext({
-  userRole: UserRole.UNDEFINED,
-  setUserRole: (userRole: UserRole) => {},
-  user: {},
-  setUser: (user: CreateUserDto) => {}
+  user: unsignedUser,
+  updateAuthContext: (user: AuthContextUser) => {},
 });
 
 export default AuthContext;

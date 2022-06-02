@@ -4,7 +4,6 @@ import com.teameleven.anchorex.security.auth.RestAuthenticationEntryPoint;
 import com.teameleven.anchorex.security.auth.TokenAuthenticationFilter;
 import com.teameleven.anchorex.serviceimpl.CustomUserDetailsServiceImpl;
 import com.teameleven.anchorex.util.TokenUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -95,6 +94,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests().antMatchers("/api/auth/**").permitAll() // /api/auth/**
 				.antMatchers("/h2-console/**").permitAll() // /h2-console/** ako se koristi H2 baza)
 				.antMatchers("/api/tests").permitAll() // /api/foo
+				.antMatchers("/api/validateToken").permitAll() // /api/foo
 
 				// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama
 				// kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
@@ -134,7 +134,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login");
 
 		// Ovim smo dozvolili pristup statickim resursima aplikacije
-		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",
+		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/**/*.png", "/**/*.jpg", "favicon.ico", "/**/*.html",
 				"/**/*.css", "/**/*.js");
 	}
 }

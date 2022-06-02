@@ -1,7 +1,15 @@
-import { useState } from 'react';
+import axios from 'axios';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from '../../context/auth-context';
+import { UserRole } from '../../model/user-role.enum';
+import { HttpStatusCode } from '../../utils/http-status-code.enum';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
 
 const ReservationEntityDropdown = (props: { entityId: number }) => {
+  const authContext = useContext(AuthContext);
+  const userRole = authContext.user.role;
   const [isDropdownHidden, setIsDropdownHidden] = useState(true);
 
   const togglePopup = () => {
@@ -12,15 +20,47 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
     setIsDropdownHidden(true);
   };
 
-  const edit = () => {
-    console.log('edit');
-    hidePopup();
-  };
+  const remove =
+    (id: number) => async (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (userRole === UserRole.INSTRUCTOR) {
+        const response = await fetch(`/api/fishingLessons/${props.entityId}`, {
+          method: 'DELETE',
+          headers: [
+            ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+          ],
+        });
 
-  const remove = () => {
-    console.log('remove');
-    hidePopup();
-  };
+        switch (response.status) {
+          case HttpStatusCode.NO_CONTENT:
+            alert('Fishing lesson successfully deleted.');
+            window.location.reload();
+            return;
+          default:
+            alert('Unknown error occurred.');
+            return;
+        }
+      }
+
+      var url = '/api/';
+      if (userRole === UserRole.LODGE_OWNER) {
+        url += 'lodge/deleteLodge/';
+      } else if (userRole === UserRole.SHIP_OWNER) {
+        url += 'ship/deleteShip/';
+      }
+      axios
+        .delete(url + id, {
+          headers: {
+            Accept: 'application/json',
+            'Content-type': 'application/json',
+            Authorization:
+              'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+          },
+        })
+        .then((response) => {
+          hidePopup();
+          window.location.reload();
+        });
+    };
 
   const onBlur = (event: React.FocusEvent<HTMLButtonElement, Element>) => {
     if (!event.relatedTarget?.id.startsWith('dropdown-')) {
@@ -56,23 +96,29 @@ const ReservationEntityDropdown = (props: { entityId: number }) => {
         hidden={isDropdownHidden}
       >
         <div className='flex flex-col w-24 text-white'>
-          <Link
-            className='p-1 hover:bg-blue-400 hover:text-white rounded-t-md text-center border-b border-white'
-            to={'/reservationEntities/' + props.entityId}
-            id={'dropdown-link-' + props.entityId}
-          >
-            View
-          </Link>
-          <button
-            className='p-1 hover:bg-blue-400 hover:text-white border-b border-white'
-            onClick={edit}
-            id={'dropdown-edit-' + props.entityId}
-          >
-            Edit
-          </button>
+          {userRole === UserRole.LODGE_OWNER ? (
+            <Link
+              className='p-1 hover:bg-blue-400 hover:text-white rounded-t-md text-center border-b border-white'
+              to={'/lodge/' + props.entityId}
+              id={'dropdown-link-' + props.entityId}
+            >
+              Edit
+            </Link>
+          ) : userRole === UserRole.SHIP_OWNER ? (
+            <Link
+              className='p-1 hover:bg-blue-400 hover:text-white rounded-t-md text-center border-b border-white'
+              to={'/ship/' + props.entityId}
+              id={'dropdown-link-' + props.entityId}
+            >
+              Edit
+            </Link>
+          ) : (
+            <div></div>
+          )}
+
           <button
             className='p-1 hover:bg-blue-400 hover:text-white rounded-b-md'
-            onClick={remove}
+            onClick={remove(props.entityId)}
             id={'dropdown-remove-' + props.entityId}
           >
             Remove

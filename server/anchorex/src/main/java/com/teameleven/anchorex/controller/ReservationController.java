@@ -116,5 +116,10 @@ public class ReservationController {
         return reservationService.getReservationNumberByWeek(id);
     }
 
+    @GetMapping(path="/salaryYearly")
+    public double[] salaryByYear(@RequestParam String email){
+        Long id = userService.findByEmail(email).getId();
+        return reservationService.getSalaryByYear(id);
+    }
 
 }

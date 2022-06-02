@@ -8,6 +8,7 @@ import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDisplayDTO;
 import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.service.FreePeriodService;
+import com.teameleven.anchorex.service.ReservationService;
 import com.teameleven.anchorex.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ public class ShipController {
 
     @Autowired
     private FreePeriodService freePeriodService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     public ShipController(ShipService shipService) {
         this.shipService = shipService;
@@ -44,6 +48,9 @@ public class ShipController {
 
     @DeleteMapping(path="/deleteShip/{id}")
     public ResponseEntity<Void> deleteShip(@PathVariable Long id){
+        if(!reservationService.checkIfEntityIsAvailable(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         shipService.deleteShip(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -59,12 +66,24 @@ public class ShipController {
 
     @PutMapping(path="/updateShip", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateShip(@RequestBody Ship ship){
+        if(!reservationService.checkIfEntityIsAvailable(ship.getId())){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         shipService.updateShip(ship);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(path="/deleteService/{id}")
+    public ResponseEntity<Void> deleteService(@PathVariable Long id){
+        shipService.deleteService(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(path="/addShipService/{id}")
     public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
+        if(!reservationService.checkIfEntityIsAvailable(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         shipService.addService(service, id);
         return new ResponseEntity<>(service, HttpStatus.CREATED);
     }

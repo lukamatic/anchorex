@@ -9,6 +9,7 @@ import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
 import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.LodgeService;
+import com.teameleven.anchorex.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,9 @@ public class LodgeController {
 
     @Autowired
     private FreePeriodService freePeriodService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     public LodgeController(LodgeService lodgeService) {
         this.lodgeService = lodgeService;
@@ -44,6 +48,9 @@ public class LodgeController {
 
     @DeleteMapping(path="/deleteLodge/{id}")
     public ResponseEntity<Void> deleteLodge(@PathVariable Long id){
+        if(!reservationService.checkIfEntityIsAvailable(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         lodgeService.deleteLodge(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -57,6 +64,9 @@ public class LodgeController {
 
     @PutMapping(path="/updateLodge", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateLodge(@RequestBody Lodge lodge){
+        if(!reservationService.checkIfEntityIsAvailable(lodge.getId())){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         lodgeService.updateLodge(lodge);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -69,6 +79,9 @@ public class LodgeController {
 
     @PostMapping(path="/addService/{id}")
     public ResponseEntity<ServiceDTO> addService(@RequestBody ServiceDTO service, @PathVariable Long id){
+        if(!reservationService.checkIfEntityIsAvailable(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         lodgeService.addService(service, id);
         return new ResponseEntity<>(service, HttpStatus.CREATED);
     }

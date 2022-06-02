@@ -29,4 +29,8 @@ public interface ReservationService {
     int[] getReservationNumberByYear(Long id);
 
     int[] getReservationNumberByWeek(Long id);
+
+    double[] getSalaryByYear(Long id);
+
+    boolean checkIfEntityIsAvailable(Long id);
 }

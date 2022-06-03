@@ -26,6 +26,8 @@ import FishingLessonDisplayKit from './display-fishing-lesson/FishingLessonDispl
 import FishingLessonDisplayRules from './display-fishing-lesson/FishingLessonDisplayRules';
 import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesssonDisplayPricelist';
 import ReservationHistory from './reservation-entities/ReservationHistory';
+import NewAdmin from './NewAdmin';
+import Business from './Business';
 
 const MyRouter = () => {
   return (
@@ -115,6 +117,14 @@ const MyRouter = () => {
 
         <Route path='/reservations'>
           <ReservationHistory />
+        </Route>
+
+        <Route path='/newAdmin'>
+          <NewAdmin />
+        </Route>
+
+        <Route path='/business'>
+          <Business />
         </Route>
       </Switch>
     </Router>

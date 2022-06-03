@@ -33,6 +33,17 @@ public class Reservation {
     @JoinTable(name = "reservation_service", joinColumns = @JoinColumn(name = "reservation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
     private Set<Service> services = new HashSet<>();
 
+    @Column
+    private Double appPercentage;
+
+    public Double getAppPercentage() {
+        return appPercentage;
+    }
+
+    public void setAppPercentage(Double appPercentage) {
+        this.appPercentage = appPercentage;
+    }
+
     public Reservation() {
         super();
     }

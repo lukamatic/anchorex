@@ -20,4 +20,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(value = "SELECT r FROM Reservation r where r.ownerId=?1 and r.userId!=null")
     List<Reservation> getClosedReservations(Long id);
 
+    @Query(value = "SELECT r FROM Reservation r where r.userId!=null")
+    List<Reservation> getClosedReservations();
+
 }

@@ -8,10 +8,7 @@ import com.teameleven.anchorex.dto.ReservationReportDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.mapper.ReportMapper;
 import com.teameleven.anchorex.mapper.ReservationMapper;
-import com.teameleven.anchorex.repository.ReservationEntityRepository;
-import com.teameleven.anchorex.repository.ReservationReportRepository;
-import com.teameleven.anchorex.repository.ReservationRepository;
-import com.teameleven.anchorex.repository.UserRepository;
+import com.teameleven.anchorex.repository.*;
 import com.teameleven.anchorex.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,19 +30,24 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private final UserRepository userRepository;
 
+    private final BusinessConfigurationRepository businessConfigurationRepository;
+
     public ReservationServiceImpl(ReservationRepository reservationRepository,
                                   ReservationEntityRepository entityRepository,
-                                  ReservationReportRepository reportRepository, UserRepository userRepository) {
+                                  ReservationReportRepository reportRepository, UserRepository userRepository,
+                                  BusinessConfigurationRepository businessConfigurationRepository) {
         this.reservationRepository = reservationRepository;
         this.entityRepository = entityRepository;
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
+        this.businessConfigurationRepository = businessConfigurationRepository;
     }
 
     @Override
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation reservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
         reservation.setOwnerId(entityRepository.getOwnerId(reservation.getReservationEntityId()));
+        reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
         reservationRepository.save(reservation);
         return reservation;
     }
@@ -55,6 +57,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
         personalReservation.setUserId(reservationDTO.getUserId());
         personalReservation.setOwnerId(entityRepository.getOwnerId(personalReservation.getReservationEntityId()));
+        personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
         reservationRepository.save(personalReservation);
         return personalReservation;
     }
@@ -79,7 +82,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ClientReservationDTO> getFreeReservations(Long id) {
+    public List<ClientReservationDTO> getFreeReservationDtos(Long id) {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getEntityReservations(id);
         for(Reservation reservation: reservations){
@@ -89,7 +92,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ClientReservationDTO> getBookedReservations(Long id) {
+    public List<ClientReservationDTO> getBookedReservationDtos(Long id) {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getBookedReservations(id);
         for(Reservation reservation: reservations){
@@ -99,13 +102,18 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ClientReservationDTO> getClosedReservations(Long id) {
+    public List<ClientReservationDTO> getClosedReservationDtos(Long id) {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getClosedReservations(id);
         for(Reservation reservation: reservations){
             reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
         }
         return reservationDTOS;
+    }
+
+    @Override
+    public List<Reservation> getClosedReservations() {
+        return this.reservationRepository.getClosedReservations();
     }
 
     @Override

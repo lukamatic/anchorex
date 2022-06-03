@@ -7,8 +7,8 @@ import HouseIcon from './button-icons/HouseIcon';
 import './Home.css';
 const HomeScreen = () => {
 	const history = useHistory();
-	const { user } = useContext(AuthContext);
-	const authorized = !!user.firstName;
+	const { user, userDetails } = useContext(AuthContext);
+	const authorized = !!user.loggedIn;
 
 	const buttons = [
 		{
@@ -87,7 +87,7 @@ const HomeScreen = () => {
 				<div className=''></div>
 				{authorized && (
 					<div className='text-center py-3 mb-12'>
-						<h1 className='subpixel-antialiased text-3xl font-bold text-gray-700'>Hi, {user.firstName}</h1>
+						<h1 className='subpixel-antialiased text-3xl font-bold text-gray-700'>Hi {userDetails.firstName}! 👋🏼</h1>
 						<h3 className='subpixel-antialiased font-semibold text-gray-700'>Online Bookings for the finest fishing lessons, ships and lodges.</h3>
 					</div>
 				)}

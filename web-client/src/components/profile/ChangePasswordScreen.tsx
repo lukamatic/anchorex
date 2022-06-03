@@ -14,7 +14,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 
 const ChangePasswordScreen = () => {
 	const history = useHistory();
-	const { user } = useContext(AuthContext);
+	const { user, userDetails } = useContext(AuthContext);
 
 	const [userData, setUserData] = useState<UserConfirmPassword>({
 		password: '',

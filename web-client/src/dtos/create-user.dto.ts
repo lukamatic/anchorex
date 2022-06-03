@@ -14,3 +14,17 @@ export default interface CreateUserDto {
 	signupExplanation?: string;
 	id?: number;
 }
+export const emptyCreateUserDto: CreateUserDto = {
+	role: UserRole.UNDEFINED,
+	email: '',
+	password: '',
+	firstName: '',
+	lastName: '',
+	address: '',
+	city: '',
+	country: '',
+	phoneNumber: '',
+	biography: '',
+	signupExplanation: '',
+	id: -1,
+};

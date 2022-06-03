@@ -1,25 +1,36 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../context/auth-context';
 import SignupInput from '../signup/SignupInput';
 import ErrorLabel from '../common/ErrorLabel';
-import CreateUserDto from '../../dtos/create-user.dto';
+import CreateUserDto, { emptyCreateUserDto } from '../../dtos/create-user.dto';
 import TextInput from '../common/TextInput';
 import SignupValidation from '../../validations/signup-validation';
 import LeftArrow from '../../icons/LeftArrow';
 import { useHistory } from 'react-router-dom';
-import { patchUser } from '../../server/service';
+import { getUserByTokenAsync, patchUser } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import LoadingSpinner from '../common/LoadingSpinner';
 const ProfileScreen = () => {
 	const history = useHistory();
-	const { user } = useContext(AuthContext);
+	const { user, userDetails } = useContext(AuthContext);
 
-	const [userData, setUserData] = useState<CreateUserDto>(user);
+	const [userData, setUserData] = useState<CreateUserDto>(userDetails);
 	const [errorMessage, setErrorMessage] = useState<any>({});
 	const [errorText, setErrorText] = useState<string>('');
 	const [successText, setSuccessText] = useState<string>('');
 	const [fetching, setFetching] = useState(false);
 	const signUpValidation = new SignupValidation();
+
+	// useEffect(() => {
+	// 	loadUserData();
+	// }, []);
+
+	// const loadUserData = async () => {
+	// 	const resp = await getUserByTokenAsync();
+	// 	if (resp.status === HttpStatusCode.OK) {
+	// 		setUserData(resp.data);
+	// 	}
+	// };
 
 	const handleChange = (e: any, field: string, validation: any) => {
 		const value = e.target.value;

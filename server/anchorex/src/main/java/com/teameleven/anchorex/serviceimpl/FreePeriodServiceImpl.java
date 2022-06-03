@@ -128,6 +128,25 @@ public class FreePeriodServiceImpl implements FreePeriodService {
         return false;
     }
 
+    @Override
+    public boolean checkIfPeriodIsFree(Date startDate, Date endDate, Long id){
+        List<FreePeriod> freePeriods = freePeriodRepository.getFreePeriods(id);
+        for(FreePeriod freePeriod: freePeriods) {
+            if ((freePeriod.getStartDate().before(startDate) || freePeriod.getStartDate().compareTo(startDate) == 0) &&
+                    (freePeriod.getEndDate().after(endDate) || freePeriod.getEndDate().compareTo(endDate) == 0)) {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<FreePeriod> getAllFreePeriods() {
+        List<FreePeriod> freePeriods = freePeriodRepository.findAll();
+        return freePeriods;
+    }
+
     private void removeFreePeriodFromReservationDates(FreePeriod freePeriod, Date startDate, Date endDate){
         freePeriodRepository.delete(freePeriod);
         if(freePeriod.getStartDate().before(startDate) && freePeriod.getEndDate().after(endDate)){

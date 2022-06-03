@@ -60,6 +60,12 @@ public class ReservationController {
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
+    @GetMapping(path="/all")
+    public ResponseEntity<List<ClientReservationDTO>> getAllReservations(){
+        var reservations = reservationService.getAllReservations();
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
+
     @PostMapping(path = "/createPersonalReservation", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Reservation> createPersonalReservation(@RequestBody ReservationDTO reservationDTO){
         if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),

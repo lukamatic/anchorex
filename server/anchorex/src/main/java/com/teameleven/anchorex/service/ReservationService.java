@@ -33,4 +33,6 @@ public interface ReservationService {
     double[] getSalaryByYear(Long id);
 
     boolean checkIfEntityIsAvailable(Long id);
+
+    List<ClientReservationDTO> getAllReservations();
 }

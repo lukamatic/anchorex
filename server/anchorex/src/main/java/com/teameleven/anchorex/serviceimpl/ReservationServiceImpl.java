@@ -185,4 +185,16 @@ public class ReservationServiceImpl implements ReservationService {
         }
         return true;
     }
+
+    @Override
+    public List<ClientReservationDTO> getAllReservations() {
+        List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
+        var reservations =  reservationRepository.getAllUsedReservations();
+        for(Reservation reservation: reservations){
+            reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
+        }
+        return reservationDTOS;
+    }
+
+
 }

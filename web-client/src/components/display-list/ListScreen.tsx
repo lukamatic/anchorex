@@ -1,8 +1,9 @@
 import { useEffect, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import searchDto, { filterDto } from '../../dtos/search.dto';
+import searchDto, { emptyFilterDto, filterDto } from '../../dtos/search.dto';
 import LeftArrow from '../../icons/LeftArrow';
-import { searchDataAsync } from '../../server/service';
+import { getAllFreePeriodsAsync, getAllLodgesAsync, getAllReservations, getPossibleLodges, searchDataAsync } from '../../server/service';
+import { onlyUnique } from '../../utils/commonOps';
 import { addDays } from '../../utils/dateUtils';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import DatePicker from '../common/DatePicker';
@@ -23,23 +24,37 @@ const ListScreen = () => {
 	const { type }: { type: string } = useParams();
 	const [state, setState] = useReducer((oldState: any, newState: any) => ({ ...oldState, ...newState }), {
 		list: [],
+		allItems: [],
 		searchText: '',
 		initialLoading: true,
 		loadingMore: false,
 		totalSize: -1,
 		checkInDate: new Date(),
-		checkOutDate: addDays(new Date(), 2),
-		locations: ['Novi Sad', 'Beograd'],
-		currentFilterModel: null,
+		checkOutDate: addDays(new Date(), 10),
+		locations: [],
+		currentFilterModel: emptyFilterDto,
 		currentSortModel: null,
+		sortOptions: ['Name 🔼', 'Name 🔽'],
+		selectedSortOption: 'Name 🔽',
+		numberOfSingleBedrooms: [0, 1],
+		numberOfDoubleBedrooms: [0, 1],
+		numberOfFourBedrooms: [0, 1],
+		freePeriods: [],
+		reservations: [],
+		numberOfPeople: 2,
 	});
 
-	const { list, searchText, initialLoading, loadingMore, totalSize, checkInDate, checkOutDate, locations, currentFilterModel, currentSortModel } = state;
+	const { list, allItems, searchText, initialLoading, loadingMore, totalSize, checkInDate, checkOutDate, locations, currentFilterModel, sortOptions, selectedSortOption, numberOfSingleBedrooms, numberOfDoubleBedrooms, numberOfFourBedrooms, freePeriods, reservations, numberOfPeople } = state;
 
 	useEffect(() => {
-		loadDataAsync(type);
+		initLoad();
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
+
+	const initLoad = async () => {
+		loadDataAsync(type);
+	};
 
 	const goBack = () => {
 		history.goBack();
@@ -57,43 +72,83 @@ const ListScreen = () => {
 		setState({ checkOutDate: value });
 	};
 
+	const returnFilteredList = (filterModel: filterDto = currentFilterModel) => {
+		let filteredList = [...allItems];
+		if (filterModel.locations.length > 0) {
+			const locations = filterModel.locations;
+
+			filteredList = filteredList.filter((e: any) => locations.includes(e.location.city));
+		}
+		filteredList = filteredList.filter((e: any) => filterModel.numberOfSingleRooms[0] <= e.singleBedroomNumber && e.singleBedroomNumber <= filterModel.numberOfSingleRooms[1]);
+		filteredList = filteredList.filter((e: any) => filterModel.numberOfDoubleRooms[0] <= e.singleBedroomNumber && e.doubleBedroomNumber <= filterModel.numberOfDoubleRooms[1]);
+		filteredList = filteredList.filter((e: any) => filterModel.numberOfFourRooms[0] <= e.singleBedroomNumber && e.fourBedroomNumber <= filterModel.numberOfFourRooms[1]);
+		return filteredList;
+	};
+
 	const applyFilter = (filterModel: filterDto) => {
-		setState({ currentFilterModel: filterModel });
+		let filteredList = returnFilteredList(filterModel);
+		setState({ currentFilterModel: filterModel, searchText: '' });
+		doSort(selectedSortOption, filteredList);
 	};
 
 	const applySearch = () => {
-		loadDataAsync(type);
+		// const text = searchText.toLocaleLowerCase();
+		// let filteredList = [...allItems]; //returnFilteredList();
+		// filteredList = filteredList.filter((e: any) => e?.name?.toLowerCase()?.includes(text));
+		// doSort(selectedSortOption, filteredList);
+		// setState({ list: filteredList });
+		loadDataAsync();
 	};
 
-	const loadDataAsync = async (type: string, offset: number = list.length) => {
-		const searchData: searchDto = {
-			searchText,
-			checkIn: checkInDate,
-			checkOut: checkOutDate,
-			sort: currentSortModel,
-			filter: currentFilterModel,
-			type,
-			pagination: {
-				limit: 20,
-				offset,
-			},
+	const getMinMax = (array: number[]) => {
+		return [Math.min(...array), Math.max(...array)];
+	};
+
+	const loadDataAsync = async (t?: string) => {
+		setState({
+			initialLoading: true,
+		});
+		const data = {
+			startDate: checkInDate,
+			endDate: checkOutDate,
+			numberOfPeople: numberOfPeople,
 		};
-		const resp = await searchDataAsync(searchData);
+		const resp = await getPossibleLodges(data);
+		console.log(resp);
+
 		if (resp.status === HttpStatusCode.OK) {
-			const data = resp.data;
-			const previousList = offset === 0 ? [] : [...list];
+			const filteredLocations = resp.data.map((e: any) => e?.location?.city).filter(onlyUnique);
+			const numberOfSingleBedrooms = resp.data.map((e: any) => e.singleBedroomNumber);
+			const numberOfDoubleBedrooms = resp.data.map((e: any) => e.doubleBedroomNumber);
+			const numberOfFourBedrooms = resp.data.map((e: any) => e.fourBedroomNumber);
+
+			doSort(selectedSortOption, resp.data);
 			setState({
-				list: [...previousList, ...data.list],
-				totalSize: data.size,
+				// list: resp.data,
+				allItems: [...resp.data],
+				totalSize: resp.data.length,
 				initialLoading: false,
-				loadingMore: false,
+				locations: filteredLocations,
+				numberOfSingleBedrooms: getMinMax(numberOfSingleBedrooms),
+				numberOfDoubleBedrooms: getMinMax(numberOfDoubleBedrooms),
+				numberOfFourBedrooms: getMinMax(numberOfFourBedrooms),
 			});
+			return resp.data;
 		} else {
 			setState({
 				initialLoading: false,
 			});
 		}
+		return [];
 	};
+
+	const doSort = (e: string, array: any[]) => {
+		const order = e.includes('🔼') ? 1 : -1;
+		const items = array.sort((a: any, b: any) => (a.name > b.name ? order * -1 : order));
+		setState({ list: items });
+	};
+
+	const numberOfDays = new Date(checkOutDate - checkInDate).getDate();
 
 	return (
 		<div className='w-full flex bg-blue-50 flex-1 flex-col'>
@@ -111,10 +166,10 @@ const ListScreen = () => {
 				<div className='flex flex-row flex-1 mt-4 overflow-y-auto'>
 					<div className='mr-3 '>
 						<div className='bg-blue-400 px-5 pb-7 pt-3 rounded-md mt-5 shadow-lg'>
-							<h1 className='text-xl text-white mb-2 font-bold'>Search</h1>
-							<div className='mb-2'>
+							<h1 className='text-xl text-white mb-2 font-bold'>Pick a period</h1>
+							{/* <div className='mb-2'>
 								<LiveSearch value={searchText} callback={asyncSearch} />
-							</div>
+							</div> */}
 							<div>
 								<p className='text-white'>Check-in date</p>
 								<DatePicker placeholder='Select date' value={checkInDate} minDate={new Date()} onValueChange={changeCheckInDate} />
@@ -123,7 +178,22 @@ const ListScreen = () => {
 								<p className='text-white'>Check-out date</p>
 								<DatePicker placeholder='Select date' value={checkOutDate} minDate={addDays(checkInDate, 1)} onValueChange={changeCheckOutDate} />
 							</div>
-
+							<div className='flex-1 flex flex-col'>
+								<label htmlFor='' className='text-white'>
+									Number of people
+								</label>
+								<input
+									type='number'
+									className='w-full bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+									placeholder='Number of people'
+									value={numberOfPeople}
+									min={0}
+									max={100}
+									onChange={(e: any) => {
+										setState({ numberOfPeople: parseInt(e.target.value) });
+									}}
+								/>
+							</div>
 							<button
 								className='px-3 py-2 bg-yellow-200 rounded-md shadow-md hover:shadow-lg 
 												self-end w-full mt-4 transform hover:scale-105 transition-transform duration-120 
@@ -133,7 +203,7 @@ const ListScreen = () => {
 								Search
 							</button>
 						</div>
-						<FilterContainer locations={locations} onApply={applyFilter} />
+						<FilterContainer locations={locations} onApply={applyFilter} numberOfSingleBedrooms={numberOfSingleBedrooms} numberOfDoubleBedrooms={numberOfDoubleBedrooms} numberOfFourBedrooms={numberOfFourBedrooms} />
 					</div>
 
 					<div className='flex flex-col flex-1 '>
@@ -144,13 +214,19 @@ const ListScreen = () => {
 								<label htmlFor='sort by' className='mr-2'>
 									Sort by:
 								</label>
-								<SelectDropdown list={['']} value={'SortBy'} onChange={() => {}} />
+								<SelectDropdown
+									list={sortOptions}
+									value={selectedSortOption}
+									onChange={(e: string) => {
+										doSort(e, list);
+										setState({ selectedSortOption: e });
+									}}
+								/>
 							</div>
 						</div>
-						<div>{totalSize > 0 && list.map(ListItem)}</div>
+						<div className='flex flex-row flex-wrap'>{list.length > 0 && list?.map((e: any) => ListItem(e, numberOfDays))}</div>
 						{totalSize <= 0 && !initialLoading && (
 							<div className='text-center flex-1 flex justify-center items-center'>
-								{' '}
 								<div className='text-gray-400 '>{!searchText ? 'This list is currently empty...' : 'Search list is currently empty... Try another text'}</div>
 							</div>
 						)}

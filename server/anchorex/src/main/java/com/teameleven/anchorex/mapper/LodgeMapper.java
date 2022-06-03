@@ -50,6 +50,7 @@ public class LodgeMapper {
         dto.setDoubleBedroomNumber(lodge.getDoubleBedroomNumber());
         dto.setFourBedroomNumber(lodge.getFourBedroomNumber());
         Set<ServiceDTO> services = new HashSet<>();
+        dto.setAverageRating(lodge.getAverageRating());
         for(Service service: lodge.getServices()){
             ServiceDTO serviceDTO = new ServiceDTO();
             serviceDTO.setId(service.getId());

@@ -1,5 +1,5 @@
 import React from 'react';
-import { emptyCreateUserDto } from '../dtos/create-user.dto';
+import CreateUserDto, { emptyCreateUserDto } from '../dtos/create-user.dto';
 import { UserRole } from '../model/user-role.enum';
 
 export interface AuthContextUser {
@@ -22,6 +22,7 @@ const AuthContext = React.createContext({
 	user: unsignedUser,
 	updateAuthContext: (user: AuthContextUser) => {},
 	userDetails: emptyCreateUserDto,
+	setUserDetails: (user: CreateUserDto) => {},
 });
 
 export default AuthContext;

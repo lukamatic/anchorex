@@ -51,7 +51,7 @@ const FishingLessonAction = () => {
 
   useEffect(() => {
     axios
-      .get('/api/fishingLesson/' + params.id, {
+      .get('/api/fishingLessons/' + params.id, {
         headers: {
           Accept: 'application/json',
           'Content-type': 'application/json',
@@ -87,10 +87,10 @@ const FishingLessonAction = () => {
   const getReservations = reservations.map((reservation) => (
     <tr className='border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700'>
       <td className='px-6 py-4'>
-        {format(reservation.startDate, 'dd.MM.yyyy.')}
+        {reservation.startDate.toString().slice(0, 10)}
       </td>
       <td className='px-6 py-4'>
-        {format(reservation.endDate, 'dd.MM.yyyy.')}
+        {reservation.endDate.toString().slice(0, 10)}
       </td>
       <td className='px-6 py-4'>
         {reservation.services.map((service) => {

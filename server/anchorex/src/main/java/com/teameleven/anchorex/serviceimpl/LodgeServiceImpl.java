@@ -47,6 +47,12 @@ public class LodgeServiceImpl implements LodgeService {
     }
 
     @Override
+    public List<LodgeDTO> getAllLodges() {
+        List<Lodge> lodges = lodgeRepository.getLodges();
+        return getLodgesDTO(lodges);
+    }
+
+    @Override
     public void deleteLodge(Long id) {
          lodgeRepository.deleteLodge(id);
     }

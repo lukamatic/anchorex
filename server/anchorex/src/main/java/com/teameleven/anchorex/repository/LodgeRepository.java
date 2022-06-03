@@ -24,4 +24,7 @@ public interface LodgeRepository extends JpaRepository<Lodge, Long> {
 
     @Query(value = "SELECT l FROM Lodge l WHERE l.ownerId=?1", nativeQuery = false)
     List<Lodge> getLodgeByUserId(Long id);
+
+    @Query(value = "SELECT l FROM Lodge l WHERE l.deleted=false", nativeQuery = false)
+    List<Lodge> getLodges();
 }

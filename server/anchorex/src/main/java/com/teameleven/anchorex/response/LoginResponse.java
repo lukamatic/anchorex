@@ -11,6 +11,7 @@ public class LoginResponse {
     private Long userId;
     private String userRole;
 
+
     public LoginResponse(UserTokenState userTokenState, Long id, String userRole) {
         this.userTokenState = userTokenState;
         this.userId = id;

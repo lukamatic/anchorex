@@ -1,16 +1,15 @@
-import { cloneElement } from 'react';
+import { cloneElement, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import AuthContext from '../../context/auth-context';
 import CoachingIcon from './button-icons/CoachingIcon';
 import FishingIcon from './button-icons/FishingIcon';
 import HouseIcon from './button-icons/HouseIcon';
 import './Home.css';
 const HomeScreen = () => {
 	const history = useHistory();
-	const authorized = true;
-	const user = {
-		firstName: 'Petar',
-		lastName: 'Obradovic',
-	};
+	const { user, userDetails } = useContext(AuthContext);
+	const authorized = !!user.loggedIn;
+
 	const buttons = [
 		{
 			title: 'Fishing lessons',
@@ -88,7 +87,7 @@ const HomeScreen = () => {
 				<div className=''></div>
 				{authorized && (
 					<div className='text-center py-3 mb-12'>
-						<h1 className='subpixel-antialiased text-3xl font-bold text-gray-700'>Hi, {user.firstName}</h1>
+						<h1 className='subpixel-antialiased text-3xl font-bold text-gray-700'>Hi {userDetails.firstName}! 👋🏼</h1>
 						<h3 className='subpixel-antialiased font-semibold text-gray-700'>Online Bookings for the finest fishing lessons, ships and lodges.</h3>
 					</div>
 				)}

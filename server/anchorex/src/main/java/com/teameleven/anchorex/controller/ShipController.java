@@ -44,7 +44,7 @@ public class ShipController {
     }
 
     @GetMapping(path="/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ShipDisplayDTO>> getAllLodges(){
+    public ResponseEntity<Collection<ShipDisplayDTO>> getAll(){
         var ships = shipService.getAll();
         var dtos = ShipMapper.toDtos(ships);
         return new ResponseEntity<>(dtos, HttpStatus.OK);

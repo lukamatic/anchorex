@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
 
-const AdminFishingLessons = () => {
+const AdminUsers = () => {
   const [entities, setEntities] = useState<any[]>();
 
   useEffect(() => {
     const fetchEntities = async () => {
-      const response = await fetch('/api/fishingLessons/all', {
+      const response = await fetch('/api/users/all', {
         headers: [
           ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
         ],
@@ -27,7 +27,7 @@ const AdminFishingLessons = () => {
   }, []);
 
   const deleteEntity = async (id: number) => {
-    const response = await fetch(`/api/fishingLessons/${id}`, {
+    const response = await fetch(`/api/users/${id}`, {
       method: 'DELETE',
       headers: [
         ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
@@ -51,7 +51,10 @@ const AdminFishingLessons = () => {
             key={entity.id}
             className='flex items-center w-full justify-between p-4 bg-white rounded-md shadow-lg mb-3'
           >
-            <div>{entity.name}</div>
+            <div className='flex flex-col'>
+              <div>{`${entity.firstName} ${entity.lastName}`}</div>
+              <div>{entity.email}</div>
+            </div>
             <button
               className='btnRedWhite'
               onClick={() => deleteEntity(entity.id)}
@@ -65,4 +68,4 @@ const AdminFishingLessons = () => {
   );
 };
 
-export default AdminFishingLessons;
+export default AdminUsers;

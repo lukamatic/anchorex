@@ -49,7 +49,7 @@ const AdminLodges = () => {
         {entities?.map((entity) => (
           <div
             key={entity.id}
-            className='flex items-center w-full justify-between p-4 bg-white rounded-md shadow-lg'
+            className='flex items-center w-full justify-between p-4 bg-white rounded-md shadow-lg mb-3'
           >
             <div>{entity.name}</div>
             <button

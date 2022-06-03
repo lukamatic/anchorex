@@ -31,6 +31,7 @@ import LodgeCalendar from './display-lodge/LodgeCalendar';
 import ShipAction from './display-ship/ShipAction';
 import ShipCalendar from './display-ship/ShipCalendar';
 import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
+import FishingLessonAction from './display-fishing-lesson/FishingLessonAction';
 
 const MyRouter = () => {
   return (
@@ -140,6 +141,10 @@ const MyRouter = () => {
 
         <Route path='/report'>
           <BusinessReport />
+        </Route>
+
+        <Route path='/fishingLessonAction/:id'>
+          <FishingLessonAction />
         </Route>
       </Switch>
     </Router>

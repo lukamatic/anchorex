@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import AuthContext from '../../context/auth-context';
+import AuthContext, { AuthContextUser } from '../../context/auth-context';
 import { UserRole } from '../../model/user-role.enum';
 import { getUserByTokenAsync } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
@@ -45,28 +45,27 @@ const Login = () => {
 				setErrorLabelText('');
 
 				var content = await response.json();
-				const userRole = content.userRole;
-				localStorageUtil.setAccessToken(content.userTokenState.accessToken);
-				localStorageUtil.setUserRole(userRole);
-				localStorageUtil.setEmail(email);
-				const resp = await getUserByTokenAsync();
-				if (resp.status === HttpStatusCode.OK) {
-					const user = resp.data;
-					authContext.setUser(user);
-					authContext.setUserRole(userRole);
-					if (userRole === UserRole.LODGE_OWNER) {
-						history.push('/lodges');
-					} else if (userRole === UserRole.SHIP_OWNER) {
-						history.push('/ships');
-					} else {
-						history.push('/');
-					}
+
+				const user: AuthContextUser = {
+					accessToken: content.userTokenState.accessToken,
+					loggedIn: true,
+					id: content.userId,
+					email: email,
+					role: content.userRole,
+				};
+
+				authContext.updateAuthContext(user);
+				localStorageUtil.setUser(user);
+
+				if (localStorageUtil.getUserRole() === UserRole.LODGE_OWNER) {
+					history.push('/lodges');
+				} else if (localStorageUtil.getUserRole() === UserRole.SHIP_OWNER) {
+					history.push('/ships');
 				} else {
-					setErrorLabelText('Unknown error occurred.');
+					history.push('/');
 				}
 				break;
 			case HttpStatusCode.UNAUTHORIZED:
-				setPassword('');
 				setErrorLabelText('Invalid credentials!');
 				break;
 			case HttpStatusCode.FORBIDDEN:

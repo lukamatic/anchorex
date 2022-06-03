@@ -13,9 +13,12 @@ import com.teameleven.anchorex.repository.ReservationReportRepository;
 import com.teameleven.anchorex.repository.ReservationRepository;
 import com.teameleven.anchorex.repository.UserRepository;
 import com.teameleven.anchorex.service.ReservationService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -115,20 +118,71 @@ public class ReservationServiceImpl implements ReservationService {
         reportRepository.save(report);
         return report;
     }
+
+    @Override
+    public int[] getReservationNumberByMonth(int year, Long id) {
+        int[] monthlyReservations = new int[12];
+        for(int i = 1; i <= 12; i++){
+            monthlyReservations[i-1] = reservationRepository.getReservationNumberByMonth(i, year, id);
+        }
+        return monthlyReservations;
+    }
+
+    @Override
+    public int[] getReservationNumberByYear(Long id) {
+        int[] yearlyReservations = new int[5];
+        int index = 0;
+        for(int i = 2018; i <= 2022; i++){
+            yearlyReservations[index] = reservationRepository.getReservationNumberByYear(i, id);
+            index++;
+        }
+        return yearlyReservations;
+    }
+
+    @Override
+    public int[] getReservationNumberByWeek(Long id) {
+        List<Reservation> monthlyReservations = reservationRepository.getReservationsByMonth(5, 2022, id);
+        int[] weeklyReservations = new int[4];
+        int index = 0;
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        for(int i = 1; i<= 29; i+=7){
+            LocalDate localBeggining = LocalDate.of(2022,5,i);
+            int endDayOfMonth = i + 6;
+            if (i < 29){
+                endDayOfMonth = 31;
+            }
+            LocalDate localEnding = LocalDate.of(2022,5,endDayOfMonth);
+            Date begginingOfTheWeek = Date.from(localBeggining.atStartOfDay(defaultZoneId).toInstant());
+            Date endingOfTheWeek = Date.from(localEnding.atStartOfDay(defaultZoneId).toInstant());
+            for(Reservation reservation: monthlyReservations){
+                if (reservation.getStartDate().after(begginingOfTheWeek) && reservation.getStartDate().before(endingOfTheWeek)){
+                    weeklyReservations[index]++;
+                    index++;
+                }
+            }
+        }
+        return weeklyReservations;
+    }
+
+    @Override
+    public double[] getSalaryByYear(Long id) {
+        double[] yearlySalaries = new double[5];
+        int index = 0;
+        for(int i = 2018; i <= 2022; i++){
+            yearlySalaries[index] = reservationRepository.getSalaryByYear(i, id);
+            index++;
+        }
+        return yearlySalaries;
+    }
+
+    @Override
+    public boolean checkIfEntityIsAvailable(Long id){
+        List<Reservation> bookedReservations = reservationRepository.getBookedReservations(id);
+        for(Reservation reservation: bookedReservations){
+            if(reservation.getStartDate().before(new Date()) && reservation.getEndDate().after(new Date())){
+                return false;
+            }
+        }
+        return true;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,10 +3,10 @@ package com.teameleven.anchorex.serviceimpl;
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.domain.Ship;
-import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationentity.LocationDTO;
-import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
-import com.teameleven.anchorex.dto.reservationentity.ShipDTO;
+import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
+import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.enums.ServiceType;
 import com.teameleven.anchorex.mapper.LocationMapper;
 import com.teameleven.anchorex.mapper.ServiceMapper;
@@ -69,13 +69,18 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public void addService(ServiceDTO serviceDTO, Long id) {
         Service service = ServiceMapper.serviceDTOToService(serviceDTO);
-        service.setEntity(getShipById(id));
+        service.setReservationEntity(getShipById(id));
         serviceRepository.save(service);
+    }
+
+    @Override
+    public void deleteService(Long id) {
+        serviceRepository.deleteService(id);
     }
 
     private void setLocation(LocationDTO locationDTO, Ship ship){
         Location location = LocationMapper.locationDTOToLocation(locationDTO);
-        location.setEntity(ship);
+        location.setReservationEntity(ship);
         locationRepository.save(location);
     }
 
@@ -84,7 +89,7 @@ public class ShipServiceImpl implements ShipService {
             Service service = new Service();
             service.setInfo(serviceDTO.getInfo());
             service.setPrice(serviceDTO.getPrice());
-            service.setEntity(ship);
+            service.setReservationEntity(ship);
             service.setType(ServiceType.ADDITIONAL);
             serviceRepository.save(service);
         }
@@ -94,7 +99,7 @@ public class ShipServiceImpl implements ShipService {
             Service service = new Service();
             service.setInfo(serviceDTO.getInfo());
             service.setPrice(serviceDTO.getPrice());
-            service.setEntity(ship);
+            service.setReservationEntity(ship);
             service.setType(ServiceType.REGULAR);
             serviceRepository.save(service);
         }

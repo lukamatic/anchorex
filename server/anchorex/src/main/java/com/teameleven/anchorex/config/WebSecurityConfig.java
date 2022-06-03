@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	// Definisemo prava pristupa za zahteve ka odredjenim URL-ovima/rutama
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
+		http.antMatcher("/api/**")
 				// komunikacija izmedju klijenta i servera je stateless posto je u pitanju REST
 				// aplikacija
 				// ovo znaci da server ne pamti nikakvo stanje, tokeni se ne cuvaju na serveru
@@ -135,7 +135,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login");
 
 		// Ovim smo dozvolili pristup statickim resursima aplikacije
-		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",
+		web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/**/*.png", "/**/*.jpg", "favicon.ico", "/**/*.html",
 				"/**/*.css", "/**/*.js");
 	}
 }

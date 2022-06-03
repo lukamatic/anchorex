@@ -1,7 +1,7 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.ReservationEntity;
-import com.teameleven.anchorex.dto.reservationentity.FreePeriodDTO;
+import com.teameleven.anchorex.dto.FreePeriodDTO;
 
 import java.util.Date;
 

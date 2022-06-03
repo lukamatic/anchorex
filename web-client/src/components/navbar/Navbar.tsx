@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
 import { UserRole } from '../../model/user-role.enum';
@@ -8,12 +8,12 @@ import Menu from './Menu';
 import MenuToggleButton from './MenuToggleButton';
 
 const Navbar = () => {
-	const userRole = localStorageUtil.getUserRole();
+	const authContext = useContext(AuthContext);
+	const userRole = authContext.user.role;
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
-
 	return (
 		<div className='flex flex-row justify-end sticky top-0 z-30'>
 			<div className='w-screen flex flex-row justify-between items-center bg-blue-500 text-white pl-4 pr-4 py-1 flex-wrap'>

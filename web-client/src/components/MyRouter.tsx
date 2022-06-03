@@ -15,15 +15,21 @@ import HomeScreen from './home/HomeScreen';
 import ListScreen from './display-list/ListScreen';
 import Verification from './login/Verification';
 import ServiceSignupRequests from './service-signup-requests/ServiceSignupRequests';
+import Ships from './ships/Ships';
 import ShipDisplay from './display-ship/ShipDisplay';
 import ShipDisplayRules from './display-ship/ShipDisplayRules';
 import ShipDisplayPricelist from './display-ship/ShipDisplayPricelist';
 import ShipDisplayKit from './display-ship/ShipDisplayKit';
-import LodgeCalendar from './display-lodge/LodgeCalendar';
-import Ships from './display-ship/Ships';
-import ShipCalendar from './display-ship/ShipCalendar';
-import ShipAction from './display-ship/ShipAction';
+import FishingLessonDisplay from './display-fishing-lesson/FishingLessonDisplay';
+import FishingLessonDisplayImages from './display-fishing-lesson/FishingLessonDisplayImages';
+import FishingLessonDisplayKit from './display-fishing-lesson/FishingLessonDisplayKit';
+import FishingLessonDisplayRules from './display-fishing-lesson/FishingLessonDisplayRules';
+import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesssonDisplayPricelist';
 import ReservationHistory from './reservation-entities/ReservationHistory';
+import BusinessReport from './report/BusinessReport';
+import LodgeCalendar from './display-lodge/LodgeCalendar';
+import ShipAction from './display-ship/ShipAction';
+import ShipCalendar from './display-ship/ShipCalendar';
 import ProfileScreen from './profile/ProfileScreen';
 import ChangePasswordScreen from './profile/ChangePasswordScreen';
 
@@ -53,19 +59,15 @@ const MyRouter = () => {
 				<Route path='/fishingLessons'>
 					<FishingLessons />
 				</Route>
-
 				<Route path='/lodges'>
 					<Lodges />
 				</Route>
-
 				<Route path='/ships'>
 					<Ships />
 				</Route>
-
 				<Route path='/ship/:id'>
 					<ShipDisplay />
 				</Route>
-
 				<Route path='/lodge/:id'>
 					<LodgeDisplay />
 				</Route>
@@ -73,41 +75,40 @@ const MyRouter = () => {
 				<Route path='/lodgeImages/:id'>
 					<LodgeDisplayImages />
 				</Route>
-
 				<Route path='/lodgePriceList/:id'>
 					<LodgeDisplayPricelist />
 				</Route>
-
 				<Route path='/shipPriceList/:id'>
 					<ShipDisplayPricelist />
 				</Route>
-
 				<Route path='/lodgeRules/:id'>
 					<LodgeDisplayRules />
 				</Route>
-
 				<Route path='/shipRules/:id'>
 					<ShipDisplayRules />
 				</Route>
-
 				<Route path='/lodgeAction/:id'>
 					<LodgeAction />
 				</Route>
 
-				<Route path='/shipAction/:id'>
-					<ShipAction />
-				</Route>
-
-				<Route path='/lodgeCalendar/:id'>
-					<LodgeCalendar />
-				</Route>
-
-				<Route path='/shipCalendar/:id'>
-					<ShipCalendar />
-				</Route>
-
 				<Route path='/shipKit/:id'>
 					<ShipDisplayKit />
+				</Route>
+
+				<Route path='/fishingLesson/:id'>
+					<FishingLessonDisplay />
+				</Route>
+				<Route path='/fishingLessonImages/:id'>
+					<FishingLessonDisplayImages />
+				</Route>
+				<Route path='/fishingLessonPriceList/:id'>
+					<FishingLessonDisplayPricelist />
+				</Route>
+				<Route path='/fishingLessonRules/:id'>
+					<FishingLessonDisplayRules />
+				</Route>
+				<Route path='/fishingLessonKit/:id'>
+					<FishingLessonDisplayKit />
 				</Route>
 
 				<Route path='/reservationNewEntity'>
@@ -120,6 +121,22 @@ const MyRouter = () => {
 
 				<Route path='/reservations'>
 					<ReservationHistory />
+				</Route>
+
+				<Route path='/lodgeCalendar/:id'>
+					<LodgeCalendar />
+				</Route>
+
+				<Route path='/shipAction/:id'>
+					<ShipAction />
+				</Route>
+
+				<Route path='/shipCalendar/:id'>
+					<ShipCalendar />
+				</Route>
+
+				<Route path='/report'>
+					<BusinessReport />
 				</Route>
 
 				<Route path='/profile'>

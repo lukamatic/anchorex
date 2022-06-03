@@ -6,12 +6,12 @@ import { LocalStorageItem } from "../../utils/local-storage/local-storage-item.e
 import DatePicker from "../common/DatePicker";
 import AuthContext from "../../context/auth-context";
 import { UserRole } from "../../model/user-role.enum";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 const LodgeAction = () => {
   const params: { id: string } = useParams();
   const authContext = useContext(AuthContext);
-  const userRole = authContext.userRole;
+  const userRole = authContext.user.role;
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [maxPersonNumber, setMaxPersonNumber] = useState(0);
@@ -81,30 +81,26 @@ const LodgeAction = () => {
       .then((response) => {
         console.log(response.data);
         setReservations(response.data);
-        
       });
   }, []);
 
- 
   const getReservations = reservations.map((reservation) => (
     <tr className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
-      <td className="px-6 py-4">{format(reservation.startDate, 'dd.MM.yyyy.')}</td>
-      <td className="px-6 py-4">{format(reservation.endDate, 'dd.MM.yyyy.')}</td>
-      <td className="px-6 py-4">{reservation.services.map((service)=>{
-        return (
-          service.type === 'REGULAR'? (
-            service.info 
-          ):(" ")
-        ) 
-      })}
+      <td className="px-6 py-4">
+        {format(reservation.startDate, "dd.MM.yyyy.")}
       </td>
-      <td className="px-6 py-4">{reservation.services.map((service)=>{
-        return (
-          service.type === 'ADDITIONAL'? (
-            service.info + " "
-          ):(" ")
-        ) 
-      })}
+      <td className="px-6 py-4">
+        {format(reservation.endDate, "dd.MM.yyyy.")}
+      </td>
+      <td className="px-6 py-4">
+        {reservation.services.map((service) => {
+          return service.type === "REGULAR" ? service.info : " ";
+        })}
+      </td>
+      <td className="px-6 py-4">
+        {reservation.services.map((service) => {
+          return service.type === "ADDITIONAL" ? service.info + " " : " ";
+        })}
       </td>
       <td className="px-6 py-4">{reservation.discount} %</td>
       <td className="px-6 py-4">{reservation.price} $</td>
@@ -172,7 +168,7 @@ const LodgeAction = () => {
       }
     }
   };
-  
+
   const discountChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -525,41 +521,39 @@ const LodgeAction = () => {
           </button>
         </div>
       ) : (
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Start date
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    End date
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Regular service
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Additional services
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Discount
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Price
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Person number
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    <span className="sr-only">Reserve</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {getReservations}
-              </tbody>
-            </table>
-          </div>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Start date
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  End date
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Regular service
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Additional services
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Discount
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Price
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Person number
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  <span className="sr-only">Reserve</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>{getReservations}</tbody>
+          </table>
+        </div>
       )}
     </div>
   );

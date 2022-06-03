@@ -1,7 +1,5 @@
 package com.teameleven.anchorex.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 
 @Entity
@@ -22,7 +20,7 @@ public class Location{
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "reservation_entity_id")
-    private ReservationEntity entity;
+    private ReservationEntity reservationEntity;
 
 
     public Location() {
@@ -37,12 +35,12 @@ public class Location{
     }
 
 
-    public ReservationEntity getEntity() {
-        return entity;
+    public ReservationEntity getReservationEntity() {
+        return reservationEntity;
     }
 
-    public void setEntity(ReservationEntity entity) {
-        this.entity = entity;
+    public void setReservationEntity(ReservationEntity reservationEntity) {
+        this.reservationEntity = reservationEntity;
     }
 
 

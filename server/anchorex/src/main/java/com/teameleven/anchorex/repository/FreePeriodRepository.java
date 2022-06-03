@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface FreePeriodRepository extends JpaRepository<FreePeriod, Long> {
 
-    @Query(value = "SELECT p FROM FreePeriod p WHERE p.entity.id=?1")
+    @Query(value = "SELECT p FROM FreePeriod p WHERE p.reservationEntity.id=?1")
     List<FreePeriod> getFreePeriods(Long id);
 }

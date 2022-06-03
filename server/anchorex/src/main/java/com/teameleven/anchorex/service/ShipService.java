@@ -1,9 +1,9 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Ship;
-import com.teameleven.anchorex.dto.reservationentity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationentity.ServiceDTO;
-import com.teameleven.anchorex.dto.reservationentity.ShipDTO;
+import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
+import com.teameleven.anchorex.dto.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ public interface ShipService {
 
     void addService(ServiceDTO service, Long id);
 
-
+    void deleteService(Long id);
 }

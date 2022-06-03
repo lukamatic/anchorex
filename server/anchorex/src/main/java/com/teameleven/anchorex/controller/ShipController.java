@@ -4,8 +4,10 @@ import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDisplayDTO;
+import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ReservationService;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -38,6 +41,13 @@ public class ShipController {
     public ResponseEntity<Ship> create(@RequestBody CreateShipDTO createShipDTO){
         Ship ship = shipService.createShip(createShipDTO);
         return new ResponseEntity<>(ship, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path="/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ShipDisplayDTO>> getAllLodges(){
+        var ships = shipService.getAll();
+        var dtos = ShipMapper.toDtos(ships);
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(path="/ships/{id}")

@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -38,6 +39,13 @@ public class LodgeController {
     public ResponseEntity<Lodge> create(@RequestBody CreateLodgeDTO createLodgeDTO){
         var lodge = lodgeService.create(createLodgeDTO);
         return new ResponseEntity<>(lodge, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path="/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<LodgeDisplayDTO>> getAllLodges(){
+        var lodges = lodgeService.getAll();
+        var dtos = LodgeMapper.toDtos(lodges);
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(path="/lodges/{id}")

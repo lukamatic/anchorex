@@ -48,6 +48,11 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
+    public List<Ship> getAll() {
+        return this.shipRepository.findAll();
+    }
+
+    @Override
     public void deleteShip(Long id) {
         shipRepository.deleteShip(id);
     }

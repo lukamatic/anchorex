@@ -1,18 +1,17 @@
 package com.teameleven.anchorex.mapper;
 
+import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.LocationDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDisplayDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ShipMapper {
 
@@ -87,5 +86,13 @@ public class ShipMapper {
         locationDTO.setLatitude(ship.getLocation().getLatitude());
         dto.setLocation(locationDTO);
         return dto;
+    }
+
+    public static Collection<ShipDisplayDTO> toDtos(Collection<Ship> models) {
+        Collection<ShipDisplayDTO> dtos = new ArrayList<ShipDisplayDTO>();
+        for (var model : models){
+            dtos.add(shipToShipDisplayDTO(model));
+        }
+        return dtos;
     }
 }

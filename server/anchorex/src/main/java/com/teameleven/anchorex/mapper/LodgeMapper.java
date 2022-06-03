@@ -1,13 +1,17 @@
 package com.teameleven.anchorex.mapper;
 
+import com.teameleven.anchorex.domain.FishingLesson;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.LocationDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,5 +74,11 @@ public class LodgeMapper {
         return dto;
     }
 
-
+    public static Collection<LodgeDisplayDTO> toDtos(Collection<Lodge> models) {
+        Collection<LodgeDisplayDTO> dtos = new ArrayList<LodgeDisplayDTO>();
+        for (var model : models){
+            dtos.add(lodgeToLodgeDisplayDTO(model));
+        }
+        return dtos;
+    }
 }

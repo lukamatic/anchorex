@@ -28,6 +28,10 @@ import FishingLessonDisplayPricelist from './display-fishing-lesson/FishingLesss
 import ReservationHistory from './reservation-entities/ReservationHistory';
 import NewAdmin from './NewAdmin';
 import Business from './Business';
+import BusinessReport from './report/BusinessReport';
+import LodgeCalendar from './display-lodge/LodgeCalendar';
+import ShipAction from './display-ship/ShipAction';
+import ShipCalendar from './display-ship/ShipCalendar';
 
 const MyRouter = () => {
   return (
@@ -125,6 +129,22 @@ const MyRouter = () => {
 
         <Route path='/business'>
           <Business />
+        </Route>
+
+        <Route path='/lodgeCalendar/:id'>
+          <LodgeCalendar />
+        </Route>
+
+        <Route path='/shipAction/:id'>
+          <ShipAction />
+        </Route>
+
+        <Route path='/shipCalendar/:id'>
+          <ShipCalendar />
+        </Route>
+
+        <Route path='/report'>
+          <BusinessReport />
         </Route>
       </Switch>
     </Router>

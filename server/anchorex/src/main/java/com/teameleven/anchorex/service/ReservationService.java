@@ -25,4 +25,14 @@ public interface ReservationService {
     List<Reservation> getClosedReservations();
 
     ReservationReport createReport(ReservationReportDTO reportDTO);
+
+    int[] getReservationNumberByMonth(int year, Long id);
+
+    int[] getReservationNumberByYear(Long id);
+
+    int[] getReservationNumberByWeek(Long id);
+
+    double[] getSalaryByYear(Long id);
+
+    boolean checkIfEntityIsAvailable(Long id);
 }

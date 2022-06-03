@@ -61,6 +61,7 @@ public class FishingLessonMapper {
         return FishingLessonDisplayDto.builder()
                 .id(model.getId())
                 .name(model.getName())
+                .ownerId(model.getOwnerId())
                 .description(model.getDescription())
                 .averageRating(model.getAverageRating())
                 .rulesOfConduct(model.getRulesOfConduct())

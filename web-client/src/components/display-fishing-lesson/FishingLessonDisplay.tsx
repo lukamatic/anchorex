@@ -14,6 +14,7 @@ const FishingLessonDisplay = () => {
   const GEOCODE_URL =
     'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&langCode=EN&location=';
   const [name, setName] = useState('');
+  const [ownerId, setOwnerId] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
@@ -26,6 +27,7 @@ const FishingLessonDisplay = () => {
   const [entity, setEntity] = useState({
     name,
     description,
+    ownerId,
     location: {
       latitude,
       longitude,
@@ -48,6 +50,8 @@ const FishingLessonDisplay = () => {
       })
       .then((response) => {
         setName(response.data.name);
+        setName(response.data.name);
+        setOwnerId(response.data.ownerId);
         setDescription(response.data.description);
         setLatitude(response.data.location.latitude);
         setLongitude(response.data.location.longitude);
@@ -336,7 +340,44 @@ const FishingLessonDisplay = () => {
                     />
                   </svg>
 
-                  <span className='ml-2'>FishingLesson kit</span>
+                  <span className='ml-2'>Fishing kit</span>
+                </li>
+              </Link>
+              <Link
+                to={
+                  '/instructorCalendar?instructorId=' +
+                  entity.ownerId +
+                  '&entityId=' +
+                  params.id
+                }
+              >
+                <li className='mb-2 px-4 py-4 text-gray-100 flex flex-row  border-gray-300 hover:text-black   hover:bg-gray-300  hover:font-bold rounded rounded-lg'>
+                  <span>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      stroke='#FFFFFF'
+                      strokeWidth='2'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    >
+                      <rect
+                        x='3'
+                        y='4'
+                        width='18'
+                        height='18'
+                        rx='2'
+                        ry='2'
+                      ></rect>
+                      <line x1='16' y1='2' x2='16' y2='6'></line>
+                      <line x1='8' y1='2' x2='8' y2='6'></line>
+                      <line x1='3' y1='10' x2='21' y2='10'></line>
+                    </svg>
+                  </span>
+                  <span className='ml-2'>Calendar</span>
                 </li>
               </Link>
             </ul>

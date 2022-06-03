@@ -228,7 +228,7 @@ c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.66
                     />
                   </svg>
 
-                  <span className='ml-2'>FishingLesson kit</span>
+                  <span className='ml-2'>Fishing kit</span>
                 </li>
               </Link>
             </ul>

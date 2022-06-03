@@ -30,6 +30,7 @@ import BusinessReport from './report/BusinessReport';
 import LodgeCalendar from './display-lodge/LodgeCalendar';
 import ShipAction from './display-ship/ShipAction';
 import ShipCalendar from './display-ship/ShipCalendar';
+import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
 
 const MyRouter = () => {
   return (
@@ -122,20 +123,23 @@ const MyRouter = () => {
         </Route>
 
         <Route path='/lodgeCalendar/:id'>
-          <LodgeCalendar/>
+          <LodgeCalendar />
         </Route>
 
-        
-        <Route path ='/shipAction/:id'>
+        <Route path='/shipAction/:id'>
           <ShipAction />
         </Route>
 
         <Route path='/shipCalendar/:id'>
-          <ShipCalendar/>
+          <ShipCalendar />
+        </Route>
+
+        <Route path='/instructorCalendar'>
+          <InstructorCalendar />
         </Route>
 
         <Route path='/report'>
-          <BusinessReport/>
+          <BusinessReport />
         </Route>
       </Switch>
     </Router>

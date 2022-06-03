@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -72,9 +73,29 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(UpdateUserDto updateUserDto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void update(UpdateUserDto updateUserDto) throws Exception {
+		this.userRepository.updateUser(	updateUserDto.getId(),
+													updateUserDto.getAddress(),
+													updateUserDto.getBiography(),
+													updateUserDto.getCity(),
+													updateUserDto.getEmail(),
+													updateUserDto.getCountry(),
+													updateUserDto.getFirstName(),
+													updateUserDto.getLastName(),
+													updateUserDto.getPhoneNumber()
+													);
+		return;
+//		return success != 0;
+	}
+
+	@Override
+	public void updatePassword(Long userId, String password) throws  Exception{
+
+		User user = this.userRepository.findOneById(userId);
+		user.setPassword(password);
+		user.encodePassword();
+		this.userRepository.updateUser(user.getId(), user.getPassword());
+
 	}
 
 	@Override

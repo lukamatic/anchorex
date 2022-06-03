@@ -14,7 +14,7 @@ public interface UserService {
 
 	User findOneById(Long id);
 
-	User update(UpdateUserDto updateUserDto) throws Exception;
+	void update(UpdateUserDto updateUserDto) throws Exception;
 
 	User update(User user) throws Exception;
 
@@ -23,4 +23,5 @@ public interface UserService {
 	User findByEmail(String email);
 	
     void enableUser(Long id);
+	void updatePassword(Long userId, String password) throws Exception;
 }

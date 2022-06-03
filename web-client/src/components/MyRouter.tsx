@@ -32,6 +32,8 @@ import ShipAction from './display-ship/ShipAction';
 import ShipCalendar from './display-ship/ShipCalendar';
 import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
 import FishingLessonAction from './display-fishing-lesson/FishingLessonAction';
+import ProfileScreen from './profile/ProfileScreen';
+import ChangePasswordScreen from './profile/ChangePasswordScreen';
 
 const MyRouter = () => {
   return (
@@ -145,6 +147,13 @@ const MyRouter = () => {
 
         <Route path='/fishingLessonAction/:id'>
           <FishingLessonAction />
+        </Route>
+
+        <Route path='/profile'>
+          <ProfileScreen />
+        </Route>
+        <Route path='/changePassword'>
+          <ChangePasswordScreen />
         </Route>
       </Switch>
     </Router>

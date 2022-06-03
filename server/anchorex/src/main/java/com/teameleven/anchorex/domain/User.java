@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.domain;
 
 import com.teameleven.anchorex.dto.user.CreateUserDto;
+import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
@@ -99,7 +100,21 @@ public class User implements UserDetails {
 		this.enabled = false;
 	}
 
-	public Long getId() {
+    public User(UpdateUserDto updateUserDto) {
+		this.roles = new HashSet<Role>();
+		this.email = updateUserDto.getEmail();
+		this.firstName = updateUserDto.getFirstName();
+		this.lastName = updateUserDto.getLastName();
+		this.address = updateUserDto.getAddress();
+		this.city = updateUserDto.getCity();
+		this.country = updateUserDto.getCountry();
+		this.phoneNumber = updateUserDto.getPhoneNumber();
+		this.biography = updateUserDto.getBiography();
+		this.id = updateUserDto.getId();
+//		this.enabled =
+    }
+
+    public Long getId() {
 		return this.id;
 	}
 

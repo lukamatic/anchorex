@@ -32,6 +32,7 @@ import BusinessReport from './report/BusinessReport';
 import LodgeCalendar from './display-lodge/LodgeCalendar';
 import ShipAction from './display-ship/ShipAction';
 import ShipCalendar from './display-ship/ShipCalendar';
+import AdminFishingLessons from './admin-entities/AdminFishingLessons';
 
 const MyRouter = () => {
   return (
@@ -145,6 +146,10 @@ const MyRouter = () => {
 
         <Route path='/report'>
           <BusinessReport />
+        </Route>
+
+        <Route path='/adminFishingLessons'>
+          <AdminFishingLessons />
         </Route>
       </Switch>
     </Router>

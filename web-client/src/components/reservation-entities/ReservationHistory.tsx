@@ -113,10 +113,10 @@ const ReservationHistory = () => {
     <tr className='border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700'>
       <td className='px-6 py-4'>{reservation.userFullname}</td>
       <td className='px-6 py-4'>
-        {format(reservation.startDate, 'dd.MM.yyyy.')}
+        {reservation.startDate.toString().slice(0, 10)}
       </td>
       <td className='px-6 py-4'>
-        {format(reservation.endDate, 'dd.MM.yyyy.')}
+        {reservation.endDate.toString().slice(0, 10)}
       </td>
       <td className='px-6 py-4'>
         {reservation.services.map((service) => {
@@ -136,7 +136,7 @@ const ReservationHistory = () => {
           type='button'
           className='inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'
           onClick={function (): void {
-            if (reservation.endDate <= new Date()) {
+            if (new Date(reservation.endDate) <= new Date()) {
               setClientId(reservation.userId);
               setShowModal(true);
             }

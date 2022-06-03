@@ -27,6 +27,7 @@ public class FishingLessonMapper {
                 .cancellationPercentage(dto.getCancellationPercentage())
                 .fishingKit(dto.getFishingKit())
                 .services(new HashSet<>())
+                .images(new HashSet<>())
                 .build();
         dto.getRegularServices().forEach(serviceDTO -> {
             serviceDTO.setType(ServiceType.REGULAR);
@@ -61,6 +62,7 @@ public class FishingLessonMapper {
         return FishingLessonDisplayDto.builder()
                 .id(model.getId())
                 .name(model.getName())
+                .ownerId(model.getOwnerId())
                 .description(model.getDescription())
                 .averageRating(model.getAverageRating())
                 .rulesOfConduct(model.getRulesOfConduct())

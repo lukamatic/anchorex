@@ -42,10 +42,16 @@ public class LodgeController {
     }
 
     @GetMapping(path="/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<LodgeDisplayDTO>> getAllLodges(){
+    public ResponseEntity<Collection<LodgeDisplayDTO>> getAll(){
         var lodges = lodgeService.getAll();
         var dtos = LodgeMapper.toDtos(lodges);
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<LodgeDTO>> getAllLodges(){
+        var lodges = lodgeService.getAllLodges();
+        return new ResponseEntity<>(lodges, HttpStatus.OK);
     }
 
     @GetMapping(path="/lodges/{id}")

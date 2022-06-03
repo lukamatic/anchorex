@@ -247,7 +247,7 @@ const FishingLessonDisplayPricelist = () => {
                     />
                   </svg>
 
-                  <span className='ml-2'>FishingLesson kit</span>
+                  <span className='ml-2'>Fishing kit</span>
                 </li>
               </Link>
             </ul>

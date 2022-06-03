@@ -35,6 +35,10 @@ import ShipCalendar from './display-ship/ShipCalendar';
 import AdminFishingLessons from './admin-entities/AdminFishingLessons';
 import AdminLodges from './admin-entities/AdminLodges';
 import AdminShips from './admin-entities/AdminShips';
+import FishingLessonAction from './display-fishing-lesson/FishingLessonAction';
+import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
+import ChangePasswordScreen from './profile/ChangePasswordScreen';
+import ProfileScreen from './profile/ProfileScreen';
 
 const MyRouter = () => (
   <Router>
@@ -157,6 +161,36 @@ const MyRouter = () => (
       </Route>
       <Route path='/adminFishingLessons'>
         <AdminFishingLessons />
+      </Route>
+      <Route path='/lodgeCalendar/:id'>
+        <LodgeCalendar />
+      </Route>
+
+      <Route path='/shipAction/:id'>
+        <ShipAction />
+      </Route>
+
+      <Route path='/shipCalendar/:id'>
+        <ShipCalendar />
+      </Route>
+
+      <Route path='/instructorCalendar'>
+        <InstructorCalendar />
+      </Route>
+
+      <Route path='/report'>
+        <BusinessReport />
+      </Route>
+
+      <Route path='/fishingLessonAction/:id'>
+        <FishingLessonAction />
+      </Route>
+
+      <Route path='/profile'>
+        <ProfileScreen />
+      </Route>
+      <Route path='/changePassword'>
+        <ChangePasswordScreen />
       </Route>
     </Switch>
   </Router>

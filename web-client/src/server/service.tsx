@@ -1,5 +1,8 @@
 import axios from 'axios';
 import searchDto, { searchResponseDto } from '../dtos/search.dto';
+import { UserPasswordDto } from '../dtos/user';
+import { LocalStorageItem } from '../utils/local-storage/local-storage-item.enum';
+import localStorageUtil from '../utils/local-storage/local-storage-util';
 
 interface httpResponse {
 	status: number;
@@ -15,7 +18,6 @@ export const validateUserTokenAsync = async (token: string | null): Promise<http
 
 	return axios(options)
 		.then((response) => {
-			console.log(response);
 			return { status: response?.status, message: response?.data };
 		})
 		.catch((error) => {
@@ -53,8 +55,10 @@ export const searchDataAsync = async (data: searchDto): Promise<httpResponse> =>
 	const options: any = {
 		method: 'POST',
 		url: `/api/search/entities`,
-		header: {
-			'Content-Type': 'application/json',
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
 		},
 		data,
 	};
@@ -62,6 +66,76 @@ export const searchDataAsync = async (data: searchDto): Promise<httpResponse> =>
 	return axios(options)
 		.then((response) => {
 			return { status: response?.status, data: response?.data as searchResponseDto };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+
+export const getUserByTokenAsync = async (): Promise<httpResponse> => {
+	const token = localStorageUtil.getAccessToken();
+	const options: any = {
+		method: 'GET',
+		url: `/api/getUserByToken?token=${token}`,
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			console.log('error: ', error.response);
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+
+export const patchUser = async (user: any | null): Promise<httpResponse> => {
+	console.log(Object.keys(user));
+
+	const token = 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN);
+	const options: any = {
+		method: 'PUT',
+		url: `/api/users/${user?.id}`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+		data: user,
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, message: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+export const changePasswordAsync = async (userPassword: UserPasswordDto): Promise<httpResponse> => {
+	const options: any = {
+		method: 'PUT',
+		url: `/api/users/changePassword`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+		data: userPassword,
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, message: response?.data };
 		})
 		.catch((error) => {
 			return {

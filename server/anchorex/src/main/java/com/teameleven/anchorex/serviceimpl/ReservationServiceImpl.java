@@ -122,7 +122,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationReport createReport(ReservationReportDTO reportDTO) {
         ReservationReport report = ReportMapper.reportDTOToReport(reportDTO);
-        report.setClient(userRepository.getOne(reportDTO.getClientId()));
+        report.setClient(userRepository.findOneById(reportDTO.getClientId()));
         reportRepository.save(report);
         return report;
     }

@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	// Definisemo prava pristupa za zahteve ka odredjenim URL-ovima/rutama
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
+		http.antMatcher("/api/**")
 				// komunikacija izmedju klijenta i servera je stateless posto je u pitanju REST
 				// aplikacija
 				// ovo znaci da server ne pamti nikakvo stanje, tokeni se ne cuvaju na serveru
@@ -95,6 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/h2-console/**").permitAll() // /h2-console/** ako se koristi H2 baza)
 				.antMatchers("/api/tests").permitAll() // /api/foo
 				.antMatchers("/api/validateToken").permitAll() // /api/foo
+				.antMatchers("/api/getUserByToken").permitAll() // /api/foo
 
 				// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama
 				// kontrolera, moze se iskoristiti hasRole() metoda da se ogranici

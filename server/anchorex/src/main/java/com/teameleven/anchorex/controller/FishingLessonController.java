@@ -1,7 +1,9 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.FishingLesson;
+import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Test;
+import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDisplayDto;
@@ -11,25 +13,34 @@ import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.FishingLessonService;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ImageService;
+import com.teameleven.anchorex.service.UserService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collection;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/fishingLessons")
 public class FishingLessonController {
     private final FishingLessonService fishingLessonService;
+    private final UserService userService;
+    private final FreePeriodService freePeriodService;
 
-    public FishingLessonController(FishingLessonService fishingLessonService) {
+    public FishingLessonController(FishingLessonService fishingLessonService, UserService userService, FreePeriodService freePeriodService) {
         this.fishingLessonService = fishingLessonService;
+        this.userService = userService;
+        this.freePeriodService = freePeriodService;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,5 +116,25 @@ public class FishingLessonController {
     public ResponseEntity<Void> removeImage(@PathVariable("imageId") Long imageId) {
         this.fishingLessonService.removeImage(imageId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(path="/addFreePeriod/{fishingLessonId}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<FreePeriodDTO> addFreePeriod(Principal principal, @PathVariable Long fishingLessonId, @RequestBody FreePeriodDTO freePeriod) {
+        var fishingLesson = fishingLessonService.findOneById(fishingLessonId);
+
+        if (fishingLesson == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format("Fishing lesson with id %d doesn't exist.", fishingLessonId));
+        }
+
+        var user = this.userService.findByEmail(principal.getName());
+
+        if (!Objects.equals(fishingLesson.ownerId, user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can't create free period for this fishingLesson.");
+        }
+
+        freePeriodService.addFreePeriod(freePeriod, fishingLesson);
+        return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
     }
 }

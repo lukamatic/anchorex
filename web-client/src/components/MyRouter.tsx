@@ -40,6 +40,7 @@ import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
 import ChangePasswordScreen from './profile/ChangePasswordScreen';
 import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
+import AdminReports from './admin-reports/AdminReports';
 
 const MyRouter = () => (
   <Router>
@@ -165,6 +166,9 @@ const MyRouter = () => (
       </Route>
       <Route path='/adminFishingLessons'>
         <AdminFishingLessons />
+      </Route>
+      <Route path='/adminReports'>
+        <AdminReports />
       </Route>
 
       <Route path='/lodgeCalendar/:id'>

@@ -8,4 +8,5 @@ export const AdminMenuLinks: MenuLink[] = [
   { pathname: '/adminLodges', text: 'Lodges' },
   { pathname: '/adminShips', text: 'Ships' },
   { pathname: '/adminFishingLessons', text: 'Fishing lessons' },
+  { pathname: '/adminReports', text: 'Reports' },
 ];

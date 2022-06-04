@@ -2,6 +2,7 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationReport;
+import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
 import com.teameleven.anchorex.dto.DateRangeDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.dto.ReservationReportDTO;
@@ -123,6 +124,8 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationReport createReport(ReservationReportDTO reportDTO) {
         ReservationReport report = ReportMapper.reportDTOToReport(reportDTO);
         report.setClient(userRepository.findOneById(reportDTO.getClientId()));
+        report.setOwner(userRepository.findOneById(reportDTO.getOwnerId()));
+        report.setStatus(ReservationReportStatus.PENDING);
         reportRepository.save(report);
         return report;
     }

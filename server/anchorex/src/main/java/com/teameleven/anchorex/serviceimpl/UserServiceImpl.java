@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
 			var role = validateRole(createUserDto.getRole());
 			user.getRoles().add(role);
 			user.encodePassword();
+			user.setPenaltyCount(0);
 			savedUser = userRepository.save(user);
 			if (savedUser.isClient()) {
 				String token = UUID.randomUUID().toString();
@@ -96,6 +97,13 @@ public class UserServiceImpl implements UserService {
 		user.encodePassword();
 		this.userRepository.updateUser(user.getId(), user.getPassword());
 
+	}
+
+	@Override
+	public void incrementPenaltyCount(Long userId) {
+		var userToUpdate = this.userRepository.findById(userId).orElse(null);
+		userToUpdate.setPenaltyCount(userToUpdate.getPenaltyCount() + 1);
+		this.userRepository.save(userToUpdate);
 	}
 
 	@Override

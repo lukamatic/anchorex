@@ -10,6 +10,7 @@ import com.teameleven.anchorex.util.TokenUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -58,7 +59,9 @@ public class AuthController {
 			// AuthenticationException
 			authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-		} catch (DisabledException exception) {
+		} catch (BadCredentialsException exception) {
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+		}  catch (DisabledException exception) {
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		} // Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
 			// kontekst

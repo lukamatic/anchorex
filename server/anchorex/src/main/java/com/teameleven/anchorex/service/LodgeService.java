@@ -11,6 +11,8 @@ import java.util.List;
 public interface LodgeService {
     Lodge create (CreateLodgeDTO createLodgeDTO);
 
+    List<Lodge> getAll();
+
     List<LodgeDTO> getLodges(Long id);
 
     List<Lodge> getAllLodges();

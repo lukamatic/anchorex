@@ -50,6 +50,13 @@ public class FishingLessonController {
         return new ResponseEntity<>(fishingLessonDisplayDto, HttpStatus.CREATED);
     }
 
+    @GetMapping(path="/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<FishingLessonDto>> findAll() {
+        var fishingLessons = fishingLessonService.findAll();
+        var fishingLessonDtos = FishingLessonMapper.toDtos(fishingLessons);
+        return new ResponseEntity<>(fishingLessonDtos, HttpStatus.OK);
+    }
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<FishingLessonDto>> findByOwnerId(@RequestParam("ownerId") Long ownerId) {
         var fishingLessons = fishingLessonService.findByOwnerId(ownerId);

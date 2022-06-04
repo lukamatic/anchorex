@@ -1,18 +1,33 @@
 package com.teameleven.anchorex.domain;
 
+import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class ReservationReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name= "owner_id")
+    private User owner;
+
     @Column
-    private Long ownerId;
+    private Boolean penaltySuggestion;
+
     @Column
-    private boolean penaltySuggestion;
-    @Column
-    private boolean clientShowedUp;
+    private Boolean clientShowedUp;
+
     @Column
     private String comment;
 
@@ -20,59 +35,6 @@ public class ReservationReport {
     @JoinColumn(name= "client_id")
     private User client;
 
-
-
-    public ReservationReport() {
-        super();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public boolean isPenaltySuggestion() {
-        return penaltySuggestion;
-    }
-
-    public void setPenaltySuggestion(boolean penaltySuggestion) {
-        this.penaltySuggestion = penaltySuggestion;
-    }
-
-    public boolean isClientShowedUp() {
-        return clientShowedUp;
-    }
-
-    public void setClientShowedUp(boolean clientShowedUp) {
-        this.clientShowedUp = clientShowedUp;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public User getClient() {
-        return client;
-    }
-
-    public void setClient(User client) {
-        this.client = client;
-    }
-
-    public Long getOwner() {
-        return ownerId;
-    }
-
-    public void setOwner(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-
+    @Column
+    private ReservationReportStatus status;
 }

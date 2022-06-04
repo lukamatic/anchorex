@@ -12,6 +12,8 @@ public interface ShipService {
 
     List<ShipDTO> getShips(Long id);
 
+    List<Ship> getAll();
+
     void deleteShip(Long id);
 
     Ship getShipById(Long id);

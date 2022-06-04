@@ -55,6 +55,9 @@ public class User implements UserDetails {
 	private String biography;
 
 	@Column
+	private Integer penaltyCount;
+
+	@Column
 	private Timestamp lastPasswordResetDate;
 
 	@Column
@@ -202,6 +205,14 @@ public class User implements UserDetails {
 		this.biography = biography;
 	}
 
+	public Integer getPenaltyCount() {
+		return penaltyCount;
+	}
+
+	public void setPenaltyCount(Integer penaltyCount) {
+		this.penaltyCount = penaltyCount;
+	}
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
@@ -213,6 +224,8 @@ public class User implements UserDetails {
 	public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
 		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
+
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

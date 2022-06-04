@@ -48,6 +48,11 @@ public class LodgeServiceImpl implements LodgeService {
     }
 
     @Override
+    public List<Lodge> getAll() {
+        return this.lodgeRepository.findAll();
+    }
+
+    @Override
     public List<LodgeDTO> getLodges(Long id) {
         List<Lodge> lodges = lodgeRepository.getLodgeByUserId(id);
         return getLodgesDTO(lodges);

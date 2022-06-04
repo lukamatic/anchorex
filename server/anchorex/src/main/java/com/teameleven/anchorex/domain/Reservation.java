@@ -34,6 +34,18 @@ public class Reservation {
     private Set<Service> services = new HashSet<>();
 
 
+    @Column
+    private Double appPercentage;
+
+    public Double getAppPercentage() {
+        return appPercentage;
+    }
+
+    public void setAppPercentage(Double appPercentage) {
+        this.appPercentage = appPercentage;
+    }
+
+
     public Reservation() {
         super();
     }

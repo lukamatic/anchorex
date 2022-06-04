@@ -2,7 +2,11 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationReport;
+
 import com.teameleven.anchorex.domain.Revision;
+
+import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
+
 import com.teameleven.anchorex.dto.DateRangeDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.dto.ReservationReportDTO;
@@ -13,7 +17,9 @@ import com.teameleven.anchorex.enums.ReviewStatus;
 import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ReportMapper;
 import com.teameleven.anchorex.mapper.ReservationMapper;
+
 import com.teameleven.anchorex.mapper.RevisionMapper;
+
 import com.teameleven.anchorex.repository.*;
 import com.teameleven.anchorex.service.ReservationService;
 import org.apache.tomcat.jni.Local;
@@ -39,6 +45,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private final UserRepository userRepository;
 
+
     @Autowired
     private final RevisionRepository revisionRepository;
     @Autowired
@@ -47,18 +54,31 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationServiceImpl(ReservationRepository reservationRepository,
                                   ReservationEntityRepository entityRepository,
                                   ReservationReportRepository reportRepository, UserRepository userRepository,RevisionRepository revisionRepository,ReservationEntityRepository reservationEntityRepository) {
+
+    private final BusinessConfigurationRepository businessConfigurationRepository;
+
+    public ReservationServiceImpl(ReservationRepository reservationRepository,
+                                  ReservationEntityRepository entityRepository,
+                                  ReservationReportRepository reportRepository, UserRepository userRepository,
+                                  BusinessConfigurationRepository businessConfigurationRepository) {
+
         this.reservationRepository = reservationRepository;
         this.entityRepository = entityRepository;
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
+
         this.revisionRepository = revisionRepository;
         this.reservationEntityRepository = reservationEntityRepository;
+
+        this.businessConfigurationRepository = businessConfigurationRepository;
+
     }
 
     @Override
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation reservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
         reservation.setOwnerId(entityRepository.getOwnerId(reservation.getReservationEntityId()));
+        reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
         reservationRepository.save(reservation);
         return reservation;
     }
@@ -68,6 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
         personalReservation.setUserId(reservationDTO.getUserId());
         personalReservation.setOwnerId(entityRepository.getOwnerId(personalReservation.getReservationEntityId()));
+        personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
         reservationRepository.save(personalReservation);
         return personalReservation;
     }
@@ -92,7 +113,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ClientReservationDTO> getFreeReservations(Long id) {
+    public List<ClientReservationDTO> getFreeReservationDtos(Long id) {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getEntityReservations(id);
         for(Reservation reservation: reservations){
@@ -103,7 +124,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ClientReservationDTO> getBookedReservations(Long id) {
+    public List<ClientReservationDTO> getBookedReservationDtos(Long id) {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getBookedReservations(id);
         for(Reservation reservation: reservations){
@@ -113,7 +134,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ClientReservationDTO> getClosedReservations(Long id) {
+    public List<ClientReservationDTO> getClosedReservationDtos(Long id) {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getClosedReservations(id);
         for(Reservation reservation: reservations){
@@ -123,9 +144,16 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public List<Reservation> getClosedReservations() {
+        return this.reservationRepository.getClosedReservations();
+    }
+
+    @Override
     public ReservationReport createReport(ReservationReportDTO reportDTO) {
         ReservationReport report = ReportMapper.reportDTOToReport(reportDTO);
         report.setClient(userRepository.findOneById(reportDTO.getClientId()));
+        report.setOwner(userRepository.findOneById(reportDTO.getOwnerId()));
+        report.setStatus(ReservationReportStatus.PENDING);
         reportRepository.save(report);
         return report;
     }

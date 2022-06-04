@@ -18,11 +18,13 @@ public interface ReservationService {
 
     boolean checkCaptainAvailability(DateRangeDTO dateRangeDTO);
 
-    List<ClientReservationDTO> getFreeReservations(Long id);
+    List<ClientReservationDTO> getFreeReservationDtos(Long id);
 
-    List<ClientReservationDTO> getBookedReservations(Long id);
+    List<ClientReservationDTO> getBookedReservationDtos(Long id);
 
-    List<ClientReservationDTO> getClosedReservations(Long id);
+    List<ClientReservationDTO> getClosedReservationDtos(Long id);
+
+    List<Reservation> getClosedReservations();
 
     ReservationReport createReport(ReservationReportDTO reportDTO);
 

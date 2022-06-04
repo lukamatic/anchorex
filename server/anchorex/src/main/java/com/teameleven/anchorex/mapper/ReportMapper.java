@@ -10,7 +10,6 @@ public class ReportMapper {
     public static ReservationReport reportDTOToReport(ReservationReportDTO reportDTO){
         ReservationReport report = new ReservationReport();
         report.setComment(reportDTO.getComment());
-        report.setOwner(reportDTO.getOwnerId());
         report.setClientShowedUp(reportDTO.isClientShowedUp());
         report.setPenaltySuggestion(reportDTO.isPenaltySuggestion());
         return report;

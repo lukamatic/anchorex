@@ -1,22 +1,18 @@
 import { List } from 'lodash';
-import React, { useContext, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
-import AuthContext from '../../context/auth-context';
-import CreateUserDto from '../../dtos/create-user.dto';
-import { UserRole } from '../../model/user-role.enum';
-import { singUpAsync } from '../../server/service';
-import { HttpStatusCode } from '../../utils/http-status-code.enum';
-import SignupValidation from '../../validations/signup-validation';
-import ErrorLabel from '../common/ErrorLabel';
-import SignupInput from './SignupInput';
+import { useContext, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import AuthContext from '../context/auth-context';
+import CreateUserDto from '../dtos/create-user.dto';
+import { UserRole } from '../model/user-role.enum';
+import { singUpAsync } from '../server/service';
+import { HttpStatusCode } from '../utils/http-status-code.enum';
+import SignupValidation from '../validations/signup-validation';
+import ErrorLabel from './common/ErrorLabel';
+import SignupInput from './signup/SignupInput';
 
-const Signup = () => {
+const NewAdmin = () => {
   const authContext = useContext(AuthContext);
   const history = useHistory();
-
-  if (authContext.user.role !== UserRole.UNDEFINED) {
-    history.push('/');
-  }
 
   const params: { choice: string } = useParams();
   const signupValidation = new SignupValidation();
@@ -270,11 +266,7 @@ const Signup = () => {
       };
       const resp = await singUpAsync(createUserDto);
       if (resp.status === HttpStatusCode.CREATED) {
-        if (userRole === UserRole.CLIENT) {
-          alert('Email is sent. Please check your inbox!');
-        } else {
-          history.push('/login');
-        }
+        alert('Email is sent. Please check your inbox!');
       }
     } else {
       setErrorText('Please fill out required fields correctly.');
@@ -426,4 +418,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default NewAdmin;

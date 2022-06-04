@@ -22,8 +22,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class ReservationController {
 
     @GetMapping(path="/openReservations/{id}")
     public ResponseEntity<List<ClientReservationDTO>> getOpenReservations(@PathVariable Long id){
-        var reservations = reservationService.getFreeReservations(id);
+        var reservations = reservationService.getFreeReservationDtos(id);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
@@ -105,7 +107,7 @@ public class ReservationController {
 
     @GetMapping(path="/bookedReservations/{id}")
     public ResponseEntity<List<ClientReservationDTO>> getBookedReservations(@PathVariable Long id){
-        var reservations = reservationService.getBookedReservations(id);
+        var reservations = reservationService.getBookedReservationDtos(id);
         for(ClientReservationDTO reservationDTO: reservations){
             reservationDTO.setUserFullname(userService.findOneById(reservationDTO.getUserId()).getFirstName()
                     + " " + userService.findOneById(reservationDTO.getUserId()).getLastName());
@@ -117,7 +119,7 @@ public class ReservationController {
     @GetMapping(path="/closedReservations")
     public ResponseEntity<List<ClientReservationDTO>> getClosedReservations(@RequestParam String email){
         var user = userService.findByEmail(email);
-        var reservations = reservationService.getClosedReservations(user.getId());
+        var reservations = reservationService.getClosedReservationDtos(user.getId());
         for(ClientReservationDTO reservationDTO: reservations){
             reservationDTO.setUserFullname(userService.findOneById(reservationDTO.getUserId()).getFirstName()
                     + " " + userService.findOneById(reservationDTO.getUserId()).getLastName());
@@ -193,10 +195,26 @@ public class ReservationController {
     }
 
 
+
     @PostMapping(path="/createRevision", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createReview( @RequestBody RevisionDTO revisionDTO){
         reservationService.crateRevision(revisionDTO);
         return new ResponseEntity<>("Ok", HttpStatus.OK);
+    }
+
+    @GetMapping(path="/appRevenue", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Double> getAppRevenue(@RequestParam String from, @RequestParam String to) {
+        var reservations = this.reservationService.getClosedReservations();
+
+        var total = 0.0;
+
+        for (var reservation: reservations) {
+            if (reservation.getStartDate().after(new Date(from)) && reservation.getStartDate().before(new Date(to))) {
+                total += reservation.getPrice() * reservation.getAppPercentage();
+            }
+        }
+
+        return new ResponseEntity<>(total, HttpStatus.OK);
     }
 
 }

@@ -4,6 +4,7 @@ import com.teameleven.anchorex.domain.Role;
 import com.teameleven.anchorex.domain.ServiceSignupRequest;
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.domain.UserValidationToken;
+import com.teameleven.anchorex.domain.enumerations.ServiceSignupRequestStatus;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.repository.UserRepository;
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
 			var role = validateRole(createUserDto.getRole());
 			user.getRoles().add(role);
 			user.encodePassword();
+			user.setPenaltyCount(0);
 			savedUser = userRepository.save(user);
 			if (savedUser.isClient()) {
 				String token = UUID.randomUUID().toString();
@@ -52,6 +54,7 @@ public class UserServiceImpl implements UserService {
 				this.authService.sendVerificationMail(savedUser, token);
 			} else if (savedUser.isService()) {
 				var serviceSignupRequest = new ServiceSignupRequest(savedUser, createUserDto.getSignupExplanation());
+				serviceSignupRequest.setStatus(ServiceSignupRequestStatus.PENDING);
 				serviceSignupRequestService.create(serviceSignupRequest);
 			}
 		} catch (DataIntegrityViolationException e) {
@@ -96,6 +99,13 @@ public class UserServiceImpl implements UserService {
 		user.encodePassword();
 		this.userRepository.updateUser(user.getId(), user.getPassword());
 
+	}
+
+	@Override
+	public void incrementPenaltyCount(Long userId) {
+		var userToUpdate = this.userRepository.findById(userId).orElse(null);
+		userToUpdate.setPenaltyCount(userToUpdate.getPenaltyCount() + 1);
+		this.userRepository.save(userToUpdate);
 	}
 
 	@Override

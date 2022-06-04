@@ -24,4 +24,6 @@ public interface UserService {
 	
     void enableUser(Long id);
 	void updatePassword(Long userId, String password) throws Exception;
+
+	void incrementPenaltyCount(Long userId);
 }

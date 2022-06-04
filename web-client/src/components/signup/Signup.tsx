@@ -270,7 +270,11 @@ const Signup = () => {
       };
       const resp = await singUpAsync(createUserDto);
       if (resp.status === HttpStatusCode.CREATED) {
-        alert('Email is sent. Please check your inbox!');
+        if (userRole === UserRole.CLIENT) {
+          alert('Email is sent. Please check your inbox!');
+        } else {
+          history.push('/login');
+        }
       }
     } else {
       setErrorText('Please fill out required fields correctly.');

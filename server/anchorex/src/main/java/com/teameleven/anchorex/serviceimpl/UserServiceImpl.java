@@ -4,6 +4,7 @@ import com.teameleven.anchorex.domain.Role;
 import com.teameleven.anchorex.domain.ServiceSignupRequest;
 import com.teameleven.anchorex.domain.User;
 import com.teameleven.anchorex.domain.UserValidationToken;
+import com.teameleven.anchorex.domain.enumerations.ServiceSignupRequestStatus;
 import com.teameleven.anchorex.dto.user.CreateUserDto;
 import com.teameleven.anchorex.dto.user.UpdateUserDto;
 import com.teameleven.anchorex.repository.UserRepository;
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
 				this.authService.sendVerificationMail(savedUser, token);
 			} else if (savedUser.isService()) {
 				var serviceSignupRequest = new ServiceSignupRequest(savedUser, createUserDto.getSignupExplanation());
+				serviceSignupRequest.setStatus(ServiceSignupRequestStatus.PENDING);
 				serviceSignupRequestService.create(serviceSignupRequest);
 			}
 		} catch (DataIntegrityViolationException e) {

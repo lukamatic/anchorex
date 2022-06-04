@@ -51,15 +51,14 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private final ReservationEntityRepository reservationEntityRepository;
 
-    public ReservationServiceImpl(ReservationRepository reservationRepository,
-                                  ReservationEntityRepository entityRepository,
-                                  ReservationReportRepository reportRepository, UserRepository userRepository,RevisionRepository revisionRepository,ReservationEntityRepository reservationEntityRepository) {
+
 
     private final BusinessConfigurationRepository businessConfigurationRepository;
 
     public ReservationServiceImpl(ReservationRepository reservationRepository,
                                   ReservationEntityRepository entityRepository,
                                   ReservationReportRepository reportRepository, UserRepository userRepository,
+                                  RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
                                   BusinessConfigurationRepository businessConfigurationRepository) {
 
         this.reservationRepository = reservationRepository;

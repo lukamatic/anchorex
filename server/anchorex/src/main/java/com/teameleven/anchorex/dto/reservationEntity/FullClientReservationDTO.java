@@ -1,35 +1,59 @@
-package com.teameleven.anchorex.dto;
+package com.teameleven.anchorex.dto.reservationentity;
 
-import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.domain.Revision;
+import com.teameleven.anchorex.dto.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
+import com.teameleven.anchorex.enums.ReviewStatus;
 
 import java.util.Date;
 import java.util.Set;
 
-public class ReservationDTO {
+public class FullClientReservationDTO {
     private Date startDate;
     private Date endDate;
     private Integer maxPersonNumber;
     private double discount;
     private double price;
-    private Set<Service> services;
+    private Set<ServiceDTO> services;
     private Long userId;
-    private Long ownerId;
-    private Long id;
+    private boolean captain;
+    private Long reservationEntityId;
+    private String userFullname;
+    private Revision revision;
+    private ReviewStatus revisionStatus;
 
-    public Long getOwnerId() {
-        return ownerId;
+    public ReviewStatus getRevisionStatus() {
+        return revisionStatus;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setRevisionStatus(ReviewStatus revisionStatus) {
+        this.revisionStatus = revisionStatus;
     }
 
-    public Long getId() {
-        return id;
+    public Revision getRevision() {
+        return revision;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRevision(Revision revision) {
+        this.revision = revision;
+    }
+
+    private com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO lodgeInfo;
+
+    public LodgeDisplayDTO getLodgeInfo() {
+        return lodgeInfo;
+    }
+
+    public void setLodgeInfo(LodgeDisplayDTO lodgeInfo) {
+        this.lodgeInfo = lodgeInfo;
+    }
+
+    public String getUserFullname() {
+        return userFullname;
+    }
+
+    public void setUserFullname(String userFullname) {
+        this.userFullname = userFullname;
     }
 
     public Long getUserId() {
@@ -40,10 +64,7 @@ public class ReservationDTO {
         this.userId = userId;
     }
 
-    private Long reservationEntityId;
-    private boolean captain;
-
-    public ReservationDTO(){
+    public FullClientReservationDTO(){
         super();
     }
 
@@ -103,11 +124,11 @@ public class ReservationDTO {
         this.price = price;
     }
 
-    public Set<Service> getServices() {
+    public Set<ServiceDTO> getServices() {
         return services;
     }
 
-    public void setServices(Set<Service> services) {
+    public void setServices(Set<ServiceDTO> services) {
         this.services = services;
     }
 }

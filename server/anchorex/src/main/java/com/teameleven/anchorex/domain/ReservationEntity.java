@@ -3,7 +3,6 @@ package com.teameleven.anchorex.domain;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -51,6 +50,9 @@ public class ReservationEntity {
     @OneToMany(mappedBy = "reservationEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Set<FreePeriod> periods = new HashSet<>();
 
+    @OneToMany(mappedBy = "reservationEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    public Set<Revision> revisions = new HashSet<>();
+
     @OneToOne(mappedBy = "reservationEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Location location;
 
@@ -77,6 +79,18 @@ public class ReservationEntity {
         image.setReservationEntity(this);
     }
 
+    public Set<Revision> getRevisions() {
+        return revisions;
+    }
+
+    public void setRevisions(Set<Revision> revisions) {
+        this.revisions = revisions;
+    }
+
+    public void addRevision(Revision revision){
+        this.revisions.add(revision);
+        revision.setReservationEntity(this);
+    }
     public void removeImage(ReservationEntityImage image) {
         this.images.remove(image);
         image.setReservationEntity(null);

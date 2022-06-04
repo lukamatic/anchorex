@@ -64,11 +64,15 @@ const HomeScreen = () => {
 	const authorizedButtons = [
 		{
 			title: 'Reservations',
-			callback: () => {},
+			callback: () => {
+				history.push('/userReservations');
+			},
 		},
 		{
 			title: 'History',
-			callback: () => {},
+			callback: () => {
+				history.push('/userHistory');
+			},
 		},
 		{
 			title: 'Penalties',

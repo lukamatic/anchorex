@@ -34,130 +34,138 @@ import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
 import FishingLessonAction from './display-fishing-lesson/FishingLessonAction';
 import ProfileScreen from './profile/ProfileScreen';
 import ChangePasswordScreen from './profile/ChangePasswordScreen';
+import UserReservationsPage from './user-reservations/UserReservationsPage';
+import UserHistory from './user-reservations/UserHistory';
 
 const MyRouter = () => {
-  return (
-    <Router>
-      <Navbar />
-      <Switch>
-        <Route path='/' exact>
-          <HomeScreen />
-        </Route>
-        <Route path='/verification'>
-          <Verification />
-        </Route>
-        <Route path='/listScreen/:type'>
-          <ListScreen />
-        </Route>
-        <Route path='/login'>
-          <Login />
-        </Route>
-        <Route path='/signupChoice'>
-          <SignupChoice />
-        </Route>
-        <Route path='/signup/:choice'>
-          <Signup />
-        </Route>
-        <Route path='/fishingLessons'>
-          <FishingLessons />
-        </Route>
-        <Route path='/lodges'>
-          <Lodges />
-        </Route>
-        <Route path='/ships'>
-          <Ships />
-        </Route>
-        <Route path='/ship/:id'>
-          <ShipDisplay />
-        </Route>
-        <Route path='/lodge/:id'>
-          <LodgeDisplay />
-        </Route>
+	return (
+		<Router>
+			<Navbar />
+			<Switch>
+				<Route path='/' exact>
+					<HomeScreen />
+				</Route>
+				<Route path='/verification'>
+					<Verification />
+				</Route>
+				<Route path='/listScreen/:type'>
+					<ListScreen />
+				</Route>
+				<Route path='/login'>
+					<Login />
+				</Route>
+				<Route path='/signupChoice'>
+					<SignupChoice />
+				</Route>
+				<Route path='/signup/:choice'>
+					<Signup />
+				</Route>
+				<Route path='/fishingLessons'>
+					<FishingLessons />
+				</Route>
+				<Route path='/lodges'>
+					<Lodges />
+				</Route>
+				<Route path='/ships'>
+					<Ships />
+				</Route>
+				<Route path='/ship/:id'>
+					<ShipDisplay />
+				</Route>
+				<Route path='/lodge/:id'>
+					<LodgeDisplay />
+				</Route>
 
-        <Route path='/lodgeImages/:id'>
-          <LodgeDisplayImages />
-        </Route>
-        <Route path='/lodgePriceList/:id'>
-          <LodgeDisplayPricelist />
-        </Route>
-        <Route path='/shipPriceList/:id'>
-          <ShipDisplayPricelist />
-        </Route>
-        <Route path='/lodgeRules/:id'>
-          <LodgeDisplayRules />
-        </Route>
-        <Route path='/shipRules/:id'>
-          <ShipDisplayRules />
-        </Route>
-        <Route path='/lodgeAction/:id'>
-          <LodgeAction />
-        </Route>
+				<Route path='/lodgeImages/:id'>
+					<LodgeDisplayImages />
+				</Route>
+				<Route path='/lodgePriceList/:id'>
+					<LodgeDisplayPricelist />
+				</Route>
+				<Route path='/shipPriceList/:id'>
+					<ShipDisplayPricelist />
+				</Route>
+				<Route path='/lodgeRules/:id'>
+					<LodgeDisplayRules />
+				</Route>
+				<Route path='/shipRules/:id'>
+					<ShipDisplayRules />
+				</Route>
+				<Route path='/lodgeAction/:id'>
+					<LodgeAction />
+				</Route>
 
-        <Route path='/shipKit/:id'>
-          <ShipDisplayKit />
-        </Route>
+				<Route path='/shipKit/:id'>
+					<ShipDisplayKit />
+				</Route>
 
-        <Route path='/fishingLesson/:id'>
-          <FishingLessonDisplay />
-        </Route>
-        <Route path='/fishingLessonImages/:id'>
-          <FishingLessonDisplayImages />
-        </Route>
-        <Route path='/fishingLessonPriceList/:id'>
-          <FishingLessonDisplayPricelist />
-        </Route>
-        <Route path='/fishingLessonRules/:id'>
-          <FishingLessonDisplayRules />
-        </Route>
-        <Route path='/fishingLessonKit/:id'>
-          <FishingLessonDisplayKit />
-        </Route>
+				<Route path='/fishingLesson/:id'>
+					<FishingLessonDisplay />
+				</Route>
+				<Route path='/fishingLessonImages/:id'>
+					<FishingLessonDisplayImages />
+				</Route>
+				<Route path='/fishingLessonPriceList/:id'>
+					<FishingLessonDisplayPricelist />
+				</Route>
+				<Route path='/fishingLessonRules/:id'>
+					<FishingLessonDisplayRules />
+				</Route>
+				<Route path='/fishingLessonKit/:id'>
+					<FishingLessonDisplayKit />
+				</Route>
 
-        <Route path='/reservationNewEntity'>
-          <ReservationNewEntity />
-        </Route>
+				<Route path='/reservationNewEntity'>
+					<ReservationNewEntity />
+				</Route>
 
-        <Route path='/serviceSignupRequests'>
-          <ServiceSignupRequests />
-        </Route>
+				<Route path='/serviceSignupRequests'>
+					<ServiceSignupRequests />
+				</Route>
 
-        <Route path='/reservations'>
-          <ReservationHistory />
-        </Route>
+				<Route path='/reservations'>
+					<ReservationHistory />
+				</Route>
 
-        <Route path='/lodgeCalendar/:id'>
-          <LodgeCalendar />
-        </Route>
+				<Route path='/lodgeCalendar/:id'>
+					<LodgeCalendar />
+				</Route>
 
-        <Route path='/shipAction/:id'>
-          <ShipAction />
-        </Route>
+				<Route path='/shipAction/:id'>
+					<ShipAction />
+				</Route>
 
-        <Route path='/shipCalendar/:id'>
-          <ShipCalendar />
-        </Route>
+				<Route path='/shipCalendar/:id'>
+					<ShipCalendar />
+				</Route>
 
-        <Route path='/instructorCalendar'>
-          <InstructorCalendar />
-        </Route>
+				<Route path='/instructorCalendar'>
+					<InstructorCalendar />
+				</Route>
 
-        <Route path='/report'>
-          <BusinessReport />
-        </Route>
+				<Route path='/report'>
+					<BusinessReport />
+				</Route>
 
-        <Route path='/fishingLessonAction/:id'>
-          <FishingLessonAction />
-        </Route>
+				<Route path='/fishingLessonAction/:id'>
+					<FishingLessonAction />
+				</Route>
 
-        <Route path='/profile'>
-          <ProfileScreen />
-        </Route>
-        <Route path='/changePassword'>
-          <ChangePasswordScreen />
-        </Route>
-      </Switch>
-    </Router>
-  );
+				<Route path='/profile'>
+					<ProfileScreen />
+				</Route>
+				<Route path='/changePassword'>
+					<ChangePasswordScreen />
+				</Route>
+				<Route path='/userReservations'>
+					<UserReservationsPage />
+				</Route>
+				<Route path='/userHistory'>
+					<UserHistory />
+				</Route>
+			</Switch>
+		</Router>
+	);
 };
 
 export default MyRouter;

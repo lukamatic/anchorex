@@ -17,6 +17,7 @@ import com.teameleven.anchorex.repository.LodgeRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.LodgeService;
+import com.teameleven.anchorex.service.ReservationService;
 
 import java.util.*;
 
@@ -26,12 +27,14 @@ public class LodgeServiceImpl implements LodgeService {
     private final ServiceRepository serviceRepository;
     private final LocationRepository locationRepository;
     private final FreePeriodService freePeriodService;
+    private final ReservationService reservationService;
 
-    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository, FreePeriodService freePeriodService) {
+    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository, FreePeriodService freePeriodService, ReservationService reservationService) {
         this.lodgeRepository = lodgeRepository;
         this.serviceRepository = additionalServiceRepository;
         this.locationRepository = locationRepository;
         this.freePeriodService = freePeriodService;
+        this.reservationService = reservationService;
     }
 
     @Override
@@ -93,7 +96,7 @@ public class LodgeServiceImpl implements LodgeService {
         for(Lodge lodge: allLodges){
             int numberOfAcceptablePeople = lodge.getFourBedroomNumber() * 4 + lodge.getSingleBedroomNumber() + lodge.getDoubleBedroomNumber() * 2;
             if( numberOfAcceptablePeople >= requestPeriod.getNumberOfPeople()){
-                if(freePeriodService.checkIfPeriodIsFree(requestPeriod.getStartDate(), requestPeriod.getEndDate(), lodge.getId())){
+                if(freePeriodService.checkIfPeriodIsFree(requestPeriod.getStartDate(), requestPeriod.getEndDate(), lodge.getId()) ){
                     retList.add(lodge);
                 }
             }

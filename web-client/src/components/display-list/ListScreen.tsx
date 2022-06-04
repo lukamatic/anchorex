@@ -10,6 +10,7 @@ import DatePicker from '../common/DatePicker';
 import LiveSearch from '../common/LiveSearch';
 import LoadingSpinner from '../common/LoadingSpinner';
 import SelectDropdown from '../common/SelectDropdown';
+import ReservationModal from '../modals/ReservationModal';
 import FilterContainer from './FilterContainer';
 import ListItem from './ListItem';
 
@@ -42,9 +43,32 @@ const ListScreen = () => {
 		freePeriods: [],
 		reservations: [],
 		numberOfPeople: 2,
+		modalOpened: false,
+		selectedReservation: {},
 	});
 
-	const { list, allItems, searchText, initialLoading, loadingMore, totalSize, checkInDate, checkOutDate, locations, currentFilterModel, sortOptions, selectedSortOption, numberOfSingleBedrooms, numberOfDoubleBedrooms, numberOfFourBedrooms, freePeriods, reservations, numberOfPeople } = state;
+	const {
+		list,
+		allItems,
+		searchText,
+		initialLoading,
+		loadingMore,
+		totalSize,
+		checkInDate,
+		checkOutDate,
+		locations,
+		currentFilterModel,
+		sortOptions,
+		selectedSortOption,
+		numberOfSingleBedrooms,
+		numberOfDoubleBedrooms,
+		numberOfFourBedrooms,
+		freePeriods,
+		reservations,
+		numberOfPeople,
+		modalOpened,
+		selectedReservation,
+	} = state;
 
 	useEffect(() => {
 		initLoad();
@@ -61,6 +85,10 @@ const ListScreen = () => {
 	};
 
 	const title = titleDict[type];
+
+	const openModal = (reservation: any) => {
+		setState({ modalOpened: true, selectedReservation: { ...reservation, checkInDate, checkOutDate, numberOfPeople } });
+	};
 
 	const asyncSearch = (text: string) => {
 		setState({ searchText: text });
@@ -114,7 +142,6 @@ const ListScreen = () => {
 			numberOfPeople: numberOfPeople,
 		};
 		const resp = await getPossibleLodges(data);
-		console.log(resp);
 
 		if (resp.status === HttpStatusCode.OK) {
 			const filteredLocations = resp.data.map((e: any) => e?.location?.city).filter(onlyUnique);
@@ -150,95 +177,106 @@ const ListScreen = () => {
 
 	const numberOfDays = new Date(checkOutDate - checkInDate).getDate();
 
+	const closeModal = () => {
+		setState({ modalOpened: false });
+	};
+	const successBook = () => {
+		loadDataAsync();
+		setState({ modalOpened: false });
+	};
+
 	return (
-		<div className='w-full flex bg-blue-50 flex-1 flex-col'>
-			<div className='max-w-6xl self-center w-full pt-5  flex-1 flex flex-col'>
-				<div>
-					<div className='flex flex-row items-center'>
-						<button className='flex flex-row items-center px-3 pt-1 w-28' onClick={goBack}>
-							<LeftArrow className='' />
-							<span className='ml-1'>Back</span>
-						</button>
-						<h1 className='text-2xl text-center flex-1'>{title}</h1>
-						<div className='w-28'></div>
+		<>
+			<div className='w-full flex bg-blue-50 flex-1 flex-col'>
+				<div className='max-w-6xl self-center w-full pt-5  flex-1 flex flex-col'>
+					<div>
+						<div className='flex flex-row items-center'>
+							<button className='flex flex-row items-center px-3 pt-1 w-28' onClick={goBack}>
+								<LeftArrow className='' />
+								<span className='ml-1'>Back</span>
+							</button>
+							<h1 className='text-2xl text-center flex-1'>{title}</h1>
+							<div className='w-28'></div>
+						</div>
 					</div>
-				</div>
-				<div className='flex flex-row flex-1 mt-4 overflow-y-auto'>
-					<div className='mr-3 '>
-						<div className='bg-blue-400 px-5 pb-7 pt-3 rounded-md mt-5 shadow-lg'>
-							<h1 className='text-xl text-white mb-2 font-bold'>Pick a period</h1>
-							{/* <div className='mb-2'>
+					<div className='flex flex-row flex-1 mt-4 overflow-y-auto'>
+						<div className='mr-3 '>
+							<div className='bg-blue-400 px-5 pb-7 pt-3 rounded-md mt-5 shadow-lg'>
+								<h1 className='text-xl text-white mb-2 font-bold'>Pick a period</h1>
+								{/* <div className='mb-2'>
 								<LiveSearch value={searchText} callback={asyncSearch} />
 							</div> */}
-							<div>
-								<p className='text-white'>Check-in date</p>
-								<DatePicker placeholder='Select date' value={checkInDate} minDate={new Date()} onValueChange={changeCheckInDate} />
+								<div>
+									<p className='text-white'>Check-in date</p>
+									<DatePicker placeholder='Select date' value={checkInDate} minDate={new Date()} onValueChange={changeCheckInDate} />
+								</div>
+								<div>
+									<p className='text-white'>Check-out date</p>
+									<DatePicker placeholder='Select date' value={checkOutDate} minDate={addDays(checkInDate, 1)} onValueChange={changeCheckOutDate} />
+								</div>
+								<div className='flex-1 flex flex-col'>
+									<label htmlFor='' className='text-white'>
+										Number of people
+									</label>
+									<input
+										type='number'
+										className='w-full bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+										placeholder='Number of people'
+										value={numberOfPeople}
+										min={0}
+										max={100}
+										onChange={(e: any) => {
+											setState({ numberOfPeople: parseInt(e.target.value) });
+										}}
+									/>
+								</div>
+								<button
+									className='px-3 py-2 bg-yellow-200 rounded-md shadow-md hover:shadow-lg 
+								self-end w-full mt-4 transform hover:scale-105 transition-transform duration-120 
+								font-semibold text-gray-600'
+									onClick={applySearch}
+								>
+									Search
+								</button>
 							</div>
-							<div>
-								<p className='text-white'>Check-out date</p>
-								<DatePicker placeholder='Select date' value={checkOutDate} minDate={addDays(checkInDate, 1)} onValueChange={changeCheckOutDate} />
-							</div>
-							<div className='flex-1 flex flex-col'>
-								<label htmlFor='' className='text-white'>
-									Number of people
-								</label>
-								<input
-									type='number'
-									className='w-full bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-									placeholder='Number of people'
-									value={numberOfPeople}
-									min={0}
-									max={100}
-									onChange={(e: any) => {
-										setState({ numberOfPeople: parseInt(e.target.value) });
-									}}
-								/>
-							</div>
-							<button
-								className='px-3 py-2 bg-yellow-200 rounded-md shadow-md hover:shadow-lg 
-												self-end w-full mt-4 transform hover:scale-105 transition-transform duration-120 
-													font-semibold text-gray-600'
-								onClick={applySearch}
-							>
-								Search
-							</button>
+							<FilterContainer locations={locations} onApply={applyFilter} numberOfSingleBedrooms={numberOfSingleBedrooms} numberOfDoubleBedrooms={numberOfDoubleBedrooms} numberOfFourBedrooms={numberOfFourBedrooms} />
 						</div>
-						<FilterContainer locations={locations} onApply={applyFilter} numberOfSingleBedrooms={numberOfSingleBedrooms} numberOfDoubleBedrooms={numberOfDoubleBedrooms} numberOfFourBedrooms={numberOfFourBedrooms} />
-					</div>
 
-					<div className='flex flex-col flex-1 '>
-						<div className='flex flex-row justify-between '>
-							<div className='flex-1'>{/* TODO: Badges / Applied filters */}</div>
-							{/* <div className='ml-3 pr-3 border-l-2 border-blue-300'></div> */}
-							<div className=' flex flex-row items-center'>
-								<label htmlFor='sort by' className='mr-2'>
-									Sort by:
-								</label>
-								<SelectDropdown
-									list={sortOptions}
-									value={selectedSortOption}
-									onChange={(e: string) => {
-										doSort(e, list);
-										setState({ selectedSortOption: e });
-									}}
-								/>
+						<div className='flex flex-col flex-1 '>
+							<div className='flex flex-row justify-between '>
+								<div className='flex-1'>{/* TODO: Badges / Applied filters */}</div>
+								{/* <div className='ml-3 pr-3 border-l-2 border-blue-300'></div> */}
+								<div className=' flex flex-row items-center'>
+									<label htmlFor='sort by' className='mr-2'>
+										Sort by:
+									</label>
+									<SelectDropdown
+										list={sortOptions}
+										value={selectedSortOption}
+										onChange={(e: string) => {
+											doSort(e, list);
+											setState({ selectedSortOption: e });
+										}}
+									/>
+								</div>
 							</div>
+							<div className='flex flex-row flex-wrap'>{list.length > 0 && list?.map((e: any) => ListItem(e, numberOfDays, numberOfPeople, openModal))}</div>
+							{totalSize <= 0 && !initialLoading && (
+								<div className='text-center flex-1 flex justify-center items-center'>
+									<div className='text-gray-400 '>{!searchText ? 'This list is currently empty...' : 'Search list is currently empty... Try another text'}</div>
+								</div>
+							)}
+							{initialLoading && (
+								<div className='flex flex-1 justify-center items-center'>
+									<LoadingSpinner />
+								</div>
+							)}
 						</div>
-						<div className='flex flex-row flex-wrap'>{list.length > 0 && list?.map((e: any) => ListItem(e, numberOfDays))}</div>
-						{totalSize <= 0 && !initialLoading && (
-							<div className='text-center flex-1 flex justify-center items-center'>
-								<div className='text-gray-400 '>{!searchText ? 'This list is currently empty...' : 'Search list is currently empty... Try another text'}</div>
-							</div>
-						)}
-						{initialLoading && (
-							<div className='flex flex-1 justify-center items-center'>
-								<LoadingSpinner />
-							</div>
-						)}
 					</div>
 				</div>
 			</div>
-		</div>
+			<ReservationModal isOpen={modalOpened} onRequestClose={closeModal} reservation={selectedReservation} successBook={successBook} />
+		</>
 	);
 };
 

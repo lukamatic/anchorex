@@ -48,19 +48,16 @@ public class ReservationReportServiceImpl implements ReservationReportService {
             this.userService.incrementPenaltyCount(report.getClient().getId());
         }
 
-        //TODO: send mail
         ApiClient client = Postmark.getApiClient("2c3c225b-f823-4924-b983-4b1a82ad17ea");
         TemplatedMessage message = new TemplatedMessage("obradovic.petar@uns.ac.rs", report.getOwner().getEmail());
-        message.setTemplateId(28144927);
+        message.setTemplateId(28161326);
         // set model as HashMap
         HashMap model = new HashMap<String, Object>();
-        model.put("Report id", report.getId());
-        model.put("Client", String.format("%s %s", report.getClient().getFirstName(), report.getClient().getLastName()));
-        model.put("Comment", report.getComment());
-        model.put("Approved", "yes");
-        if (report.getPenaltySuggestion()) {
-            model.put("Penalty given", (!report.getClientShowedUp() || penalty) ? "yes" : "no");
-        }
+        model.put("reportId", report.getId());
+        model.put("client", String.format("%s %s", report.getClient().getFirstName(), report.getClient().getLastName()));
+        model.put("comment", report.getComment());
+        model.put("status", "APPROVED");
+        model.put("penaltyGiven", (!report.getClientShowedUp() || penalty) ? "yes" : "no");
 
         message.setTemplateModel(model);
 
@@ -83,5 +80,26 @@ public class ReservationReportServiceImpl implements ReservationReportService {
 
         report.setStatus(ReservationReportStatus.REJECTED);
         this.reservationReportRepository.save(report);
+
+        ApiClient client = Postmark.getApiClient("2c3c225b-f823-4924-b983-4b1a82ad17ea");
+        TemplatedMessage message = new TemplatedMessage("obradovic.petar@uns.ac.rs", report.getOwner().getEmail());
+        message.setTemplateId(28161326);
+        // set model as HashMap
+        HashMap model = new HashMap<String, Object>();
+        model.put("reportId", report.getId());
+        model.put("client", String.format("%s %s", report.getClient().getFirstName(), report.getClient().getLastName()));
+        model.put("comment", report.getComment());
+        model.put("status", "REJECTED");
+        model.put("penaltyGiven", "no");
+
+        message.setTemplateModel(model);
+
+        try {
+            MessageResponse response = client.deliverMessage(message);
+        } catch (PostmarkException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

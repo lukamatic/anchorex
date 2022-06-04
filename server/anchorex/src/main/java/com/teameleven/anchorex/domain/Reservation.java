@@ -14,16 +14,22 @@ public class Reservation {
     private Date startDate;
     @Column
     private Date endDate;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name= "user_id")
+    private User user;
+
     @Column
     private Integer maxPersonNumber;
     @Column
     private double discount;
     @Column
     private double price;
-    @Column
-    private Long userId;
-    @Column
-    private Long reservationEntityId;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name= "reservation_entity_id")
+    private ReservationEntity reservationEntity;
+
     @Column
     private Long ownerId;
     @Column
@@ -72,12 +78,12 @@ public class Reservation {
         this.services = services;
     }
 
-    public Long getReservationEntityId() {
-        return reservationEntityId;
+    public ReservationEntity getReservationEntity() {
+        return reservationEntity;
     }
 
-    public void setReservationEntityId(Long reservationEntityId) {
-        this.reservationEntityId = reservationEntityId;
+    public void setReservationEntity(ReservationEntity reservationEntity) {
+        this.reservationEntity = reservationEntity;
     }
 
     public Long getId() {
@@ -128,12 +134,11 @@ public class Reservation {
         this.price = price;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
-
 }

@@ -18,7 +18,6 @@ public class ReservationMapper {
     public static Reservation reservationDTOToReservation(ReservationDTO reservationDTO){
         Reservation reservation = new Reservation();
         reservation.setDiscount(reservationDTO.getDiscount());
-        reservation.setReservationEntityId(reservationDTO.getReservationEntityId());
         reservation.setEndDate(reservationDTO.getEndDate());
         reservation.setPrice(reservationDTO.getPrice());
         reservation.setStartDate(reservationDTO.getStartDate());
@@ -31,7 +30,7 @@ public class ReservationMapper {
     public static ClientReservationDTO reservationToClientReservationDTO(Reservation reservation){
         ClientReservationDTO reservationDTO = new ClientReservationDTO();
         reservationDTO.setDiscount(reservation.getDiscount());
-        reservationDTO.setReservationEntityId(reservation.getReservationEntityId());
+        reservationDTO.setReservationEntityId(reservation.getReservationEntity().getId());
         reservationDTO.setEndDate(reservation.getEndDate());
         reservationDTO.setPrice(reservation.getPrice());
         reservationDTO.setStartDate(reservation.getStartDate());
@@ -47,7 +46,7 @@ public class ReservationMapper {
         reservationDTO.setServices(services);
         reservationDTO.setMaxPersonNumber(reservation.getMaxPersonNumber());
         reservationDTO.setCaptain(reservation.isCaptain());
-        reservationDTO.setUserId(reservation.getUserId());
+        reservationDTO.setUserId(reservation.getUser().getId());
         return reservationDTO;
     }
 }

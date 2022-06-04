@@ -41,6 +41,7 @@ import ChangePasswordScreen from './profile/ChangePasswordScreen';
 import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
+import MyCalendar from './MyCalendar';
 
 const MyRouter = () => (
   <Router>
@@ -200,6 +201,10 @@ const MyRouter = () => (
       </Route>
       <Route path='/changePassword'>
         <ChangePasswordScreen />
+      </Route>
+
+      <Route path='/calendar'>
+        <MyCalendar />
       </Route>
     </Switch>
   </Router>

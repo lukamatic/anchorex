@@ -13,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -136,5 +139,17 @@ public class ReservationController {
         }
 
         return new ResponseEntity<>(total, HttpStatus.OK);
+    }
+
+    @GetMapping(path="/instructorReservations", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<Collection<Reservation>> getAllInstructorsReservations(Principal principal) {
+        var owner = this.userService.findByEmail(principal.getName());
+        var reservations = this.reservationService.getAllReservationsByOwnerId(owner.getId());
+        reservations.stream().forEach((reservation -> {
+            reservation.getReservationEntity().getServices().stream().forEach(service -> service.setReservationEntity(null));
+            reservation.getReservationEntity().getLocation().setReservationEntity(null);
+        }));
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 }

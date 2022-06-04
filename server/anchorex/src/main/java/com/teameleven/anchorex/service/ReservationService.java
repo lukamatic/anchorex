@@ -7,6 +7,7 @@ import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.dto.ReservationReportDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ReservationService {
@@ -35,4 +36,6 @@ public interface ReservationService {
     double[] getSalaryByYear(Long id);
 
     boolean checkIfEntityIsAvailable(Long id);
+
+    Collection<Reservation> getAllReservationsByOwnerId(Long ownerId);
 }

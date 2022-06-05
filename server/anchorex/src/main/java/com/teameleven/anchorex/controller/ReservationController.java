@@ -87,13 +87,13 @@ public class ReservationController {
     }
 
     @PostMapping(path = "/createPersonalReservation", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reservation> createPersonalReservation(@RequestBody ReservationDTO reservationDTO) {
+    public ResponseEntity<Void> createPersonalReservation(@RequestBody ReservationDTO reservationDTO) {
         if (!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
                 reservationDTO.getReservationEntityId())) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         var reservation = reservationService.createPersonalReservation(reservationDTO);
-        return new ResponseEntity<>(reservation, HttpStatus.CREATED);
+        return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/takeQuickAction", consumes = MediaType.APPLICATION_JSON_VALUE)

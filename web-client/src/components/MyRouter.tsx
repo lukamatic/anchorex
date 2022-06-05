@@ -44,6 +44,7 @@ import AdminReports from './admin-reports/AdminReports';
 import MyCalendar from './MyCalendar';
 import DeleteAccount from './DeleteAccount';
 import AccountDeletionRequests from './account-deletion-requests/AccountDeletionRequests';
+import LoyaltyProgramSettings from './LoyaltyProgramSettings';
 
 const MyRouter = () => (
   <Router>
@@ -215,6 +216,10 @@ const MyRouter = () => (
 
       <Route path='/accountDeletionRequests'>
         <AccountDeletionRequests />
+      </Route>
+
+      <Route path='/loyaltyProgramSettings'>
+        <LoyaltyProgramSettings />
       </Route>
     </Switch>
   </Router>

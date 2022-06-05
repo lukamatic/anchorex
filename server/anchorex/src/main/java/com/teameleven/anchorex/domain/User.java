@@ -70,6 +70,8 @@ public class User implements UserDetails {
 	@OneToOne(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public ReservationReport report;
 
+	private Integer points;
+
 	public User() {
 	}
 
@@ -101,6 +103,7 @@ public class User implements UserDetails {
 		this.phoneNumber = createUserDto.getPhoneNumber();
 		this.biography = createUserDto.getBiography();
 		this.enabled = false;
+		this.points = 0;
 	}
 
     public User(UpdateUserDto updateUserDto) {
@@ -259,6 +262,14 @@ public class User implements UserDetails {
 
 	public void encodePassword() {
 		this.password = new BCryptPasswordEncoder().encode(this.password);
+	}
+
+	public Integer getPoints() {
+		return points;
+	}
+
+	public void setPoints(Integer points) {
+		this.points = points;
 	}
 
 	public boolean isClient() {

@@ -70,6 +70,14 @@ public class User implements UserDetails {
 	@OneToOne(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public ReservationReport report;
 
+	@Transient
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	public Set<Complaint> complaint  = new HashSet<>();;
+
+	@Transient
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	public Set<Subscription> subscription  = new HashSet<>();;
+
 	public User() {
 	}
 

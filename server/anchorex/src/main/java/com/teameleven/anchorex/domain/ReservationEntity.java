@@ -59,6 +59,14 @@ public class ReservationEntity {
     @OneToMany(mappedBy = "reservationEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Set<ReservationEntityImage> images = new HashSet<>();
 
+
+    @OneToMany(mappedBy = "reservationEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public Set<Complaint> complaint  = new HashSet<>();;
+
+
+    @OneToMany(mappedBy = "reservationEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public Set<Subscription> subscription  = new HashSet<>();;
+
     public void addService(Service service) {
         this.services.add(service);
         service.setReservationEntity(this);

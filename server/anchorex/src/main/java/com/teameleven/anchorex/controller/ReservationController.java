@@ -9,6 +9,7 @@ import com.teameleven.anchorex.dto.ReservationReportDTO;
 import com.teameleven.anchorex.dto.RevisionDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
+import com.teameleven.anchorex.enums.ReservationEntityType;
 import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.repository.RevisionRepository;
 import com.teameleven.anchorex.service.FreePeriodService;
@@ -159,8 +160,8 @@ public class ReservationController {
             if (reservationDTO.getEndDate().before(rn)) {
                 reservationDTO.setUserFullname(userService.findOneById(reservationDTO.getUserId()).getFirstName()
                         + " " + userService.findOneById(reservationDTO.getUserId()).getLastName());
-                reservationDTO.setLodgeInfo(LodgeMapper
-                        .lodgeToLodgeDisplayDTO(lodgeService.getLodgeById(reservationDTO.getReservationEntityId())));
+                if(reservationDTO.getReservationType() == ReservationEntityType.LODGE)
+                    reservationDTO.setLodgeInfo(LodgeMapper.lodgeToLodgeDisplayDTO(lodgeService.getLodgeById(reservationDTO.getReservationEntityId())));
                 var revision = revisionRepository.getReservationRevisionFromUser(
                         reservationDTO.getReservationEntityId(), reservationDTO.getUserId());
                 if (revision != null)

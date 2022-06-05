@@ -2,14 +2,28 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationReport;
+
+
+import com.teameleven.anchorex.domain.Revision;
+
+
 import com.teameleven.anchorex.domain.User;
+
 import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
+
 import com.teameleven.anchorex.dto.DateRangeDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.dto.ReservationReportDTO;
+import com.teameleven.anchorex.dto.RevisionDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
+import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
+import com.teameleven.anchorex.enums.ReviewStatus;
+import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ReportMapper;
 import com.teameleven.anchorex.mapper.ReservationMapper;
+
+import com.teameleven.anchorex.mapper.RevisionMapper;
+
 import com.teameleven.anchorex.repository.*;
 import com.teameleven.anchorex.service.ReservationService;
 import org.apache.tomcat.jni.Local;
@@ -35,17 +49,32 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private final UserRepository userRepository;
 
+
+    @Autowired
+    private final RevisionRepository revisionRepository;
+    @Autowired
+    private final ReservationEntityRepository reservationEntityRepository;
+
+
+
     private final BusinessConfigurationRepository businessConfigurationRepository;
 
     public ReservationServiceImpl(ReservationRepository reservationRepository,
                                   ReservationEntityRepository entityRepository,
                                   ReservationReportRepository reportRepository, UserRepository userRepository,
+                                  RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
                                   BusinessConfigurationRepository businessConfigurationRepository) {
+
         this.reservationRepository = reservationRepository;
         this.entityRepository = entityRepository;
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
+
+        this.revisionRepository = revisionRepository;
+        this.reservationEntityRepository = reservationEntityRepository;
+
         this.businessConfigurationRepository = businessConfigurationRepository;
+
     }
 
     @Override
@@ -94,7 +123,8 @@ public class ReservationServiceImpl implements ReservationService {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations =  reservationRepository.getEntityReservations(id);
         for(Reservation reservation: reservations){
-            reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
+            if(reservation.getUserId() == null)
+                reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
         }
         return reservationDTOS;
     }
@@ -202,7 +232,49 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public List<ClientReservationDTO> getAllReservations() {
+        List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
+        var reservations =  reservationRepository.getAllUsedReservations();
+        for(Reservation reservation: reservations){
+            reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
+        }
+        return reservationDTOS;
+    }
+
+    @Override
+    public List<FullClientReservationDTO> getReservationsForUser(Long userId) {
+        List<FullClientReservationDTO> reservationDTOS = new ArrayList<>();
+        var reservations =  reservationRepository.getReservationsForUser(userId);
+        for(Reservation reservation: reservations){
+            var dto = ReservationMapper.reservationToFullClientReservationDTO(reservation);
+//            dto.setLodgeInfo(.lodgeToLodgeDisplayDTO(entityRepository.findById(dto.getReservationEntityId())));
+            reservationDTOS.add(dto);
+
+        }
+        return reservationDTOS;
+    }
+
+    @Override
+    public void updateReservation(ReservationDTO reservationDTO) {
+        Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
+        personalReservation.setUserId(reservationDTO.getUserId());
+        personalReservation.setOwnerId(reservationDTO.getOwnerId());
+        personalReservation.setId(reservationDTO.getId());
+        reservationRepository.save(personalReservation);
+    }
+
+    @Override
+    public void crateRevision(RevisionDTO revisionDTO) {
+        Revision revision = RevisionMapper.RevisionDtoToRevision(revisionDTO);
+        revision.setReservationEntity(reservationEntityRepository.getOne(revisionDTO.getReservationId()));
+        revision.setStatus(ReviewStatus.PENDING);
+        revisionRepository.save(revision);
+    }
+
+
+
     public Collection<Reservation> getAllReservationsByOwnerId(Long ownerId) {
         return this.reservationRepository.getAllReservationsByOwnerId(ownerId);
     }
+
 }

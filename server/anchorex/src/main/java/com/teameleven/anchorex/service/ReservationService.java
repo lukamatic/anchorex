@@ -9,6 +9,7 @@ import com.teameleven.anchorex.dto.RevisionDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ReservationService {
@@ -45,4 +46,7 @@ public interface ReservationService {
     void updateReservation(ReservationDTO reservationDTO);
 
     void crateRevision(RevisionDTO revisionDTO);
+
+    Collection<Reservation> getAllReservationsByOwnerId(Long ownerId);
+
 }

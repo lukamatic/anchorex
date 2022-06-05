@@ -3,7 +3,11 @@ package com.teameleven.anchorex.serviceimpl;
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationReport;
 
+
 import com.teameleven.anchorex.domain.Revision;
+
+
+import com.teameleven.anchorex.domain.User;
 
 import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
 
@@ -76,7 +80,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation reservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
-        reservation.setOwnerId(entityRepository.getOwnerId(reservation.getReservationEntityId()));
+        var reservationEntity = this.entityRepository.findById(reservationDTO.getReservationEntityId()).orElse(null);
+        reservation.setReservationEntity(reservationEntity);
+        reservation.setOwnerId(reservationEntity.getOwnerId());
         reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
         reservationRepository.save(reservation);
         return reservation;
@@ -85,8 +91,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation createPersonalReservation(ReservationDTO reservationDTO) {
         Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
-        personalReservation.setUserId(reservationDTO.getUserId());
-        personalReservation.setOwnerId(entityRepository.getOwnerId(personalReservation.getReservationEntityId()));
+        var user = userRepository.findOneById(reservationDTO.getUserId());
+        personalReservation.setUser(user);
+        personalReservation.setOwnerId(entityRepository.getOwnerId(personalReservation.getReservationEntity().getId()));
         personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
         reservationRepository.save(personalReservation);
         return personalReservation;
@@ -264,5 +271,10 @@ public class ReservationServiceImpl implements ReservationService {
         revisionRepository.save(revision);
     }
 
+
+
+    public Collection<Reservation> getAllReservationsByOwnerId(Long ownerId) {
+        return this.reservationRepository.getAllReservationsByOwnerId(ownerId);
+    }
 
 }

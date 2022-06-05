@@ -5,6 +5,10 @@ import { Link, useParams } from 'react-router-dom';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 import DatePicker from '../common/DatePicker';
+// @ts-ignore
+import Calendar from 'react-awesome-calendar';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
+import { ca } from 'date-fns/locale';
 
 const InstructorCalendar = () => {
   console.log(window.location.search);
@@ -56,6 +60,7 @@ const InstructorCalendar = () => {
       userFullname: String,
     },
   ]);
+  const [calendarEvents, setCalendarEvents] = useState<any[]>();
 
   useEffect(() => {
     axios
@@ -160,33 +165,6 @@ const InstructorCalendar = () => {
     const value = event.target.value;
     setDiscount(Number(value));
   };
-  const captainChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.checked;
-    setCaptain(Boolean(value));
-  };
-  const checkCaptainAvailability = (dateRange: {
-    startDate: Date;
-    endDate: Date;
-    ownerId: number;
-  }) => {
-    console.log(dateRange);
-    axios
-      .post('/api/reservation/checkCaptainAvailability', dateRange, {
-        headers: {
-          Accept: 'application/json',
-          'Content-type': 'application/json',
-          Authorization:
-            'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
-        },
-      })
-      .then((response) => {
-        setCheckCaptain(response.data);
-        if (!response.data) {
-          setCaptain(false);
-        }
-        console.log(response.data);
-      });
-  };
 
   const startDateChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -200,12 +178,38 @@ const InstructorCalendar = () => {
     setEndDate(new Date(value));
   };
 
-  const personNumberChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setPersonNumber(Number(value));
-  };
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const response = await fetch(`/api/reservation/instructorReservations`, {
+        headers: [
+          ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+        ],
+      });
+
+      switch (response.status) {
+        case HttpStatusCode.OK:
+          const reservations = await response.json();
+          const events = calendarEvents || [];
+          reservations.map((reservation: any) => {
+            const client = reservation.user;
+            const event = {
+              color: '#fd3153',
+              from: reservation.startDate,
+              to: reservation.endDate,
+              title: `${reservation.reservationEntity.name} - ${client.firstName} ${client.lastName}`,
+            };
+            events.push(event);
+          });
+          console.log(events);
+          setCalendarEvents(events);
+          break;
+        default:
+          alert('Unknown error occurred.');
+      }
+    };
+
+    fetchReservations();
+  }, [params.instructorId]);
 
   const addNewFreePeriod = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (startDate >= endDate || endDate <= new Date()) {
@@ -304,50 +308,6 @@ const InstructorCalendar = () => {
         });
     }
   };
-
-  const getReservations = reservations.map((reservation) => (
-    <tr className='border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700'>
-      <td className='px-6 py-4'>{reservation.userFullname}</td>
-      <td className='px-6 py-4'>
-        {format(reservation.startDate, 'dd.MM.yyyy.')}
-      </td>
-      <td className='px-6 py-4'>
-        {format(reservation.endDate, 'dd.MM.yyyy.')}
-      </td>
-      <td className='px-6 py-4'>
-        {reservation.services.map((service) => {
-          return service.type === 'REGULAR' ? service.info : ' ';
-        })}
-      </td>
-      <td className='px-6 py-4'>
-        {reservation.services.map((service) => {
-          return service.type === 'ADDITIONAL' ? service.info + ' ' : ' ';
-        })}
-      </td>
-      <td className='px-6 py-4'>{reservation.discount}%</td>
-      <td className='px-6 py-4'>{reservation.price}$</td>
-      <td className='px-6 py-4'>{reservation.maxPersonNumber}</td>
-      <td className='px-6 py-4'>
-        <button
-          type='button'
-          className='inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'
-          onClick={function (): void {
-            if (
-              reservation.startDate <= new Date() &&
-              new Date() <= reservation.endDate
-            ) {
-              setUserID(reservation.userId);
-              setShowModal(true);
-            }
-          }}
-          data-bs-toggle='modal'
-          data-bs-target='#exampleModalScrollable'
-        >
-          Personal reservation
-        </button>
-      </td>
-    </tr>
-  ));
 
   return (
     <div>
@@ -542,13 +502,13 @@ c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.66
           </div>
         </nav>
       </div>
-      <div className='w-full mt-12 mx-auto max-w-xl'>
-        <h2 className='text-xl font-bold leading-7 text-gray-900 mb-8 sm:text-3xl sm:truncate'>
-          Free period
-        </h2>
-        <form className='w-full max-w-lg'>
-          <div className='flex flex-wrap -mx-3 mb-6'>
-            <div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
+      <div className='flex pr-10'>
+        <div className='w-500px'>
+          <h2 className='text-xl font-bold leading-7 text-gray-900 mb-8 sm:text-3xl sm:truncate text-center'>
+            Free period
+          </h2>
+          <div className='flex flex-col items-center -mx-3 mb-6'>
+            <div className='px-3 mb-6 md:mb-0'>
               <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'>
                 Start Date
               </label>
@@ -559,7 +519,7 @@ c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.66
                 onChange={startDateChangeHandler}
               />
             </div>
-            <div className='w-full md:w-1/2 px-3'>
+            <div className='px-3'>
               <label className='block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'>
                 End Date
               </label>
@@ -571,245 +531,17 @@ c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.66
               />
             </div>
             <button
-              className='mt-6 ml-48 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+              className='mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
               type='button'
               onClick={addNewFreePeriod}
             >
               Add new period
             </button>
           </div>
-        </form>
-        <h2 className='text-xl font-bold leading-7 text-gray-900 mb-8 sm:text-3xl sm:truncate'>
-          All reservations
-        </h2>
-        <table className='w-full text-sm text-left text-gray-500 dark:text-gray-400'>
-          <thead className='text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
-            <tr>
-              <th scope='col' className='px-6 py-3'>
-                User
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Start date
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                End date
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Regular service
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Additional services
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Discount
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Price
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Person number
-              </th>
-              <th scope='col' className='px-6 py-3'>
-                Personal reservation
-              </th>
-            </tr>
-          </thead>
-          <tbody>{getReservations}</tbody>
-        </table>
-        {showModal ? (
-          <div>
-            <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
-              <div className='relative w-auto my-6 mx-auto max-w-3xl'>
-                <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-                  <div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
-                    <div className='w-full mt-12 mx-auto max-w-xl'>
-                      <div className='md:flex md:items-center mb-6'>
-                        <div className='md:w-1/3'>
-                          <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
-                            Action start date
-                          </label>
-                        </div>
-                        <div className='md:w-2/3'>
-                          <DatePicker
-                            value={startDate}
-                            onValueChange={function (d: Date): void {
-                              setStartDate(d);
-                              var startDate = d;
-                              var dateRange = {
-                                startDate,
-                                endDate,
-                                ownerId,
-                              };
-                              checkCaptainAvailability(dateRange);
-                            }}
-                          ></DatePicker>
-                        </div>
-                      </div>
-                      <div className='md:flex md:items-center mb-6'>
-                        <div className='md:w-1/3'>
-                          <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
-                            Action end date
-                          </label>
-                        </div>
-                        <div className='md:w-2/3'>
-                          <DatePicker
-                            value={endDate}
-                            onValueChange={function (d: Date): void {
-                              setEndDate(d);
-                              var endDate = d;
-                              var dateRange = {
-                                startDate,
-                                endDate,
-                                ownerId,
-                              };
-                              checkCaptainAvailability(dateRange);
-                            }}
-                          ></DatePicker>
-                        </div>
-                      </div>
-                      <div className='md:flex md:items-center mb-6'>
-                        <div className='md:w-1/3'>
-                          <label className='block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4'>
-                            Max person number
-                          </label>
-                        </div>
-                        <div className='md:w-2/3'>
-                          <input
-                            className='bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-                            id='inline-full-name'
-                            type='number'
-                            min='1'
-                            step='1'
-                            max={maxPersonNumber}
-                            value={personNumber}
-                            name='personNumber'
-                            onChange={personNumberChangeHandler}
-                          ></input>
-                        </div>
-                      </div>
-                      <div className='md:flex md:items-center mb-6'>
-                        <div className='md:w-1/3'>
-                          <label className='block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4'>
-                            Regular service
-                          </label>
-                        </div>
-                        <div className='inline-block relative md:w-2/3'>
-                          <select
-                            onChange={regularServiceChangeHandler}
-                            className='block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline'
-                          >
-                            {regularServices.map((newService) => (
-                              <option
-                                key={newService.id}
-                                value={newService.info}
-                                selected
-                              >
-                                {newService.info}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div className='md:flex md:items-center mb-6'>
-                        <div className='md:w-1/3'>
-                          <label className='block text-gray-500 font-bold md:text-right ml-24 mb-1 md:mb-0 pr-4'>
-                            Additional services
-                          </label>
-                        </div>
-                        <div className='inline-block relative md:w-2/3'>
-                          <select
-                            multiple
-                            onChange={(e) => additionalServiceChangeHandler(e)}
-                            className='block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline'
-                          >
-                            {additionalServices.map((newService) => (
-                              <option key={newService.id} value={newService.id}>
-                                {newService.info}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div className='md:flex md:items-center mb-6'>
-                        <div className='md:w-1/3'>
-                          <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
-                            Discount
-                          </label>
-                        </div>
-                        <div className='md:w-2/3'>
-                          <input
-                            className='bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500'
-                            id='inline-full-name'
-                            type='number'
-                            min='0'
-                            max='100'
-                            name='discount'
-                            value={discount}
-                            onChange={discountChangeHandler}
-                          ></input>
-                        </div>
-                      </div>
-                      <div className='md:flex md:items-center mb-6'>
-                        <div className='md:w-1/3'>
-                          <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
-                            Captain
-                          </label>
-                        </div>
-                        <div className='md:w-2/3'>
-                          {!checkCaptain ? (
-                            <input
-                              disabled
-                              id='inline-full-name'
-                              type='checkbox'
-                              name='captain'
-                              checked={captain}
-                            ></input>
-                          ) : (
-                            <input
-                              id='inline-full-name'
-                              type='checkbox'
-                              name='captain'
-                              checked={captain}
-                              onChange={captainChangeHandler}
-                            ></input>
-                          )}
-                        </div>
-                      </div>
-                      {!checkCaptain ? (
-                        <div className='md:flex md:items-center ml-48 mb-6'>
-                          <label className='block text-red-500 font-medium md:text-right mb-1 md:mb-0 pr-4'>
-                            *you can't choose the captain at the moment
-                          </label>
-                        </div>
-                      ) : (
-                        <div className='md:flex md:items-center ml-48 mb-6'>
-                          <label className='block text-gray-500 font-medium md:text-right mb-1 md:mb-0 pr-4'>
-                            *captain included is 20$ extra
-                          </label>
-                        </div>
-                      )}
-                      <button
-                        className='btnRedWhite w-60 ml-30'
-                        type='button'
-                        onClick={() => setShowModal(false)}
-                      >
-                        Close
-                      </button>
-                      <button
-                        className='btnBlueWhite w-60 ml-24'
-                        onClick={createReservation}
-                      >
-                        Add quick reservation
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className='opacity-25 fixed inset-0 z-40 bg-black'></div>
-          </div>
-        ) : null}
+        </div>
+        <Calendar events={calendarEvents} />
       </div>
+      {calendarEvents?.length && <div>{calendarEvents.length}</div>}
     </div>
   );
 };

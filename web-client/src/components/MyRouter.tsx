@@ -42,6 +42,8 @@ import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
 import MyCalendar from './MyCalendar';
+import DeleteAccount from './DeleteAccount';
+import AccountDeletionRequests from './account-deletion-requests/AccountDeletionRequests';
 
 const MyRouter = () => (
   <Router>
@@ -205,6 +207,14 @@ const MyRouter = () => (
 
       <Route path='/calendar'>
         <MyCalendar />
+      </Route>
+
+      <Route path='/deleteAccount'>
+        <DeleteAccount />
+      </Route>
+
+      <Route path='/accountDeletionRequests'>
+        <AccountDeletionRequests />
       </Route>
     </Switch>
   </Router>

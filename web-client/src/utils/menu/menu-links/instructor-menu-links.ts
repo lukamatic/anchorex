@@ -6,5 +6,5 @@ export const InstructorMenuLinks: MenuLink[] = [
   { pathname: '/calendar', text: 'Calendar' },
   { pathname: '/dashboard', text: 'Dashboard' },
   { pathname: '/profile', text: 'Profile' },
-  { pathname: '/accountSettings', text: 'Account settings' },
+  { pathname: '/deleteAccount', text: 'Delete account' },
 ];

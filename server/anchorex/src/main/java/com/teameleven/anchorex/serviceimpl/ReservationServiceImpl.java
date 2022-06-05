@@ -88,7 +88,8 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
         var user = userRepository.findOneById(reservationDTO.getUserId());
         personalReservation.setUser(user);
-        personalReservation.setOwnerId(entityRepository.getOwnerId(personalReservation.getReservationEntity().getId()));
+        personalReservation.setReservationEntity(reservationEntityRepository.getOne(reservationDTO.getReservationEntityId()));
+        personalReservation.setOwnerId(reservationDTO.getOwnerId());
         personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
         reservationRepository.save(personalReservation);
         return personalReservation;

@@ -89,12 +89,18 @@ const HomeScreen = () => {
 	];
 
 	const homeButton = (type: any, index: number) => (
-		<a key={index} className='bg-blue-100 w-full h-36 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/4 flex items-center justify-center transition-transform duration-120 transform hover:scale-125' href={`#${type.title.toLowerCase()}`}>
+		<button
+			key={index}
+			className='bg-blue-100 w-full h-36 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/4 flex items-center justify-center transition-transform duration-120 transform hover:scale-125'
+			onClick={() => {
+				openFullList(type.path);
+			}}
+		>
 			<div className='justify-center w-full flex flex-col flex-1'>
 				<div className='flex-1 mx-auto'>{type?.logo && cloneElement(type?.logo)}</div>
 				<span className='font-gray-700 text-xl text-center  w-full'>{type.title}</span>
 			</div>
-		</a>
+		</button>
 	);
 	const authorizedButton = (type: any, index: number) => (
 		<button key={index} onClick={type.callback} className='bg-white w-full h-14 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/6 flex items-center justify-center transition-transform duration-120 transform hover:scale-110'>
@@ -122,7 +128,7 @@ const HomeScreen = () => {
 				<div className='flex flex-col justify-around flex-1 md:flex-row z-10'>{buttons.map(homeButton)}</div>
 				{authorized && <div className='flex flex-col justify-around flex-1 md:flex-row mt-4'>{authorizedButtons.map(authorizedButton)}</div>}
 			</div>
-			<div className='max-w-7xl self-center w-full'>
+			{/* <div className='max-w-7xl self-center w-full'>
 				{buttons.map((section, i) => {
 					const emptyList = !section?.data?.length;
 
@@ -169,7 +175,7 @@ const HomeScreen = () => {
 						</div>
 					);
 				})}
-			</div>
+			</div> */}
 		</div>
 	);
 };

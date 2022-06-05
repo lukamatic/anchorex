@@ -3,6 +3,7 @@ package com.teameleven.anchorex.serviceimpl;
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.LocationDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
@@ -14,7 +15,9 @@ import com.teameleven.anchorex.mapper.ServiceMapper;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.LodgeRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.LodgeService;
+import com.teameleven.anchorex.service.ReservationService;
 
 import java.util.*;
 
@@ -23,11 +26,15 @@ public class LodgeServiceImpl implements LodgeService {
     private final LodgeRepository lodgeRepository;
     private final ServiceRepository serviceRepository;
     private final LocationRepository locationRepository;
+    private final FreePeriodService freePeriodService;
+    private final ReservationService reservationService;
 
-    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository) {
+    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository, FreePeriodService freePeriodService, ReservationService reservationService) {
         this.lodgeRepository = lodgeRepository;
         this.serviceRepository = additionalServiceRepository;
         this.locationRepository = locationRepository;
+        this.freePeriodService = freePeriodService;
+        this.reservationService = reservationService;
     }
 
     @Override
@@ -52,9 +59,9 @@ public class LodgeServiceImpl implements LodgeService {
     }
 
     @Override
-    public List<LodgeDTO> getAllLodges() {
+    public List<Lodge> getAllLodges() {
         List<Lodge> lodges = lodgeRepository.getLodges();
-        return getLodgesDTO(lodges);
+        return lodges;
     }
 
     @Override
@@ -87,6 +94,20 @@ public class LodgeServiceImpl implements LodgeService {
         serviceRepository.save(service);
     }
 
+    @Override
+    public List<Lodge> getFreeLodges(BookingItemsRequestDTO requestPeriod) {
+        List<Lodge> allLodges = lodgeRepository.findAll();
+        List<Lodge> retList = new ArrayList<>();
+        for(Lodge lodge: allLodges){
+            int numberOfAcceptablePeople = lodge.getFourBedroomNumber() * 4 + lodge.getSingleBedroomNumber() + lodge.getDoubleBedroomNumber() * 2;
+            if( numberOfAcceptablePeople >= requestPeriod.getNumberOfPeople()){
+                if(freePeriodService.checkIfPeriodIsFree(requestPeriod.getStartDate(), requestPeriod.getEndDate(), lodge.getId()) ){
+                    retList.add(lodge);
+                }
+            }
+        }
+        return retList;
+    }
 
 
     private List<LodgeDTO> getLodgesDTO(List<Lodge> lodges) {

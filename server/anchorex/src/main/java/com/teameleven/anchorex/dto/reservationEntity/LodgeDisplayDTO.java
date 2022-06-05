@@ -16,6 +16,7 @@ public class LodgeDisplayDTO {
     private Integer fourBedroomNumber;
     private Set<ServiceDTO> services;
     private LocationDTO location;
+    private Double averageRating;
 
     public LodgeDisplayDTO() {
         super();
@@ -99,5 +100,13 @@ public class LodgeDisplayDTO {
 
     public void setServices(Set<ServiceDTO> services) {
         this.services = services;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
     }
 }

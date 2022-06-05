@@ -1,14 +1,31 @@
-import { cloneElement, useContext } from 'react';
+import { cloneElement, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
+import { getAllLodgesAsync } from '../../server/service';
+import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import CoachingIcon from './button-icons/CoachingIcon';
 import FishingIcon from './button-icons/FishingIcon';
 import HouseIcon from './button-icons/HouseIcon';
 import './Home.css';
+
 const HomeScreen = () => {
 	const history = useHistory();
 	const { user, userDetails } = useContext(AuthContext);
 	const authorized = !!user.loggedIn;
+	const [lodges, setLodges] = useState<any[]>([]);
+
+	useEffect(() => {
+		loadLodges();
+	}, []);
+
+	const loadLodges = async () => {
+		const resp = await getAllLodgesAsync();
+		if (resp.status === HttpStatusCode.OK) {
+			setLodges(resp.data.splice(0, 3));
+		}
+	};
+
+	const images = [require('./../../images/ent1.jpg'), require('./../../images/ext1.jpg'), require('./../../images/ext2.jpg')];
 
 	const buttons = [
 		{
@@ -20,8 +37,8 @@ const HomeScreen = () => {
 				{ name: 'Lesson 1', description: 'Description....', images: [require('./../../images/ent1.jpg')] },
 				{ name: 'Lesson 2', description: 'Description....', images: [require('./../../images/ent2.jpg')] },
 				{ name: 'Lesson 3', description: 'Description....', images: [require('./../../images/ent3.jpg')] },
-				{ name: 'Lesson 4', description: 'Description....', images: [require('./../../images/ext1.jpg')] },
-				{ name: 'Lesson 5', description: 'Description....', images: [require('./../../images/ext2.jpg')] },
+				// { name: 'Lesson 4', description: 'Description....', images: [require('./../../images/ext1.jpg')] },
+				// { name: 'Lesson 5', description: 'Description....', images: [require('./../../images/ext2.jpg')] },
 			],
 		},
 		{
@@ -36,9 +53,10 @@ const HomeScreen = () => {
 			path: 'lodges',
 			description: 'Lodges description....',
 			logo: <HouseIcon height={80} />,
-			data: [],
+			data: lodges,
 		},
 	];
+
 	const openFullList = (type: string) => {
 		history.push(`/listScreen/${type}`);
 	};
@@ -46,11 +64,15 @@ const HomeScreen = () => {
 	const authorizedButtons = [
 		{
 			title: 'Reservations',
-			callback: () => {},
+			callback: () => {
+				history.push('/userReservations');
+			},
 		},
 		{
 			title: 'History',
-			callback: () => {},
+			callback: () => {
+				history.push('/userHistory');
+			},
 		},
 		{
 			title: 'Penalties',
@@ -67,12 +89,18 @@ const HomeScreen = () => {
 	];
 
 	const homeButton = (type: any, index: number) => (
-		<a key={index} className='bg-blue-100 w-full h-36 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/4 flex items-center justify-center transition-transform duration-120 transform hover:scale-125' href={`#${type.title.toLowerCase()}`}>
+		<button
+			key={index}
+			className='bg-blue-100 w-full h-36 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/4 flex items-center justify-center transition-transform duration-120 transform hover:scale-125'
+			onClick={() => {
+				openFullList(type.path);
+			}}
+		>
 			<div className='justify-center w-full flex flex-col flex-1'>
 				<div className='flex-1 mx-auto'>{type?.logo && cloneElement(type?.logo)}</div>
 				<span className='font-gray-700 text-xl text-center  w-full'>{type.title}</span>
 			</div>
-		</a>
+		</button>
 	);
 	const authorizedButton = (type: any, index: number) => (
 		<button key={index} onClick={type.callback} className='bg-white w-full h-14 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/6 flex items-center justify-center transition-transform duration-120 transform hover:scale-110'>
@@ -100,7 +128,7 @@ const HomeScreen = () => {
 				<div className='flex flex-col justify-around flex-1 md:flex-row z-10'>{buttons.map(homeButton)}</div>
 				{authorized && <div className='flex flex-col justify-around flex-1 md:flex-row mt-4'>{authorizedButtons.map(authorizedButton)}</div>}
 			</div>
-			<div className='max-w-7xl self-center w-full'>
+			{/* <div className='max-w-7xl self-center w-full'>
 				{buttons.map((section, i) => {
 					const emptyList = !section?.data?.length;
 
@@ -111,12 +139,12 @@ const HomeScreen = () => {
 								<h3 className='font-normal text-base text-gray-500'>{section.description}</h3>
 							</div>
 							<div className='flex flex-col md:flex-row  flex-wrap '>
-								{section?.data?.splice(0, 3)?.map((item, i) => {
+								{section?.data?.map((item, i) => {
 									return (
 										<div className='w-1/3 px-4 py-2' key={i}>
 											<button className='p-3 rounded-lg w-full bg-white mt-24 shadow-md hover:shadow-2xl transition-transform duration-75 transform hover:scale-105'>
 												<div className=' overflow-hidden rounded-lg -mt-24  shadow-lg mb-2'>
-													<img src={item.images[0].default} alt='Item' className='object-cover h-52 w-full' />
+													<img src={images[i]?.default} alt='Item' className='object-cover h-52 w-full' />
 												</div>
 												<div>
 													<p className='text-gray-700 text-lg text-left'>{item.name}</p>
@@ -147,7 +175,7 @@ const HomeScreen = () => {
 						</div>
 					);
 				})}
-			</div>
+			</div> */}
 		</div>
 	);
 };

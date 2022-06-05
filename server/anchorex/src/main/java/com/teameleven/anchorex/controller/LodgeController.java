@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.Lodge;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
@@ -16,7 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.ArrayList;
+
 import java.util.Collection;
+
 import java.util.List;
 
 @RestController
@@ -49,9 +54,15 @@ public class LodgeController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<LodgeDTO>> getAllLodges(){
+    public ResponseEntity<List<LodgeDisplayDTO>> getAllLodges(){
         var lodges = lodgeService.getAllLodges();
-        return new ResponseEntity<>(lodges, HttpStatus.OK);
+        List<LodgeDisplayDTO> retDto = new ArrayList<>();
+        for(var lodge: lodges){
+            LodgeDisplayDTO lodgeDTO = LodgeMapper.lodgeToLodgeDisplayDTO(lodge);
+            retDto.add(lodgeDTO);
+        }
+
+        return new ResponseEntity<>(retDto, HttpStatus.OK);
     }
 
     @GetMapping(path="/lodges/{id}")
@@ -105,5 +116,17 @@ public class LodgeController {
         Lodge lodge = lodgeService.getLodgeById(id);
         freePeriodService.addFreePeriod(freePeriod, lodge);
         return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path="/possibleReservations")
+    public ResponseEntity<List<LodgeDisplayDTO>> getPossibleReservations(@RequestBody BookingItemsRequestDTO freePeriod){
+        List<Lodge> lodges = lodgeService.getFreeLodges(freePeriod);
+        List<LodgeDisplayDTO> retDto = new ArrayList<>();
+        for(var lodge: lodges){
+            LodgeDisplayDTO lodgeDTO = LodgeMapper.lodgeToLodgeDisplayDTO(lodge);
+            retDto.add(lodgeDTO);
+        }
+
+        return new ResponseEntity<>(retDto, HttpStatus.OK);
     }
 }

@@ -38,6 +38,10 @@ import AdminShips from './admin-entities/AdminShips';
 import FishingLessonAction from './display-fishing-lesson/FishingLessonAction';
 import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
 import ChangePasswordScreen from './profile/ChangePasswordScreen';
+
+import UserReservationsPage from './user-reservations/UserReservationsPage';
+import UserHistory from './user-reservations/UserHistory';
+
 import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
@@ -220,6 +224,10 @@ const MyRouter = () => (
 
       <Route path='/loyaltyProgramSettings'>
         <LoyaltyProgramSettings />
+      </Route>
+
+      <Route path='/userHistory'>
+        <UserHistory />
       </Route>
     </Switch>
   </Router>

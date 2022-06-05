@@ -13,6 +13,24 @@ public class ReservationDTO {
     private double price;
     private Set<Service> services;
     private Long userId;
+    private Long ownerId;
+    private Long id;
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;

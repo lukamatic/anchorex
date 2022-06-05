@@ -1,12 +1,16 @@
 package com.teameleven.anchorex.dto.reservationentity;
 
-import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.domain.ReservationEntity;
+import com.teameleven.anchorex.domain.Revision;
 import com.teameleven.anchorex.dto.ServiceDTO;
+import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
+import com.teameleven.anchorex.enums.ReservationEntityType;
+import com.teameleven.anchorex.enums.ReviewStatus;
 
 import java.util.Date;
 import java.util.Set;
 
-public class ClientReservationDTO {
+public class FullClientReservationDTO {
     private Date startDate;
     private Date endDate;
     private Integer maxPersonNumber;
@@ -16,25 +20,43 @@ public class ClientReservationDTO {
     private Long userId;
     private boolean captain;
     private Long reservationEntityId;
+    private ReservationEntityType reservationType;
     private String userFullname;
+    private Revision revision;
+    private ReviewStatus revisionStatus;
 
-    private Long ownerId;
-    private Long id;
-
-    public Long getOwnerId() {
-        return ownerId;
+    public ReservationEntityType getReservationType() {
+        return reservationType;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setReservationType(ReservationEntityType reservationType) {
+        this.reservationType = reservationType;
     }
 
-    public Long getId() {
-        return id;
+    public ReviewStatus getRevisionStatus() {
+        return revisionStatus;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRevisionStatus(ReviewStatus revisionStatus) {
+        this.revisionStatus = revisionStatus;
+    }
+
+    public Revision getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Revision revision) {
+        this.revision = revision;
+    }
+
+    private com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO lodgeInfo;
+
+    public LodgeDisplayDTO getLodgeInfo() {
+        return lodgeInfo;
+    }
+
+    public void setLodgeInfo(LodgeDisplayDTO lodgeInfo) {
+        this.lodgeInfo = lodgeInfo;
     }
 
     public String getUserFullname() {
@@ -53,7 +75,7 @@ public class ClientReservationDTO {
         this.userId = userId;
     }
 
-    public ClientReservationDTO(){
+    public FullClientReservationDTO(){
         super();
     }
 

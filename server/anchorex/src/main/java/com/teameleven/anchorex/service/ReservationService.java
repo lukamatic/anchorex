@@ -5,7 +5,9 @@ import com.teameleven.anchorex.domain.ReservationReport;
 import com.teameleven.anchorex.dto.DateRangeDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.dto.ReservationReportDTO;
+import com.teameleven.anchorex.dto.RevisionDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
+import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,5 +39,14 @@ public interface ReservationService {
 
     boolean checkIfEntityIsAvailable(Long id);
 
+    List<ClientReservationDTO> getAllReservations();
+
+    List<FullClientReservationDTO> getReservationsForUser(Long userId);
+
+    void updateReservation(ReservationDTO reservationDTO);
+
+    void crateRevision(RevisionDTO revisionDTO);
+
     Collection<Reservation> getAllReservationsByOwnerId(Long ownerId);
+
 }

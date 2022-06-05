@@ -48,11 +48,7 @@ const UserHistory = () => {
 						<div className='w-28'></div>
 					</div>
 				</div>
-				<div className='flex flex-col md:flex-row  flex-wrap mt-10'>
-					{reservations.map((reservation: any, index: number) => (
-						<ReservationHistoryItem key={index} reservation={reservation} index={index} />
-					))}
-				</div>
+				<div className='flex flex-col md:flex-row  flex-wrap mt-10'>{reservations.map((reservation: any, index: number) => (reservation.reservationType == 'LODGE' ? <ReservationHistoryItem key={index} reservation={reservation} index={index} /> : null))}</div>
 			</div>
 		</div>
 	);

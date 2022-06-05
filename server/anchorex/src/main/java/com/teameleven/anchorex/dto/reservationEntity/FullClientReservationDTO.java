@@ -1,8 +1,10 @@
 package com.teameleven.anchorex.dto.reservationentity;
 
+import com.teameleven.anchorex.domain.ReservationEntity;
 import com.teameleven.anchorex.domain.Revision;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
+import com.teameleven.anchorex.enums.ReservationEntityType;
 import com.teameleven.anchorex.enums.ReviewStatus;
 
 import java.util.Date;
@@ -18,9 +20,18 @@ public class FullClientReservationDTO {
     private Long userId;
     private boolean captain;
     private Long reservationEntityId;
+    private ReservationEntityType reservationType;
     private String userFullname;
     private Revision revision;
     private ReviewStatus revisionStatus;
+
+    public ReservationEntityType getReservationType() {
+        return reservationType;
+    }
+
+    public void setReservationType(ReservationEntityType reservationType) {
+        this.reservationType = reservationType;
+    }
 
     public ReviewStatus getRevisionStatus() {
         return revisionStatus;

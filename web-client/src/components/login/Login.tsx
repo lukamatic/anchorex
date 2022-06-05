@@ -25,11 +25,27 @@ const Login = () => {
 		setPassword(event.target.value);
 	};
 
-	const logIn = async (e: any) => {
-		e.preventDefault();
-		const url: string = '/api/auth/login';
-		const data = { email: email, password: password };
+	const precreatedUsers = [
+		{
+			role: 'lodge-ownera',
+			data: { email: 'bogdanovicognjen@gmail.com', password: 'bbogi1219' },
+		},
+		{
+			role: 'instructor',
+			data: { email: 'luka.mat99@gmail.com', password: 'luka123' },
+		},
+		{
+			role: 'ship-ownera',
+			data: { email: 'sreckosojic@gmail.com', password: 'brod123' },
+		},
+		{
+			role: 'client',
+			data: { email: 'client@example.com', password: 'client123' },
+		},
+	];
 
+	const doLogin = async (data: { email: string; password: string }) => {
+		const url: string = '/api/auth/login';
 		setFetching(true);
 
 		const response = await fetch(url, {
@@ -50,12 +66,19 @@ const Login = () => {
 					accessToken: content.userTokenState.accessToken,
 					loggedIn: true,
 					id: content.userId,
-					email: email,
+					email: data.email,
 					role: content.userRole,
 				};
 
 				authContext.updateAuthContext(user);
 				localStorageUtil.setUser(user);
+
+				const resp = await getUserByTokenAsync();
+				if (resp.status === HttpStatusCode.OK) {
+					authContext.setUserDetails(resp.data);
+				} else {
+					localStorage.clear();
+				}
 
 				if (localStorageUtil.getUserRole() === UserRole.LODGE_OWNER) {
 					history.push('/lodges');
@@ -80,6 +103,13 @@ const Login = () => {
 		setFetching(false);
 	};
 
+	const logIn = async (e: any) => {
+		e.preventDefault();
+
+		const data = { email: email, password: password };
+		doLogin(data);
+	};
+
 	return (
 		<div className='flex flex-col items-center flex-grow bg-blue-50 p-3'>
 			<form onSubmit={logIn} className='flex flex-col bg-white w-full md:w-80 md:text-lg mt-12 md:mt-40 m-5 p-5 rounded-lg shadow-lg'>
@@ -100,6 +130,16 @@ const Login = () => {
 				Sign up
 			</Link>
 			{/* </form> */}
+
+			{precreatedUsers.map((user: any) => (
+				<div
+					onClick={() => {
+						doLogin(user.data);
+					}}
+				>
+					{user.role}
+				</div>
+			))}
 		</div>
 	);
 };

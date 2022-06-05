@@ -44,6 +44,7 @@ function App() {
 						user: user,
 						updateAuthContext: updateAuthContext,
 						userDetails: userDetails,
+						setUserDetails: setUserDetails,
 					}}
 				>
 					<MyRouter />

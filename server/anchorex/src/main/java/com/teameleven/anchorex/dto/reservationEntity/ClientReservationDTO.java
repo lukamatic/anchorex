@@ -18,6 +18,25 @@ public class ClientReservationDTO {
     private Long reservationEntityId;
     private String userFullname;
 
+    private Long ownerId;
+    private Long id;
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getUserFullname() {
         return userFullname;
     }

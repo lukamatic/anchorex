@@ -77,16 +77,21 @@ const UserComplaintsScreen = () => {
 							<div className='w-28'></div>
 						</div>
 					</div>
-					{usableReservations.length > 0 && (
-						<button
-							onClick={openNewComplaint}
-							className='px-3 py-2 bg-yellow-200 rounded-md 
-                                shadow-md hover:shadow-lg self-end w-56 mt-4 transform 
-                                hover:scale-105 transition-transform duration-120 font-semibold text-gray-600'
-						>
-							Create complaint
-						</button>
-					)}
+					{/* {usableReservations.length > 0 && ( */}
+					<div className='flex flex-row justify-center'>
+						{usableReservations.length > 0 ? (
+							<button
+								onClick={openNewComplaint}
+								className='px-3 py-2 bg-yellow-200 rounded-md 
+						shadow-md hover:shadow-lg self-end w-72 mt-4 transform 
+						hover:scale-105 transition-transform duration-120 font-semibold text-gray-600'
+							>
+								Create complaint
+							</button>
+						) : (
+							<p className='text-gray-400 mt-5'>You cannot create any other complaint...</p>
+						)}
+					</div>
 					<div className='flex flex-col md:flex-row  flex-wrap mt-10'>
 						{complaints.map((complaint: any, index: number) => (
 							<div key={index} className='w-1/3 px-4 py-2'>

@@ -8,4 +8,8 @@ public interface ReservationEntityRepository extends JpaRepository<ReservationEn
 
     @Query(value = "SELECT e.ownerId FROM ReservationEntity e where e.id=?1")
     Long getOwnerId(Long id);
+
+    @Query(value = "SELECT e.name FROM ReservationEntity e where e.id=?1")
+    String getName(Long id);
+
 }

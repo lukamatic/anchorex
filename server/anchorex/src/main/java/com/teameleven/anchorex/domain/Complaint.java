@@ -36,6 +36,10 @@ public class Complaint {
     @JoinColumn (name= "user_id")
     private User user;
 
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn (name= "reservation_id")
+    private ReservationEntity reservation;
+
     public Long getId() {
         return id;
     }
@@ -60,9 +64,7 @@ public class Complaint {
         this.reservation = reservation;
     }
 
-    @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn (name= "reservation_id")
-    private ReservationEntity reservation;
+
 
     public Complaint() {
         super();

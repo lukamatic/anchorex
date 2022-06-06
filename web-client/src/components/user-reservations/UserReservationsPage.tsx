@@ -5,12 +5,14 @@ import AuthContext from '../../context/auth-context';
 import LeftArrow from '../../icons/LeftArrow';
 import { getAllLodgesAsync, getAllReservationsForUser } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const UserReservationsPage = () => {
 	const history = useHistory();
 	const { user, userDetails } = useContext(AuthContext);
 	const authorized = !!user.loggedIn;
 	const [reservations, setReservations] = useState<any[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		loadReservations();
@@ -20,6 +22,7 @@ const UserReservationsPage = () => {
 		const resp = await getAllReservationsForUser(user.id);
 		if (resp.status === HttpStatusCode.OK) {
 			setReservations(resp.data);
+			setLoading(false);
 		}
 	};
 	const goBack = () => {
@@ -28,7 +31,7 @@ const UserReservationsPage = () => {
 
 	return (
 		<div className='w-full flex bg-blue-50 flex-1 flex-col'>
-			<div className='max-w-7xl self-center w-full pt-10'>
+			<div className='max-w-7xl self-center w-full pt-10 flex flex-1 flex-col'>
 				<div>
 					<div className='flex flex-row items-center'>
 						<button className='flex flex-row items-center px-3 pt-1 w-28' onClick={goBack}>
@@ -92,6 +95,19 @@ const UserReservationsPage = () => {
 						);
 					})}
 				</div>
+				<div className='flex flex-col md:flex-row  flex-wrap mt-10'>
+					{!loading && reservations.length === 0 && (
+						<div className='text-center flex-1 flex justify-center items-center'>
+							<div className='text-gray-400 '> This list is currently empty... </div>
+						</div>
+					)}
+				</div>
+
+				{loading && (
+					<div className='flex flex-1 justify-center items-center h-full'>
+						<LoadingSpinner />
+					</div>
+				)}
 			</div>
 		</div>
 	);

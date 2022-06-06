@@ -26,7 +26,10 @@ import com.teameleven.anchorex.repository.*;
 import com.teameleven.anchorex.service.ReservationService;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -49,8 +52,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private final RevisionRepository revisionRepository;
-    @Autowired
-    private final ReservationEntityRepository reservationEntityRepository;
 
     private final BusinessConfigurationRepository businessConfigurationRepository;
 
@@ -66,33 +67,45 @@ public class ReservationServiceImpl implements ReservationService {
         this.userRepository = userRepository;
 
         this.revisionRepository = revisionRepository;
-        this.reservationEntityRepository = reservationEntityRepository;
 
         this.businessConfigurationRepository = businessConfigurationRepository;
 
     }
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     @Override
     public Reservation createReservation(ReservationDTO reservationDTO) {
         Reservation reservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
-        var reservationEntity = this.entityRepository.findById(reservationDTO.getReservationEntityId()).orElse(null);
-        reservation.setReservationEntity(reservationEntity);
-        reservation.setOwnerId(reservationEntity.getOwnerId());
-        reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-        reservationRepository.save(reservation);
-        return reservation;
+        try{
+            var reservationEntity = entityRepository.getLocked(reservationDTO.getReservationEntityId());
+            reservation.setReservationEntity(reservationEntity);
+            reservation.setOwnerId(reservationEntity.getOwnerId());
+            reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+            reservationRepository.save(reservation);
+            return reservation;
+        }catch(PessimisticLockingFailureException e) {
+            System.out.println(e.getMessage());
+            throw new PessimisticLockingFailureException("Entity already reserved");
+        }
+
     }
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     @Override
     public Reservation createPersonalReservation(ReservationDTO reservationDTO) {
         Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
-        var user = userRepository.findOneById(reservationDTO.getUserId());
-        personalReservation.setUser(user);
-        personalReservation.setReservationEntity(reservationEntityRepository.getOne(reservationDTO.getReservationEntityId()));
-        personalReservation.setOwnerId(reservationDTO.getOwnerId());
-        personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-        reservationRepository.save(personalReservation);
-        return personalReservation;
+        try{
+            var user = userRepository.findOneById(reservationDTO.getUserId());
+            personalReservation.setUser(user);
+            personalReservation.setReservationEntity(entityRepository.getLocked(reservationDTO.getReservationEntityId()));
+            personalReservation.setOwnerId(reservationDTO.getOwnerId());
+            personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+            reservationRepository.save(personalReservation);
+            return personalReservation;
+        }catch(PessimisticLockingFailureException e) {
+            System.out.println(e.getMessage());
+            throw new PessimisticLockingFailureException("Entity already reserved");
+        }
     }
 
     @Override
@@ -262,7 +275,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void crateRevision(RevisionDTO revisionDTO) {
         Revision revision = RevisionMapper.RevisionDtoToRevision(revisionDTO);
-        revision.setReservationEntity(reservationEntityRepository.getOne(revisionDTO.getReservationId()));
+        revision.setReservationEntity(entityRepository.getOne(revisionDTO.getReservationId()));
         revision.setStatus(ReviewStatus.PENDING);
         revisionRepository.save(revision);
     }

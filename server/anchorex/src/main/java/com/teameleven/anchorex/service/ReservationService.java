@@ -8,10 +8,12 @@ import com.teameleven.anchorex.dto.ReservationReportDTO;
 import com.teameleven.anchorex.dto.RevisionDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
 
+@Transactional
 public interface ReservationService {
     Reservation createReservation(ReservationDTO reservationDTO);
 

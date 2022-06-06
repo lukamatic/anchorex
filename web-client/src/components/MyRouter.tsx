@@ -46,6 +46,7 @@ import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
 import MyCalendar from './MyCalendar';
+import ShipDisplayImages from './display-ship/ShipDisplayImages';
 
 const MyRouter = () => (
 	<Router>
@@ -88,6 +89,11 @@ const MyRouter = () => (
 			<Route path='/lodgeImages/:id'>
 				<LodgeDisplayImages />
 			</Route>
+
+			<Route path ='/shipImages/:id'>
+				<ShipDisplayImages/>
+			</Route>
+
 			<Route path='/lodgePriceList/:id'>
 				<LodgeDisplayPricelist />
 			</Route>

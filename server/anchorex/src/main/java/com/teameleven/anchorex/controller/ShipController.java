@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -103,5 +104,17 @@ public class ShipController {
         Ship ship = shipService.getShipById(id);
         freePeriodService.addFreePeriod(freePeriod, ship);
         return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/{id}/images/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> addImages(@PathVariable("id") Long id, @RequestParam("files") MultipartFile[] files) {
+        shipService.addImages(id, files);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "images/remove/{imageId}")
+    public ResponseEntity<Void> removeImage(@PathVariable("imageId") Long imageId) {
+        shipService.removeImage(imageId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

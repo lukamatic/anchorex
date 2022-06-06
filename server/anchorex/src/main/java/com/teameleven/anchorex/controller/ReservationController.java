@@ -18,6 +18,7 @@ import com.teameleven.anchorex.service.ReservationService;
 import com.teameleven.anchorex.service.UserService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> create(@RequestBody ReservationDTO reservationDTO) {
         if (!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
                 reservationDTO.getReservationEntityId())) {
+            //throw new PessimisticLockingFailureException("Entity already reserved");
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         var reservation = reservationService.createReservation(reservationDTO);

@@ -2,6 +2,7 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Lodge;
+import com.teameleven.anchorex.domain.ReservationEntityImage;
 import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.LocationDTO;
@@ -14,10 +15,15 @@ import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ServiceMapper;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.LodgeRepository;
+import com.teameleven.anchorex.repository.ReservationEntityImageRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.service.FreePeriodService;
+import com.teameleven.anchorex.service.ImageService;
 import com.teameleven.anchorex.service.LodgeService;
 import com.teameleven.anchorex.service.ReservationService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -28,13 +34,17 @@ public class LodgeServiceImpl implements LodgeService {
     private final LocationRepository locationRepository;
     private final FreePeriodService freePeriodService;
     private final ReservationService reservationService;
+    private final ImageService imageService;
+    private final ReservationEntityImageRepository reservationEntityImageRepository;
 
-    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository, FreePeriodService freePeriodService, ReservationService reservationService) {
+    public LodgeServiceImpl(LodgeRepository lodgeRepository, ServiceRepository additionalServiceRepository, LocationRepository locationRepository, FreePeriodService freePeriodService, ReservationService reservationService, ImageService imageService, ReservationEntityImageRepository reservationEntityImageRepository) {
         this.lodgeRepository = lodgeRepository;
         this.serviceRepository = additionalServiceRepository;
         this.locationRepository = locationRepository;
         this.freePeriodService = freePeriodService;
         this.reservationService = reservationService;
+        this.imageService = imageService;
+        this.reservationEntityImageRepository = reservationEntityImageRepository;
     }
 
     @Override
@@ -107,6 +117,24 @@ public class LodgeServiceImpl implements LodgeService {
             }
         }
         return retList;
+    }
+
+    @Override
+    public void addImages(Long id, MultipartFile[] files) {
+        var lodgeToUpdate = lodgeRepository.findById(id).orElse(null);
+
+        if (lodgeToUpdate == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Fishing lesson with id %d doesn't exist.", id));
+        }
+
+        var urls = this.imageService.uploadImages(files);
+        urls.forEach(url -> lodgeToUpdate.addImage(ReservationEntityImage.builder().url(url).build()));
+        lodgeRepository.save(lodgeToUpdate);
+    }
+
+    @Override
+    public void removeImage(Long imageId) {
+        reservationEntityImageRepository.deleteById(imageId);
     }
 
 

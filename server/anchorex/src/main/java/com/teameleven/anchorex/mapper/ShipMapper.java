@@ -85,6 +85,9 @@ public class ShipMapper {
         locationDTO.setLongitude(ship.getLocation().getLongitude());
         locationDTO.setLatitude(ship.getLocation().getLatitude());
         dto.setLocation(locationDTO);
+
+        dto.setImages(ReservationEntityImageMapper.toDtos(ship.getImages()));
+
         return dto;
     }
 

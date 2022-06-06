@@ -25,6 +25,16 @@ public class FullClientReservationDTO {
     private Revision revision;
     private ReviewStatus revisionStatus;
 
+    private String reservationName;
+
+    public String getReservationName() {
+        return reservationName;
+    }
+
+    public void setReservationName(String reservationName) {
+        this.reservationName = reservationName;
+    }
+
     public ReservationEntityType getReservationType() {
         return reservationType;
     }

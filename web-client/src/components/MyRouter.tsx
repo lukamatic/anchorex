@@ -46,6 +46,7 @@ import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
 import MyCalendar from './MyCalendar';
+import UserComplaintsScreen from './user-reservations/UserComplaints';
 
 const MyRouter = () => (
 	<Router>
@@ -214,6 +215,9 @@ const MyRouter = () => (
 			</Route>
 			<Route path='/calendar'>
 				<MyCalendar />
+			</Route>
+			<Route path='/complaints'>
+				<UserComplaintsScreen />
 			</Route>
 		</Switch>
 	</Router>

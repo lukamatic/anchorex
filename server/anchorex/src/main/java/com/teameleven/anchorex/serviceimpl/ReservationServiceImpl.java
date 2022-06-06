@@ -1,22 +1,14 @@
 package com.teameleven.anchorex.serviceimpl;
 
-import com.teameleven.anchorex.domain.Reservation;
-import com.teameleven.anchorex.domain.ReservationReport;
-
-import com.teameleven.anchorex.domain.Revision;
-
-import com.teameleven.anchorex.domain.User;
+import com.teameleven.anchorex.domain.*;
 
 import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
 
-import com.teameleven.anchorex.dto.DateRangeDTO;
-import com.teameleven.anchorex.dto.ReservationDTO;
-import com.teameleven.anchorex.dto.ReservationReportDTO;
-import com.teameleven.anchorex.dto.RevisionDTO;
+import com.teameleven.anchorex.dto.*;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
+import com.teameleven.anchorex.enums.ComplaintStatus;
 import com.teameleven.anchorex.enums.ReviewStatus;
-import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ReportMapper;
 import com.teameleven.anchorex.mapper.ReservationMapper;
 
@@ -24,7 +16,6 @@ import com.teameleven.anchorex.mapper.RevisionMapper;
 
 import com.teameleven.anchorex.repository.*;
 import com.teameleven.anchorex.service.ReservationService;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,13 +43,16 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private final ReservationEntityRepository reservationEntityRepository;
 
+    @Autowired
+    private final ComplaintRepository complaintRepository;
+
     private final BusinessConfigurationRepository businessConfigurationRepository;
 
     public ReservationServiceImpl(ReservationRepository reservationRepository,
-            ReservationEntityRepository entityRepository,
-            ReservationReportRepository reportRepository, UserRepository userRepository,
-            RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
-            BusinessConfigurationRepository businessConfigurationRepository) {
+                                  ReservationEntityRepository entityRepository,
+                                  ReservationReportRepository reportRepository, UserRepository userRepository,
+                                  RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
+                                  ComplaintRepository complaintRepository, BusinessConfigurationRepository businessConfigurationRepository) {
 
         this.reservationRepository = reservationRepository;
         this.entityRepository = entityRepository;
@@ -67,6 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         this.revisionRepository = revisionRepository;
         this.reservationEntityRepository = reservationEntityRepository;
+        this.complaintRepository = complaintRepository;
 
         this.businessConfigurationRepository = businessConfigurationRepository;
 
@@ -269,6 +264,16 @@ public class ReservationServiceImpl implements ReservationService {
 
     public Collection<Reservation> getAllReservationsByOwnerId(Long ownerId) {
         return this.reservationRepository.getAllReservationsByOwnerId(ownerId);
+    }
+
+    @Override
+    public void createComplaint(ComplaintDTO complaintDTO) {
+        Complaint complaint = new Complaint();
+        complaint.setComment(complaintDTO.getComment());
+        complaint.setReservation(reservationEntityRepository.getOne(complaintDTO.getReservationId()));
+        complaint.setUser(userRepository.findOneById(complaintDTO.getUserId()));
+        complaint.setStatus(ComplaintStatus.PENDING);
+        complaintRepository.save(complaint);
     }
 
 }

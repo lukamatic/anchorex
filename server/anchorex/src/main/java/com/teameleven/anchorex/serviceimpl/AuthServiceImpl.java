@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
         ApiClient client = Postmark.getApiClient("2c3c225b-f823-4924-b983-4b1a82ad17ea");
         TemplatedMessage message = new TemplatedMessage("obradovic.petar@uns.ac.rs", user.getEmail());
         message.setTemplateId(28144927);
-        String verificationUrl = "http://localhost:3000/verification?token="+token;
+        String verificationUrl = "http://teameleven-anchorex.herokuapp.com/verification?token="+token;
         // set model as HashMap
         HashMap model = new HashMap<String, Object>();
         model.put("firstName", user.getFirstName());

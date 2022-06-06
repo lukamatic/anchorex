@@ -277,6 +277,7 @@ public class ReservationServiceImpl implements ReservationService {
         Revision revision = RevisionMapper.RevisionDtoToRevision(revisionDTO);
         revision.setReservationEntity(entityRepository.getOne(revisionDTO.getReservationId()));
         revision.setStatus(RevisionStatus.PENDING);
+        revision.setVersion(0);
         revisionRepository.save(revision);
     }
 
@@ -291,6 +292,7 @@ public class ReservationServiceImpl implements ReservationService {
         complaint.setReservation(entityRepository.getOne(complaintDTO.getReservationId()));
         complaint.setUser(userRepository.findOneById(complaintDTO.getUserId()));
         complaint.setStatus(ComplaintStatus.PENDING);
+        complaint.setVersion(0);
         complaintRepository.save(complaint);
     }
 }

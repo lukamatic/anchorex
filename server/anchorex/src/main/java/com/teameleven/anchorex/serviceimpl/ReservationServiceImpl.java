@@ -5,8 +5,6 @@ import com.teameleven.anchorex.domain.ReservationReport;
 
 import com.teameleven.anchorex.domain.Revision;
 
-import com.teameleven.anchorex.domain.User;
-
 import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
 
 import com.teameleven.anchorex.dto.DateRangeDTO;
@@ -16,15 +14,15 @@ import com.teameleven.anchorex.dto.RevisionDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
 import com.teameleven.anchorex.enums.ReviewStatus;
-import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ReportMapper;
 import com.teameleven.anchorex.mapper.ReservationMapper;
 
 import com.teameleven.anchorex.mapper.RevisionMapper;
 
 import com.teameleven.anchorex.repository.*;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ReservationService;
-import org.apache.tomcat.jni.Local;
+import com.teameleven.anchorex.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -53,23 +51,28 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private final RevisionRepository revisionRepository;
 
+    private final UserService userService;
+
+    private final FreePeriodService freePeriodService;
+
     private final BusinessConfigurationRepository businessConfigurationRepository;
 
+
+
     public ReservationServiceImpl(ReservationRepository reservationRepository,
-            ReservationEntityRepository entityRepository,
-            ReservationReportRepository reportRepository, UserRepository userRepository,
-            RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
-            BusinessConfigurationRepository businessConfigurationRepository) {
+                                  ReservationEntityRepository entityRepository,
+                                  ReservationReportRepository reportRepository, UserRepository userRepository,
+                                  RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
+                                  UserService userService, FreePeriodService freePeriodService, BusinessConfigurationRepository businessConfigurationRepository) {
 
         this.reservationRepository = reservationRepository;
         this.entityRepository = entityRepository;
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
-
         this.revisionRepository = revisionRepository;
-
+        this.userService = userService;
+        this.freePeriodService = freePeriodService;
         this.businessConfigurationRepository = businessConfigurationRepository;
-
     }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
@@ -80,9 +83,15 @@ public class ReservationServiceImpl implements ReservationService {
             var reservationEntity = entityRepository.getLocked(reservationDTO.getReservationEntityId());
             reservation.setReservationEntity(reservationEntity);
             reservation.setOwnerId(reservationEntity.getOwnerId());
-            reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-            reservationRepository.save(reservation);
-            return reservation;
+            if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
+                    reservationDTO.getReservationEntityId())){
+                throw new PessimisticLockingFailureException("Entity already reserved");
+            }
+            else{
+                reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+                reservationRepository.save(reservation);
+                return reservation;
+            }
         }catch(PessimisticLockingFailureException e) {
             System.out.println(e.getMessage());
             throw new PessimisticLockingFailureException("Entity already reserved");
@@ -96,12 +105,19 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation personalReservation = ReservationMapper.reservationDTOToReservation(reservationDTO);
         try{
             var user = userRepository.findOneById(reservationDTO.getUserId());
+            var reservationEntity = entityRepository.getLocked(reservationDTO.getReservationEntityId());
             personalReservation.setUser(user);
-            personalReservation.setReservationEntity(entityRepository.getLocked(reservationDTO.getReservationEntityId()));
-            personalReservation.setOwnerId(reservationDTO.getOwnerId());
-            personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-            reservationRepository.save(personalReservation);
-            return personalReservation;
+            personalReservation.setReservationEntity(reservationEntity);
+            personalReservation.setOwnerId(reservationEntity.getOwnerId());
+            if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
+                    reservationDTO.getReservationEntityId())){
+                throw new PessimisticLockingFailureException("Entity already reserved");
+            }
+            else{
+                personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+                reservationRepository.save(personalReservation);
+                return personalReservation;
+            }
         }catch(PessimisticLockingFailureException e) {
             System.out.println(e.getMessage());
             throw new PessimisticLockingFailureException("Entity already reserved");
@@ -166,7 +182,13 @@ public class ReservationServiceImpl implements ReservationService {
         ReservationReport report = ReportMapper.reportDTOToReport(reportDTO);
         report.setClient(userRepository.findOneById(reportDTO.getClientId()));
         report.setOwner(userRepository.findOneById(reportDTO.getOwnerId()));
-        report.setStatus(ReservationReportStatus.PENDING);
+        if(!report.getClientShowedUp()){
+            report.setStatus(ReservationReportStatus.APPROVED);
+            userService.incrementPenaltyCount(report.getClient().getId());
+        }
+        else{
+            report.setStatus(ReservationReportStatus.PENDING);
+        }
         reportRepository.save(report);
         return report;
     }
@@ -193,21 +215,21 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public int[] getReservationNumberByWeek(Long id) {
-        List<Reservation> monthlyReservations = reservationRepository.getReservationsByMonth(5, 2022, id);
+        List<Reservation> monthlyReservations = reservationRepository.getReservationsByWeek(5, 2022, id);
         int[] weeklyReservations = new int[4];
         int index = 0;
         ZoneId defaultZoneId = ZoneId.systemDefault();
         for (int i = 1; i <= 29; i += 7) {
-            LocalDate localBeggining = LocalDate.of(2022, 5, i);
+            LocalDate localBegining = LocalDate.of(2022, 5, i);
             int endDayOfMonth = i + 6;
-            if (i < 29) {
+            if (endDayOfMonth > 29) {
                 endDayOfMonth = 31;
             }
             LocalDate localEnding = LocalDate.of(2022, 5, endDayOfMonth);
-            Date begginingOfTheWeek = Date.from(localBeggining.atStartOfDay(defaultZoneId).toInstant());
+            Date beginingOfTheWeek = Date.from(localBegining.atStartOfDay(defaultZoneId).toInstant());
             Date endingOfTheWeek = Date.from(localEnding.atStartOfDay(defaultZoneId).toInstant());
             for (Reservation reservation : monthlyReservations) {
-                if (reservation.getStartDate().after(begginingOfTheWeek)
+                if (reservation.getStartDate().after(beginingOfTheWeek)
                         && reservation.getStartDate().before(endingOfTheWeek)) {
                     weeklyReservations[index]++;
                     index++;

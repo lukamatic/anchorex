@@ -3,14 +3,12 @@ package com.teameleven.anchorex.controller;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationReport;
-import com.teameleven.anchorex.dto.DateRangeDTO;
-import com.teameleven.anchorex.dto.ReservationDTO;
-import com.teameleven.anchorex.dto.ReservationReportDTO;
-import com.teameleven.anchorex.dto.RevisionDTO;
+import com.teameleven.anchorex.dto.*;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 import com.teameleven.anchorex.mapper.LodgeMapper;
+import com.teameleven.anchorex.mapper.ReservationMapper;
 import com.teameleven.anchorex.repository.RevisionRepository;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.LodgeService;
@@ -219,15 +217,11 @@ public class ReservationController {
 
     @GetMapping(path = "/instructorReservations", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Collection<Reservation>> getAllInstructorsReservations(Principal principal) {
+    public ResponseEntity<Collection<ReservationCalendarDto>> getAllInstructorsReservations(Principal principal) {
         var owner = this.userService.findByEmail(principal.getName());
         var reservations = this.reservationService.getAllReservationsByOwnerId(owner.getId());
-        reservations.stream().forEach((reservation -> {
-            reservation.getReservationEntity().getServices().stream()
-                    .forEach(service -> service.setReservationEntity(null));
-            reservation.getReservationEntity().getLocation().setReservationEntity(null);
-        }));
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
+        var dtos = ReservationMapper.toCalendarDtos(reservations);
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
 }

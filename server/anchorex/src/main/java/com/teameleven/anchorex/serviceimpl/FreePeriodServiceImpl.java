@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -145,6 +146,11 @@ public class FreePeriodServiceImpl implements FreePeriodService {
     public List<FreePeriod> getAllFreePeriods() {
         List<FreePeriod> freePeriods = freePeriodRepository.findAll();
         return freePeriods;
+    }
+
+    @Override
+    public Collection<FreePeriod> getAllFreePeriodsForEntity(Long entityId) {
+        return this.freePeriodRepository.getFreePeriods(entityId);
     }
 
     private void removeFreePeriodFromReservationDates(FreePeriod freePeriod, Date startDate, Date endDate){

@@ -2,11 +2,15 @@ package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.dto.ReservationCalendarDto;
 import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
+import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,5 +81,25 @@ public class ReservationMapper {
         reservationDTO.setReservationType(reservation.getReservationEntity().getReservationEntityType());
 
         return reservationDTO;
+    }
+
+    public static ReservationCalendarDto toCalendarDto(Reservation model) {
+        return ReservationCalendarDto.builder()
+                .id(model.getId())
+                .startDate(model.getStartDate())
+                .endDate(model.getEndDate())
+                .reservationEntityId(model.getReservationEntity().getId())
+                .reservationEntityName(model.getReservationEntity().getName())
+                .userId(model.getUser() == null ? null : model.getUser().getId())
+                .userFullName(model.getUser() == null ? null : model.getUser().getFirstName() + " " + model.getUser().getLastName())
+                .build();
+    }
+
+    public static Collection<ReservationCalendarDto> toCalendarDtos(Collection<Reservation> models) {
+        Collection<ReservationCalendarDto> dtos = new ArrayList<ReservationCalendarDto>();
+        for (var model : models){
+            dtos.add(toCalendarDto(model));
+        }
+        return dtos;
     }
 }

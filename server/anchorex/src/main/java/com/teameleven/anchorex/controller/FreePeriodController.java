@@ -36,4 +36,12 @@ public class FreePeriodController {
         return new ResponseEntity<>(tests, HttpStatus.OK);
     }
 
+
+    @GetMapping(path = "/{entityId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<FreePeriod>> findAllForEntity(@PathVariable("entityId") Long entityId) {
+        var periods = freePeriodService.getAllFreePeriodsForEntity(entityId);
+        periods.forEach(p -> p.setReservationEntity(null));
+        return new ResponseEntity<>(periods, HttpStatus.OK);
+    }
+
 }

@@ -184,6 +184,8 @@ const FishingLessonAction = () => {
   };
 
   const checkConditions = () => {
+    console.log(startDate);
+    console.log(endDate);
     if (startDate >= endDate || startDate <= new Date()) {
       window.alert('Bad dates!');
       return false;
@@ -417,6 +419,31 @@ c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.66
           <div className='md:flex md:items-center mb-6'>
             <div className='md:w-1/3'>
               <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
+                Start time:
+              </label>
+            </div>
+            <div className='md:w-2/3'>
+              <input
+                className='input'
+                onChange={(event) => {
+                  const val = event.target.value;
+                  if (val.match(/[0-9][0-9]:[0-9][0-9]/)) {
+                    console.log(val);
+                    const hours = val.split(':')[0];
+                    const minutes = val.split(':')[1];
+                    console.log(hours, minutes);
+                    const d = startDate;
+                    d.setHours(parseInt(hours));
+                    d.setMinutes(parseInt(minutes));
+                    setStartDate(d);
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className='md:flex md:items-center mb-6'>
+            <div className='md:w-1/3'>
+              <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
                 Action end date
               </label>
             </div>
@@ -427,6 +454,31 @@ c-3.682,0-6.667-2.984-6.667-6.666s2.985-6.667,6.667-6.667s6.667,2.985,6.667,6.66
                   setEndDate(d);
                 }}
               ></DatePicker>
+            </div>
+          </div>
+          <div className='md:flex md:items-center mb-6'>
+            <div className='md:w-1/3'>
+              <label className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'>
+                End time:
+              </label>
+            </div>
+            <div className='md:w-2/3'>
+              <input
+                className='input'
+                onChange={(event) => {
+                  const val = event.target.value;
+                  if (val.match(/[0-9][0-9]:[0-9][0-9]/)) {
+                    console.log(val);
+                    const hours = val.split(':')[0];
+                    const minutes = val.split(':')[1];
+                    console.log(hours, minutes);
+                    const d = endDate;
+                    d.setHours(parseInt(hours));
+                    d.setMinutes(parseInt(minutes));
+                    setEndDate(d);
+                  }
+                }}
+              />
             </div>
           </div>
 

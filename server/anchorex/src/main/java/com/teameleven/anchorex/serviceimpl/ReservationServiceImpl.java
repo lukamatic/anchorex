@@ -8,7 +8,6 @@ import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
 import com.teameleven.anchorex.dto.*;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
-import com.teameleven.anchorex.enums.ReviewStatus;
 import com.teameleven.anchorex.enums.RevisionStatus;
 import com.teameleven.anchorex.enums.ComplaintStatus;
 import com.teameleven.anchorex.mapper.ReportMapper;
@@ -55,15 +54,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final BusinessConfigurationRepository businessConfigurationRepository;
 
-
-
-    public ReservationServiceImpl(ReservationRepository reservationRepository,
-                                  ReservationEntityRepository entityRepository,
-                                  ReservationReportRepository reportRepository, UserRepository userRepository,
-                                  RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
-                                  UserService userService, FreePeriodService freePeriodService, BusinessConfigurationRepository businessConfigurationRepository) {
-                                  ComplaintRepository complaintRepository, BusinessConfigurationRepository businessConfigurationRepository) {
-
+    public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationEntityRepository entityRepository, ReservationReportRepository reportRepository, UserRepository userRepository, RevisionRepository revisionRepository, UserService userService, FreePeriodService freePeriodService, ComplaintRepository complaintRepository, BusinessConfigurationRepository businessConfigurationRepository) {
         this.reservationRepository = reservationRepository;
         this.entityRepository = entityRepository;
         this.reportRepository = reportRepository;
@@ -71,7 +62,6 @@ public class ReservationServiceImpl implements ReservationService {
         this.revisionRepository = revisionRepository;
         this.userService = userService;
         this.freePeriodService = freePeriodService;
-        this.reservationEntityRepository = reservationEntityRepository;
         this.complaintRepository = complaintRepository;
         this.businessConfigurationRepository = businessConfigurationRepository;
     }
@@ -298,7 +288,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void crateRevision(RevisionDTO revisionDTO) {
         Revision revision = RevisionMapper.RevisionDtoToRevision(revisionDTO);
-        revision.setReservationEntity(reservationEntityRepository.getOne(revisionDTO.getReservationId()));
+        revision.setReservationEntity(entityRepository.getOne(revisionDTO.getReservationId()));
         revision.setStatus(RevisionStatus.PENDING);
         revisionRepository.save(revision);
     }
@@ -311,7 +301,7 @@ public class ReservationServiceImpl implements ReservationService {
     public void createComplaint(ComplaintDTO complaintDTO) {
         Complaint complaint = new Complaint();
         complaint.setComment(complaintDTO.getComment());
-        complaint.setReservation(reservationEntityRepository.getOne(complaintDTO.getReservationId()));
+        complaint.setReservation(entityRepository.getOne(complaintDTO.getReservationId()));
         complaint.setUser(userRepository.findOneById(complaintDTO.getUserId()));
         complaint.setStatus(ComplaintStatus.PENDING);
         complaintRepository.save(complaint);

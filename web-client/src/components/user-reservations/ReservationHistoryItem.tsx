@@ -43,7 +43,7 @@ const ReservationHistoryItem = (props: { reservation: any; index: number }) => {
 
 	const getColor = (text: string) => {
 		if (text === 'PENDING') return 'bg-yellow-200';
-		else if (text === 'DECLINED') return 'bg-red-200';
+		else if (text === 'REJECTED') return 'bg-red-200';
 		else return 'bg-green-200';
 	};
 

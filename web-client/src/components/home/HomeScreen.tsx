@@ -86,7 +86,9 @@ const HomeScreen = () => {
 		},
 		{
 			title: 'Promotions',
-			callback: () => {},
+			callback: () => {
+				history.push('/subscriptions');
+			},
 		},
 	];
 

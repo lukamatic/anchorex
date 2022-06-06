@@ -47,6 +47,7 @@ import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
 import MyCalendar from './MyCalendar';
 import UserComplaintsScreen from './user-reservations/UserComplaints';
+import UserSubscriptionScreen from './user-reservations/UserSubscriptionsScreen';
 
 const MyRouter = () => (
 	<Router>
@@ -218,6 +219,9 @@ const MyRouter = () => (
 			</Route>
 			<Route path='/complaints'>
 				<UserComplaintsScreen />
+			</Route>
+			<Route path='/subscriptions'>
+				<UserSubscriptionScreen />
 			</Route>
 		</Switch>
 	</Router>

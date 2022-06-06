@@ -47,6 +47,8 @@ import DeleteAccount from './DeleteAccount';
 import AccountDeletionRequests from './account-deletion-requests/AccountDeletionRequests';
 import LoyaltyProgramSettings from './LoyaltyProgramSettings';
 import AdminRevisions from './admin-revisions/AdminRevisions';
+import UserComplaintsScreen from './user-reservations/UserComplaints';
+import UserReservationsPage from './user-reservations/UserReservationsPage';
 
 const MyRouter = () => (
   <Router>
@@ -229,6 +231,18 @@ const MyRouter = () => (
 
       <Route path='/userHistory'>
         <UserHistory />
+      </Route>
+      <Route path='/userReservations'>
+        <UserReservationsPage />
+      </Route>
+      <Route path='/userHistory'>
+        <UserHistory />
+      </Route>
+      <Route path='/calendar'>
+        <MyCalendar />
+      </Route>
+      <Route path='/complaints'>
+        <UserComplaintsScreen />
       </Route>
     </Switch>
   </Router>

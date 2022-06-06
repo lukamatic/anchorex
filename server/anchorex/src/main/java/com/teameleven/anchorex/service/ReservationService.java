@@ -2,10 +2,7 @@ package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationReport;
-import com.teameleven.anchorex.dto.DateRangeDTO;
-import com.teameleven.anchorex.dto.ReservationDTO;
-import com.teameleven.anchorex.dto.ReservationReportDTO;
-import com.teameleven.anchorex.dto.RevisionDTO;
+import com.teameleven.anchorex.dto.*;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
 
@@ -49,4 +46,5 @@ public interface ReservationService {
 
     Collection<Reservation> getAllReservationsByOwnerId(Long ownerId);
 
+    void createComplaint(ComplaintDTO complaintDTO);
 }

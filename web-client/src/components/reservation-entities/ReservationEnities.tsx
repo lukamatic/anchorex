@@ -45,7 +45,7 @@ const ReservationEntities = (props: {
                         to={'/lodge/' + entity.id}
                         className='text-center hover:underline'
                       >
-                        {entity.name}
+                        {entity.name} - rating:{entity.averageRating}
                       </Link>
                     </div>
                   )}

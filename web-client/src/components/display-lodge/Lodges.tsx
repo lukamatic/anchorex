@@ -34,6 +34,7 @@ const Lodges = () => {
         })
         .then((response) => {
           setLodges(response.data);
+          console.log(response.data)
         });
     };
   }, []);

@@ -1,10 +1,14 @@
 import axios from 'axios';
+// @ts-ignore
+import Calendar from 'react-awesome-calendar';
 import { format } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 import DatePicker from '../common/DatePicker';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
+import { CalendarEventColors } from '../../utils/calendar-event-colors.enum';
 
 const LodgeCalendar = () => {
   const params: { id: string } = useParams();
@@ -16,6 +20,8 @@ const LodgeCalendar = () => {
   const [userId, setUserID] = useState(0);
   const [personNumber, setPersonNumber] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
+  const [fetched, setFetched] = useState(false);
   const [regularServices, setRegularServices] = useState([
     { id: 0, info: '', price: 0, type: '' },
   ]);
@@ -81,6 +87,68 @@ const LodgeCalendar = () => {
       .then((response) => {
         setReservations(response.data);
       });
+
+      const fetchReservations = async () => {
+        const response = await fetch(
+          `/api/reservation/allReservations/${params.id}`,
+          {
+            headers: [
+              ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+            ],
+          }
+        );
+  
+        switch (response.status) {
+          case HttpStatusCode.OK:
+            const reservations = await response.json();
+            reservations.map((reservation: any) => {
+              const event = {
+                id: (reservation.userId ? 'r' : 'a') + reservation.id,
+                color: reservation.userId
+                  ? CalendarEventColors.RESERVATION
+                  : CalendarEventColors.ACTION,
+                from: reservation.startDate,
+                to: reservation.endDate,
+                title: `${reservation.userFullName || 'Action'} - ${
+                  reservation.reservationEntityName
+                }`,
+                userId: reservation.userId
+              };
+              calendarEvents.push(event);
+            });
+            break;
+          default:
+            alert('Unknown error occurred.');
+        }
+  
+        const res = await fetch(`/api/freePeriod/` + params.id, {
+          headers: [
+            ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+          ],
+        });
+  
+        switch (res.status) {
+          case HttpStatusCode.OK:
+            const periods = await res.json();
+            periods.map((period: any) => {
+              const event = {
+                id: 'fp' + period.id,
+                color: CalendarEventColors.FREE_PERIOD,
+                from: period.startDate,
+                to: period.endDate,
+                title: ``,
+              };
+              calendarEvents.push(event);
+            });
+            break;
+          default:
+            alert('Unknown error occurred.');
+        }
+  
+        setFetched(true);
+      };
+  
+      fetchReservations();
   }, []);
 
   const setLodgeServices = (
@@ -448,6 +516,7 @@ const LodgeCalendar = () => {
           </div>
         </nav>
       </div>
+      
       <div className='w-full mt-12 mx-auto max-w-xl'>
         <h2 className='text-xl font-bold leading-7 text-gray-900 mb-8 sm:text-3xl sm:truncate'>
           Add free period
@@ -485,6 +554,11 @@ const LodgeCalendar = () => {
             </button>
           </div>
         </form>
+        {fetched && (
+          <Calendar
+            events={calendarEvents}
+          />
+        )}
         <h2 className='text-xl font-bold leading-7 text-gray-900 mb-8 sm:text-3xl sm:truncate'>
           All reservations
         </h2>

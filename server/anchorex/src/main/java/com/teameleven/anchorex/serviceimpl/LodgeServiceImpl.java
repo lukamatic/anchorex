@@ -144,6 +144,7 @@ public class LodgeServiceImpl implements LodgeService {
             LodgeDTO lodgeDTO = new LodgeDTO();
             lodgeDTO.setId(lodge.getId());
             lodgeDTO.setName(lodge.getName());
+            lodgeDTO.setAverageRating(lodge.getAverageRating());
             lodgesDTO.add(lodgeDTO);
         }
         return lodgesDTO;

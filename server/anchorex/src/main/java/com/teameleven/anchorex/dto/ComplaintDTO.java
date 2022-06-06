@@ -1,7 +1,5 @@
 package com.teameleven.anchorex.dto;
 
-import com.teameleven.anchorex.enums.ReviewStatus;
-
 public class ComplaintDTO {
 
     private Long id;

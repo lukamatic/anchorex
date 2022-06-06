@@ -7,7 +7,7 @@ import TextInput from '../common/TextInput';
 import SignupValidation from '../../validations/signup-validation';
 import LeftArrow from '../../icons/LeftArrow';
 import { useHistory } from 'react-router-dom';
-import { getUserByTokenAsync, patchUser } from '../../server/service';
+import { getLoyaltyInfoAsync, getUserByTokenAsync, patchUser } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import LoadingSpinner from '../common/LoadingSpinner';
 const ProfileScreen = () => {
@@ -16,21 +16,23 @@ const ProfileScreen = () => {
 
 	const [userData, setUserData] = useState<CreateUserDto>(userDetails);
 	const [errorMessage, setErrorMessage] = useState<any>({});
+	const [loyaltyData, setLoyaltyData] = useState<any>({});
 	const [errorText, setErrorText] = useState<string>('');
 	const [successText, setSuccessText] = useState<string>('');
 	const [fetching, setFetching] = useState(false);
 	const signUpValidation = new SignupValidation();
 
-	// useEffect(() => {
-	// 	loadUserData();
-	// }, []);
+	useEffect(() => {
+		loadUserLoyaltyInfo();
+	}, []);
 
-	// const loadUserData = async () => {
-	// 	const resp = await getUserByTokenAsync();
-	// 	if (resp.status === HttpStatusCode.OK) {
-	// 		setUserData(resp.data);
-	// 	}
-	// };
+	const loadUserLoyaltyInfo = async () => {
+		const resp = await getLoyaltyInfoAsync();
+		if (resp.status === HttpStatusCode.OK) {
+			console.log(resp.data);
+			setLoyaltyData(resp.data);
+		}
+	};
 
 	const handleChange = (e: any, field: string, validation: any) => {
 		const value = e.target.value;
@@ -120,14 +122,18 @@ const ProfileScreen = () => {
 								<p className='ml-2 text-gray-500'>(optional)</p>
 								<textarea className='input resize-none w-full h-40' maxLength={150} placeholder='Say something about yourself' onChange={(e: any) => handleChange(e, 'biography', null)} />
 							</div>
-							<div className=' bg-white  shadow-md rounded-md w-72 border-4 border-blue-200 flex flex-col top-8 p-8'>
+							<div className=' bg-white  shadow-md rounded-md w-72 border-4 border-blue-200 flex flex-col top-8 px-8 pb-8 pt-6'>
 								<div>
-									<p className='text-3xl text-gray-500'>Loyalty program</p>
-									<p className='text-xl text-gray-500 text-bold'>GOLD</p>
+									<p className='text-2xl text-gray-500'>Loyalty program</p>
+									<p className='text-xl text-gray-600 text-bold'>{loyaltyData.loyaltyStatus}</p>
 								</div>
 								<div>
-									<p className='text-2xl text-gray-500'>Points</p>
-									<p className='text-xl text-gray-500 text-bold'>30</p>
+									<p className='text-xl text-gray-400'>Points</p>
+									<p className='text-md text-gray-500 text-bold'>{loyaltyData.points}</p>
+								</div>
+								<div>
+									<p className='text-xl text-gray-400'>Discount</p>
+									<p className='text-md text-gray-500 text-bold'>{loyaltyData.discount * 100}%</p>
 								</div>
 							</div>
 							<div className='flex-1'></div>

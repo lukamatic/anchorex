@@ -64,8 +64,8 @@ public class ReservationServiceImpl implements ReservationService {
         this.freePeriodService = freePeriodService;
         this.complaintRepository = complaintRepository;
         this.businessConfigurationRepository = businessConfigurationRepository;
-    }
 
+    }
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     @Override
     public Reservation createReservation(ReservationDTO reservationDTO) {
@@ -74,15 +74,9 @@ public class ReservationServiceImpl implements ReservationService {
             var reservationEntity = entityRepository.getLocked(reservationDTO.getReservationEntityId());
             reservation.setReservationEntity(reservationEntity);
             reservation.setOwnerId(reservationEntity.getOwnerId());
-            if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
-                    reservationDTO.getReservationEntityId())){
-                throw new PessimisticLockingFailureException("Entity already reserved");
-            }
-            else{
-                reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-                reservationRepository.save(reservation);
-                return reservation;
-            }
+            reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+            reservationRepository.save(reservation);
+            return reservation;
         }catch(PessimisticLockingFailureException e) {
             System.out.println(e.getMessage());
             throw new PessimisticLockingFailureException("Entity already reserved");
@@ -100,15 +94,9 @@ public class ReservationServiceImpl implements ReservationService {
             personalReservation.setUser(user);
             personalReservation.setReservationEntity(reservationEntity);
             personalReservation.setOwnerId(reservationEntity.getOwnerId());
-            if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
-                    reservationDTO.getReservationEntityId())){
-                throw new PessimisticLockingFailureException("Entity already reserved");
-            }
-            else{
-                personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-                reservationRepository.save(personalReservation);
-                return personalReservation;
-            }
+            personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+            reservationRepository.save(personalReservation);
+            return personalReservation;
         }catch(PessimisticLockingFailureException e) {
             System.out.println(e.getMessage());
             throw new PessimisticLockingFailureException("Entity already reserved");
@@ -253,7 +241,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-
     public List<ClientReservationDTO> getAllReservations() {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations = reservationRepository.getAllUsedReservations();
@@ -290,6 +277,7 @@ public class ReservationServiceImpl implements ReservationService {
         Revision revision = RevisionMapper.RevisionDtoToRevision(revisionDTO);
         revision.setReservationEntity(entityRepository.getOne(revisionDTO.getReservationId()));
         revision.setStatus(RevisionStatus.PENDING);
+        revision.setVersion(0);
         revisionRepository.save(revision);
     }
 
@@ -304,7 +292,7 @@ public class ReservationServiceImpl implements ReservationService {
         complaint.setReservation(entityRepository.getOne(complaintDTO.getReservationId()));
         complaint.setUser(userRepository.findOneById(complaintDTO.getUserId()));
         complaint.setStatus(ComplaintStatus.PENDING);
+        complaint.setVersion(0);
         complaintRepository.save(complaint);
     }
-
 }

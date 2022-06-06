@@ -47,3 +47,5 @@ INSERT INTO public.location ( address, city, country, latitude, longitude, reser
 INSERT INTO public.lodge (double_bedroom_number, four_bedroom_number, single_bedroom_number, id) VALUES (1, 0, 1, 2);
 
 INSERT INTO public.reservation (app_percentage, captain, discount, end_date, max_person_number, owner_id, price, reservation_entity_id, start_date, user_id) VALUES (20, false, 5, '2022-05-18 02:00:00', null, 4, 0, 1, '2022-05-16 02:00:00', 2);
+
+INSERT INTO public.complaint (comment, status, reservation_id, user_id, version) VALUES ('neki komentar', 0, 1, 2, 0);

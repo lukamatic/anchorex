@@ -34,6 +34,18 @@ public class Revision {
     @JoinColumn (name= "reservation_entity_id")
     private ReservationEntity reservationEntity;
 
+    @Version
+    @Column(name="version", nullable = false)
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public Revision() {
         super();
     }

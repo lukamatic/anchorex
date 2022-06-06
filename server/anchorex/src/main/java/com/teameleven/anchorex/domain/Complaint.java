@@ -40,6 +40,28 @@ public class Complaint {
     @JoinColumn (name= "reservation_id")
     private ReservationEntity reservation;
 
+    @Version
+    @Column(name="version", nullable = false)
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    private String reservationEntityName;
+
+    public String getReservationEntityName() {
+        return reservationEntityName;
+    }
+
+    public void setReservationEntityName(String reservationEntityName) {
+        this.reservationEntityName = reservationEntityName;
+    }
+
     public Long getId() {
         return id;
     }

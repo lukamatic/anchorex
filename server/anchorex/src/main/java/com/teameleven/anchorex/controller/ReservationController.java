@@ -62,7 +62,10 @@ public class ReservationController {
 
     @PostMapping(path = "/createReservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Reservation> create(@RequestBody ReservationDTO reservationDTO) {
-
+        if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
+                reservationDTO.getReservationEntityId())){
+            throw new PessimisticLockingFailureException("Entity already reserved");
+        }
         var reservation = reservationService.createReservation(reservationDTO);
         return new ResponseEntity<>(reservation, HttpStatus.CREATED);
     }
@@ -86,6 +89,10 @@ public class ReservationController {
 
     @PostMapping(path = "/createPersonalReservation", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createPersonalReservation(@RequestBody ReservationDTO reservationDTO) {
+        if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
+                reservationDTO.getReservationEntityId())){
+            throw new PessimisticLockingFailureException("Entity already reserved");
+        }
         var reservation = reservationService.createPersonalReservation(reservationDTO);
         return new ResponseEntity<>( HttpStatus.CREATED);
     }

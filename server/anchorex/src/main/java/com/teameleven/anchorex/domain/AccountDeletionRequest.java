@@ -27,4 +27,8 @@ public class AccountDeletionRequest {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "user_id")
     private User user;
+
+    @Version
+    @Column(name="version", nullable = false)
+    private Integer version;
 }

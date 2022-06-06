@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.ArrayList;
@@ -128,5 +129,17 @@ public class LodgeController {
         }
 
         return new ResponseEntity<>(retDto, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/{id}/images/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> addImages(@PathVariable("id") Long id, @RequestParam("files") MultipartFile[] files) {
+        lodgeService.addImages(id, files);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "images/remove/{imageId}")
+    public ResponseEntity<Void> removeImage(@PathVariable("imageId") Long imageId) {
+        lodgeService.removeImage(imageId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

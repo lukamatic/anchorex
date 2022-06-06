@@ -79,7 +79,7 @@ public class ReservationMapper {
         reservationDTO.setCaptain(reservation.isCaptain());
         reservationDTO.setUserId(reservation.getUser().getId());
         reservationDTO.setReservationType(reservation.getReservationEntity().getReservationEntityType());
-
+        reservationDTO.setReservationName(reservation.getReservationEntity().getName());
         return reservationDTO;
     }
 

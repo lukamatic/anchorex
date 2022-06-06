@@ -5,6 +5,7 @@ import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +18,6 @@ public interface LodgeService {
 
     List<Lodge> getAllLodges();
 
-
     void deleteLodge(Long id);
 
     Lodge getLodgeById(Long id);
@@ -29,4 +29,8 @@ public interface LodgeService {
     void addService(ServiceDTO service, Long id);
 
     List<Lodge> getFreeLodges(BookingItemsRequestDTO freePeriod);
+
+    void addImages(Long id, MultipartFile[] files);
+
+    void removeImage(Long imageId);
 }

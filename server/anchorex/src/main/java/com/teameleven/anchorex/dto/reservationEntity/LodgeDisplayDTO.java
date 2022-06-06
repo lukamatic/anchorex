@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.dto.reservationEntity;
 
 import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ReservationEntityImageDto;
 import com.teameleven.anchorex.dto.ServiceDTO;
 
 import java.util.Set;
@@ -15,6 +16,7 @@ public class LodgeDisplayDTO {
     private Integer doubleBedroomNumber;
     private Integer fourBedroomNumber;
     private Set<ServiceDTO> services;
+    private Set<ReservationEntityImageDto> images;
     private LocationDTO location;
     private Double averageRating;
 
@@ -108,5 +110,13 @@ public class LodgeDisplayDTO {
 
     public void setAverageRating(Double averageRating) {
         this.averageRating = averageRating;
+    }
+
+    public Set<ReservationEntityImageDto> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<ReservationEntityImageDto> images) {
+        this.images = images;
     }
 }

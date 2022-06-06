@@ -1,13 +1,83 @@
+import axios from 'axios';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import AuthContext from '../../context/auth-context';
+import { UserRole } from '../../model/user-role.enum';
+import { HttpStatusCode } from '../../utils/http-status-code.enum';
+import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
+import localStorageUtil from '../../utils/local-storage/local-storage-util';
 
 const LodgeDisplayImages = () => {
   const params: { id: string } = useParams();
-  const ent1 = require('./../../images/ent1.jpg');
-  const ent2 = require('./../../images/ent2.jpg');
-  const ent3 = require('./../../images/ent3.jpg');
-  const ext1 = require('./../../images/ext1.jpg');
-  const ext2 = require('./../../images/ext2.jpg');
-  const ext3 = require('./../../images/ext3.jpg');
+  const [entity, setEntity] = useState<any>();
+  const authContext = useContext(AuthContext);
+  const userRole = authContext.user.role;
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    axios
+      .get('/api/lodge/' + params.id, {
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+          Authorization:
+            'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+        },
+      })
+      .then((response) => {
+        setEntity(response.data);
+        console.log(response.data);
+      });
+  }, []);
+
+  const uploadPhotos = () => {
+    const url = `/api/lodge/${params.id}/images/add`;
+    const body = new FormData();
+    const headers = [
+      ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+    ];
+
+    const files = fileInput.current!.files!;
+
+    for (let i = 0; i < files.length; i++) {
+      body.append(`files`, files[i]);
+    }
+
+    fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: body,
+    }).then((response) => {
+      switch (response.status) {
+        case HttpStatusCode.OK:
+          window.location.reload();
+          break;
+        default:
+          alert('Unknown error occurred');
+      }
+    });
+  };
+
+  const removeImage = async (imageId: number) => {
+    const url = `/api/lodge/images/remove/${imageId}`;
+    const headers = [
+      ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+    ];
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: headers,
+    });
+
+    switch (response.status) {
+      case HttpStatusCode.OK:
+        window.location.reload();
+        break;
+      default:
+        alert('Unknown error occurred');
+    }
+  };
+
 
   return (
     <div>
@@ -170,25 +240,35 @@ const LodgeDisplayImages = () => {
           </div>
         </nav>
       </div>
-      <div className='container grid grid-cols-3 gap-2 mx-auto w-full mt-12 ml-96 max-w-4xl'>
-        <div className='w-full rounded'>
-          <img src={ext1.default} alt='' />
-        </div>
-        <div className='w-full rounded'>
-          <img src={ext2.default} alt='' />
-        </div>
-        <div className='w-full rounded'>
-          <img src={ext3.default} alt='' />
-        </div>
-        <div className='w-full rounded'>
-          <img src={ent1.default} alt='' />
-        </div>
-        <div className='w-full rounded'>
-          <img src={ent2.default} alt='' />
-        </div>
-        <div className='w-full rounded'>
-          <img src={ent3.default} alt='' />
-        </div>
+      <div className='container flex flex-col mx-auto w-full mt-12 ml-96 max-w-4xl'>
+        {entity && (
+          <div className='flex flex-col mr-5'>
+            {entity.images?.map((image: any) => (
+              <div className='flex mb-7 items-center' key={image.id}>
+                <img src={image.url} />
+                <button
+                  className='btnWhiteBlue'
+                  onClick={() => removeImage(image.id)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        {authContext.user.role === UserRole.LODGE_OWNER && (
+          <div className='mb-20'>
+            <input
+              type='file'
+              accept='.png,.jpg,.jpeg,.mp4'
+              multiple
+              ref={fileInput}
+            />
+            <button className='btnBlueWhite mt-5' onClick={uploadPhotos}>
+              Upload images
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 package com.teameleven.anchorex.controller;
 
+import com.teameleven.anchorex.domain.Complaint;
 import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.ReservationReport;
@@ -10,12 +11,10 @@ import com.teameleven.anchorex.enums.ReservationEntityType;
 import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ReservationMapper;
 import com.teameleven.anchorex.repository.RevisionRepository;
-import com.teameleven.anchorex.service.FreePeriodService;
-import com.teameleven.anchorex.service.LodgeService;
-import com.teameleven.anchorex.service.ReservationService;
-import com.teameleven.anchorex.service.UserService;
+import com.teameleven.anchorex.service.*;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,23 +47,23 @@ public class ReservationController {
     @Autowired
     private RevisionRepository revisionRepository;
 
+    @Autowired
+    private ComplaintService complaintService;
+
     public ReservationController(ReservationService reservationService, FreePeriodService freePeriodService,
-            UserService userService, LodgeService lodgeService, RevisionRepository revisionRepository) {
+            UserService userService, LodgeService lodgeService, RevisionRepository revisionRepository,ComplaintService complaintService) {
         this.reservationService = reservationService;
         this.freePeriodService = freePeriodService;
         this.userService = userService;
         this.lodgeService = lodgeService;
         this.revisionRepository = revisionRepository;
+        this.complaintService = complaintService;
     }
 
     @PostMapping(path = "/createReservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Reservation> create(@RequestBody ReservationDTO reservationDTO) {
-        if (!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
-                reservationDTO.getReservationEntityId())) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-        var reservation = reservationService.createReservation(reservationDTO);
 
+        var reservation = reservationService.createReservation(reservationDTO);
         return new ResponseEntity<>(reservation, HttpStatus.CREATED);
     }
 
@@ -87,10 +86,6 @@ public class ReservationController {
 
     @PostMapping(path = "/createPersonalReservation", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createPersonalReservation(@RequestBody ReservationDTO reservationDTO) {
-        if (!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
-                reservationDTO.getReservationEntityId())) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
         var reservation = reservationService.createPersonalReservation(reservationDTO);
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
@@ -198,6 +193,19 @@ public class ReservationController {
     public ResponseEntity<String> createReview(@RequestBody RevisionDTO revisionDTO) {
         reservationService.crateRevision(revisionDTO);
         return new ResponseEntity<>("Ok", HttpStatus.OK);
+    }
+
+
+    @PostMapping(path = "/createComplaint", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> createComplaint(@RequestBody ComplaintDTO complaintDTO) {
+        reservationService.createComplaint(complaintDTO);
+        return new ResponseEntity<>("Ok", HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/complaints/{userId}")
+    public ResponseEntity<Collection<FullClientComplaintDTO>> getUserComplaints(@PathVariable Long userId) {
+        var complaints = complaintService.findComplaintsForUser(userId);
+        return new ResponseEntity<>(complaints, HttpStatus.OK);
     }
 
     @GetMapping(path = "/appRevenue", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

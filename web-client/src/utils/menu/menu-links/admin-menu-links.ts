@@ -2,6 +2,7 @@ import MenuLink from '../../../model/menu-link';
 
 export const AdminMenuLinks: MenuLink[] = [
   { pathname: '/serviceSignupRequests', text: 'Service signup requests' },
+  { pathname: '/accountDeletionRequests', text: 'Account deletion requests' },
   { pathname: '/newAdmin', text: 'New admin' },
   { pathname: '/business', text: 'Business' },
   { pathname: '/adminUsers', text: 'Users' },
@@ -9,4 +10,6 @@ export const AdminMenuLinks: MenuLink[] = [
   { pathname: '/adminShips', text: 'Ships' },
   { pathname: '/adminFishingLessons', text: 'Fishing lessons' },
   { pathname: '/adminReports', text: 'Reports' },
+  { pathname: '/adminRevisions', text: 'Revisions' },
+  { pathname: '/loyaltyProgramSettings', text: 'Loyalty program settings' },
 ];

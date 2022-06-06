@@ -11,15 +11,19 @@ import com.teameleven.anchorex.repository.UserRepository;
 import com.teameleven.anchorex.service.*;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.UUID;
 
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
@@ -101,11 +105,16 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Transactional
 	@Override
 	public void incrementPenaltyCount(Long userId) {
-		var userToUpdate = this.userRepository.findById(userId).orElse(null);
-		userToUpdate.setPenaltyCount(userToUpdate.getPenaltyCount() + 1);
-		this.userRepository.save(userToUpdate);
+		try{
+			var userToUpdate = this.userRepository.findById(userId).orElse(null);
+			userToUpdate.setPenaltyCount(userToUpdate.getPenaltyCount() + 1);
+			this.userRepository.save(userToUpdate);
+		}catch(OptimisticLockingFailureException e){
+			throw new OptimisticLockingFailureException("Optimistic lock exception");
+		}
 	}
 
 	@Override

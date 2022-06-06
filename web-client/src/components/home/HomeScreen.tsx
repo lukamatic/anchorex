@@ -79,12 +79,16 @@ const HomeScreen = () => {
 			callback: () => {},
 		},
 		{
-			title: 'Reports',
-			callback: () => {},
+			title: 'Complaints',
+			callback: () => {
+				history.push('/complaints');
+			},
 		},
 		{
 			title: 'Promotions',
-			callback: () => {},
+			callback: () => {
+				history.push('/subscriptions');
+			},
 		},
 	];
 

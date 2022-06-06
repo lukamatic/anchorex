@@ -18,6 +18,7 @@ const InstructorCalendar = () => {
     entityId: searchParams.get('entityId'),
   };
 
+  const [userID, setUserID] = useState(0);
   const [showReservationModal, setShowReservationModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -92,6 +93,7 @@ const InstructorCalendar = () => {
               title: `${reservation.userFullName || 'Action'} - ${
                 reservation.reservationEntityName
               }`,
+              userId: reservation.userId
             };
             calendarEvents.push(event);
           });
@@ -136,6 +138,8 @@ const InstructorCalendar = () => {
         <PersonalReservationModal
           entityId={params.entityId}
           setShowModal={setShowReservationModal}
+          entity="fishingLesson"
+          userId={userID}
         />
       )}
       {showReportModal && (
@@ -189,6 +193,7 @@ const InstructorCalendar = () => {
                   new Date() > new Date(event.from) &&
                   new Date() < new Date(event.to)
                 ) {
+                  setUserID(event.userId)
                   setShowReservationModal(true);
                 } else if (new Date() > new Date(event.to)) {
                   setShowReportModal(true);

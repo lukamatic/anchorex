@@ -8,7 +8,6 @@ import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
 import com.teameleven.anchorex.dto.*;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
-import com.teameleven.anchorex.enums.ReviewStatus;
 import com.teameleven.anchorex.enums.RevisionStatus;
 import com.teameleven.anchorex.enums.ComplaintStatus;
 import com.teameleven.anchorex.mapper.ReportMapper;
@@ -61,8 +60,7 @@ public class ReservationServiceImpl implements ReservationService {
                                   ReservationEntityRepository entityRepository,
                                   ReservationReportRepository reportRepository, UserRepository userRepository,
                                   RevisionRepository revisionRepository, ReservationEntityRepository reservationEntityRepository,
-                                  UserService userService, FreePeriodService freePeriodService, BusinessConfigurationRepository businessConfigurationRepository) {
-                                  ComplaintRepository complaintRepository, BusinessConfigurationRepository businessConfigurationRepository) {
+                                  UserService userService, FreePeriodService freePeriodService, BusinessConfigurationRepository businessConfigurationRepository, ComplaintRepository complaintRepository) {
 
         this.reservationRepository = reservationRepository;
         this.entityRepository = entityRepository;
@@ -71,11 +69,10 @@ public class ReservationServiceImpl implements ReservationService {
         this.revisionRepository = revisionRepository;
         this.userService = userService;
         this.freePeriodService = freePeriodService;
-        this.reservationEntityRepository = reservationEntityRepository;
         this.complaintRepository = complaintRepository;
         this.businessConfigurationRepository = businessConfigurationRepository;
-    }
 
+    }
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     @Override
     public Reservation createReservation(ReservationDTO reservationDTO) {
@@ -84,15 +81,9 @@ public class ReservationServiceImpl implements ReservationService {
             var reservationEntity = entityRepository.getLocked(reservationDTO.getReservationEntityId());
             reservation.setReservationEntity(reservationEntity);
             reservation.setOwnerId(reservationEntity.getOwnerId());
-            if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
-                    reservationDTO.getReservationEntityId())){
-                throw new PessimisticLockingFailureException("Entity already reserved");
-            }
-            else{
-                reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-                reservationRepository.save(reservation);
-                return reservation;
-            }
+            reservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+            reservationRepository.save(reservation);
+            return reservation;
         }catch(PessimisticLockingFailureException e) {
             System.out.println(e.getMessage());
             throw new PessimisticLockingFailureException("Entity already reserved");
@@ -110,15 +101,9 @@ public class ReservationServiceImpl implements ReservationService {
             personalReservation.setUser(user);
             personalReservation.setReservationEntity(reservationEntity);
             personalReservation.setOwnerId(reservationEntity.getOwnerId());
-            if(!freePeriodService.checkReservationDates(reservationDTO.getStartDate(), reservationDTO.getEndDate(),
-                    reservationDTO.getReservationEntityId())){
-                throw new PessimisticLockingFailureException("Entity already reserved");
-            }
-            else{
-                personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
-                reservationRepository.save(personalReservation);
-                return personalReservation;
-            }
+            personalReservation.setAppPercentage(businessConfigurationRepository.findById(1L).get().getAppPercentage());
+            reservationRepository.save(personalReservation);
+            return personalReservation;
         }catch(PessimisticLockingFailureException e) {
             System.out.println(e.getMessage());
             throw new PessimisticLockingFailureException("Entity already reserved");
@@ -263,7 +248,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-
     public List<ClientReservationDTO> getAllReservations() {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations = reservationRepository.getAllUsedReservations();
@@ -298,7 +282,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void crateRevision(RevisionDTO revisionDTO) {
         Revision revision = RevisionMapper.RevisionDtoToRevision(revisionDTO);
-        revision.setReservationEntity(reservationEntityRepository.getOne(revisionDTO.getReservationId()));
+        revision.setReservationEntity(entityRepository.getOne(revisionDTO.getReservationId()));
         revision.setStatus(RevisionStatus.PENDING);
         revisionRepository.save(revision);
     }
@@ -311,10 +295,9 @@ public class ReservationServiceImpl implements ReservationService {
     public void createComplaint(ComplaintDTO complaintDTO) {
         Complaint complaint = new Complaint();
         complaint.setComment(complaintDTO.getComment());
-        complaint.setReservation(reservationEntityRepository.getOne(complaintDTO.getReservationId()));
+        complaint.setReservation(entityRepository.getOne(complaintDTO.getReservationId()));
         complaint.setUser(userRepository.findOneById(complaintDTO.getUserId()));
         complaint.setStatus(ComplaintStatus.PENDING);
         complaintRepository.save(complaint);
     }
-
 }

@@ -7,6 +7,8 @@ import DatePicker from './common/DatePicker';
 const PersonalReservationModal = (props: {
   entityId: string | null;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  entity: string;
+  userId: number;
 }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -26,7 +28,6 @@ const PersonalReservationModal = (props: {
   const [additionalServices, setAdditionalServices] = useState([
     { id: 0, type: '', info: '', price: 0 },
   ]);
-  const [userId, setUserID] = useState(0);
   const [maxPersonNumber, setMaxPersonNumber] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [services, setServices] = useState([
@@ -39,6 +40,7 @@ const PersonalReservationModal = (props: {
   ]);
 
   useEffect(() => {
+    console.log('PROPS' + props.userId)
     axios
       .get('/api/auth/email', {
         params: {
@@ -56,7 +58,7 @@ const PersonalReservationModal = (props: {
         setOwnerId(response.data.id);
       });
     axios
-      .get('/api/fishingLessons/' + props.entityId, {
+      .get('/api/' + props.entity + '/' + props.entityId, {
         headers: {
           Accept: 'application/json',
           'Content-type': 'application/json',
@@ -181,7 +183,7 @@ const PersonalReservationModal = (props: {
         services,
         reservationEntityId: props.entityId,
         captain,
-        userId: userId,
+        userId: props.userId,
       };
       console.log(reservation);
       axios

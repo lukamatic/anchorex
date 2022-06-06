@@ -69,11 +69,15 @@ const AdminComplaint = (props: {
         value={props.complaint.comment}
         disabled={true}
       />
-      <p>Admin answer:</p>
-      <textarea
-        className='input resize-none h-20 mx-7 mt-2 mb-1'
-        onChange={answerChangeHandler}
-      />
+      {props.complaint.status === 'PENDING' && (
+        <>
+          <p>Admin answer:</p>
+          <textarea
+            className='input resize-none h-20 mx-7 mt-2 mb-1'
+            onChange={answerChangeHandler}
+          />
+        </>
+      )}
       {fetching ? (
         <LoadingSpinner />
       ) : (

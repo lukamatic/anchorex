@@ -51,7 +51,7 @@ import AdminRevisions from './admin-revisions/AdminRevisions';
 import UserComplaintsScreen from './user-reservations/UserComplaints';
 import UserReservationsPage from './user-reservations/UserReservationsPage';
 import UserSubscriptionScreen from './user-reservations/UserSubscriptionsScreen';
-
+import AdminComplaints from './admin-complaints/AdminComplaints';
 
 const MyRouter = () => (
   <Router>
@@ -94,10 +94,10 @@ const MyRouter = () => (
       <Route path='/lodgeImages/:id'>
         <LodgeDisplayImages />
       </Route>
-      
-      <Route path ='/shipImages/:id'>
-				<ShipDisplayImages/>
-			</Route>
+
+      <Route path='/shipImages/:id'>
+        <ShipDisplayImages />
+      </Route>
       <Route path='/lodgePriceList/:id'>
         <LodgeDisplayPricelist />
       </Route>
@@ -187,6 +187,9 @@ const MyRouter = () => (
       </Route>
       <Route path='/adminRevisions'>
         <AdminRevisions />
+      </Route>
+      <Route path='/adminComplaints'>
+        <AdminComplaints />
       </Route>
 
       <Route path='/lodgeCalendar/:id'>

@@ -3,16 +3,16 @@ import { useHistory } from 'react-router-dom';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import LoadingSpinner from '../common/LoadingSpinner';
-import AdminComplaint from './AdminReport';
+import AdminComplaint from './AdminComplaint';
 
-const AdminReports = () => {
+const AdminComplaints = () => {
   const history = useHistory();
 
-  const [reports, setReports] = useState<any[]>();
+  const [complaints, setComplaints] = useState<any[]>();
   const [reportsBackup, setReportsBackup] = useState<any[]>();
 
   useEffect(() => {
-    fetch('/api/reservationReports/all', {
+    fetch('/api/complaints/all', {
       headers: [
         ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
       ],
@@ -20,7 +20,7 @@ const AdminReports = () => {
       switch (response.status) {
         case HttpStatusCode.OK:
           response.json().then((value) => {
-            setReports(value);
+            setComplaints(value);
             setReportsBackup(value);
           });
           break;
@@ -32,28 +32,23 @@ const AdminReports = () => {
   }, []);
 
   const onApproveReject = () => {
-    setReports(reports?.map((req) => req));
+    setComplaints(complaints?.map((req) => req));
   };
 
   const filter = (event: React.ChangeEvent<HTMLSelectElement>) => {
     switch (event.target.value) {
       case 'PENDING':
-        setReports(
+        setComplaints(
           reportsBackup?.filter((report) => report.status === 'PENDING')
         );
         break;
-      case 'APPROVED':
-        setReports(
-          reportsBackup?.filter((report) => report.status === 'APPROVED')
-        );
-        break;
-      case 'REJECTED':
-        setReports(
-          reportsBackup?.filter((report) => report.status === 'REJECTED')
+      case 'ANSWERED':
+        setComplaints(
+          reportsBackup?.filter((report) => report.status === 'ANSWERED')
         );
         break;
       default:
-        setReports(reportsBackup);
+        setComplaints(reportsBackup);
     }
   };
 
@@ -64,16 +59,15 @@ const AdminReports = () => {
         <select className='ml-2 input' onChange={filter}>
           <option value='ALL'>All</option>
           <option value='PENDING'>Pending</option>
-          <option value='APPROVED'>Approved</option>
-          <option value='REJECTED'>Rejected</option>
+          <option value='ANSWERED'>Answered</option>
         </select>
       </div>
-      {reports ? (
-        reports.map((report) => {
+      {complaints ? (
+        complaints.map((report) => {
           return (
             <AdminComplaint
               key={report.id}
-              report={report}
+              complaint={report}
               onApproveReject={onApproveReject}
             />
           );
@@ -85,4 +79,4 @@ const AdminReports = () => {
   );
 };
 
-export default AdminReports;
+export default AdminComplaints;

@@ -4,7 +4,10 @@ import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import LoadingSpinner from '../common/LoadingSpinner';
 
-const AdminReport = (props: { report: any; onApproveReject: () => void }) => {
+const AdminComplaint = (props: {
+  report: any;
+  onApproveReject: () => void;
+}) => {
   const history = useHistory();
 
   const [fetching, setFetching] = useState(false);
@@ -142,4 +145,4 @@ const AdminReport = (props: { report: any; onApproveReject: () => void }) => {
   );
 };
 
-export default AdminReport;
+export default AdminComplaint;

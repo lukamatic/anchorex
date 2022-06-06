@@ -1,6 +1,6 @@
 package com.teameleven.anchorex.dto;
 
-import com.teameleven.anchorex.enums.ReviewStatus;
+import com.teameleven.anchorex.enums.ComplaintStatus;
 
 public class ComplaintDTO {
 
@@ -9,7 +9,7 @@ public class ComplaintDTO {
     private Long userId;
     private String comment;
 
-    private ComplaintDTO status;
+    private ComplaintStatus status;
 
     public ComplaintDTO(){
         super();
@@ -43,11 +43,11 @@ public class ComplaintDTO {
         return comment;
     }
 
-    public ComplaintDTO getStatus() {
+    public ComplaintStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ComplaintDTO status) {
+    public void setStatus(ComplaintStatus status) {
         this.status = status;
     }
 

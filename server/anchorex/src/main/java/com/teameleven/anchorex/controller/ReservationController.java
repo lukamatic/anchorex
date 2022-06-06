@@ -215,11 +215,9 @@ public class ReservationController {
         return new ResponseEntity<>(total, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/instructorReservations", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Collection<ReservationCalendarDto>> getAllInstructorsReservations(Principal principal) {
-        var owner = this.userService.findByEmail(principal.getName());
-        var reservations = this.reservationService.getAllReservationsByOwnerId(owner.getId());
+    @GetMapping(path = "/allReservations/{entityId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationCalendarDto>> getAllRes(@PathVariable("entityId") Long entityId) {
+        var reservations = this.reservationService.getAllRes(entityId);
         var dtos = ReservationMapper.toCalendarDtos(reservations);
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }

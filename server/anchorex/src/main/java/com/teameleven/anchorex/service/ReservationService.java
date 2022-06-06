@@ -47,6 +47,6 @@ public interface ReservationService {
 
     void crateRevision(RevisionDTO revisionDTO);
 
-    Collection<Reservation> getAllReservationsByOwnerId(Long ownerId);
+    Collection<Reservation> getAllRes(Long entityId);
 
 }

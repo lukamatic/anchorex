@@ -178,7 +178,7 @@ const LodgeCalendar = () => {
           },
         })
         .then((response) => {
-          window.alert('evo me');
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error.response);

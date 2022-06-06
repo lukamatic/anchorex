@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { HttpStatusCode } from '../../utils/http-status-code.enum';
-import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
-import DatePicker from '../common/DatePicker';
+import { HttpStatusCode } from '../utils/http-status-code.enum';
+import { LocalStorageItem } from '../utils/local-storage/local-storage-item.enum';
+import DatePicker from './common/DatePicker';
 
-const InstructorCalendarModal = (props: {
+const PersonalReservationModal = (props: {
   entityId: string | null;
-  instructorId: string | null;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [startDate, setStartDate] = useState(new Date());
@@ -38,32 +37,8 @@ const InstructorCalendarModal = (props: {
       type: '',
     },
   ]);
-  const [reservations, setReservations] = useState([
-    {
-      startDate,
-      endDate,
-      maxPersonNumber,
-      price: 0,
-      discount,
-      services,
-      userId: userId,
-      userFullname: String,
-    },
-  ]);
 
   useEffect(() => {
-    axios
-      .get('/api/reservation/bookedReservations/' + props.instructorId, {
-        headers: {
-          Accept: 'application/json',
-          'Content-type': 'application/json',
-          Authorization:
-            'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
-        },
-      })
-      .then((response) => {
-        setReservations(response.data);
-      });
     axios
       .get('/api/auth/email', {
         params: {
@@ -374,4 +349,4 @@ const InstructorCalendarModal = (props: {
   );
 };
 
-export default InstructorCalendarModal;
+export default PersonalReservationModal;

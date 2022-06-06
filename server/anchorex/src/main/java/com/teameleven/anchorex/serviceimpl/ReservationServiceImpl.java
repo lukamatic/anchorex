@@ -267,8 +267,8 @@ public class ReservationServiceImpl implements ReservationService {
         revisionRepository.save(revision);
     }
 
-    public Collection<Reservation> getAllReservationsByOwnerId(Long ownerId) {
-        return this.reservationRepository.getAllReservationsByOwnerId(ownerId);
+    public Collection<Reservation> getAllRes(Long entityId) {
+        return this.reservationRepository.getAllRes(entityId);
     }
 
 }

@@ -6,14 +6,9 @@ import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.e
 import Calendar from 'react-awesome-calendar';
 import localStorageUtil from '../../utils/local-storage/local-storage-util';
 import InstructorCalendarNavbar from './InstructorCalendarNavbar';
-import InstructorCalendarModal from './InstructorCalendarModal';
+import PersonalReservationModal from '../PersonalReservationModal';
 import ReportModal from '../ReportModal';
-
-enum CalendarEventColors {
-  RESERVATION = '#fd3153',
-  ACTION = '#eb34bd',
-  FREE_PERIOD = '#34eb6b',
-}
+import { CalendarEventColors } from '../../utils/calendar-event-colors.enum';
 
 const InstructorCalendar = () => {
   console.log(window.location.search);
@@ -64,7 +59,7 @@ const InstructorCalendar = () => {
           }
         )
         .then((response) => {
-          window.alert('evo me');
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error.response);
@@ -74,11 +69,14 @@ const InstructorCalendar = () => {
 
   useEffect(() => {
     const fetchReservations = async () => {
-      const response = await fetch(`/api/reservation/instructorReservations`, {
-        headers: [
-          ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
-        ],
-      });
+      const response = await fetch(
+        `/api/reservation/allReservations/${params.entityId}`,
+        {
+          headers: [
+            ['Authorization', 'Bearer ' + localStorageUtil.getAccessToken()],
+          ],
+        }
+      );
 
       switch (response.status) {
         case HttpStatusCode.OK:
@@ -130,14 +128,13 @@ const InstructorCalendar = () => {
     };
 
     fetchReservations();
-  }, [params.instructorId]);
+  }, [params.entityId]);
 
   return (
     <div>
       {showReservationModal && (
-        <InstructorCalendarModal
+        <PersonalReservationModal
           entityId={params.entityId}
-          instructorId={params.instructorId}
           setShowModal={setShowReservationModal}
         />
       )}
@@ -201,7 +198,6 @@ const InstructorCalendar = () => {
           />
         )}
       </div>
-      {calendarEvents?.length && <div>{calendarEvents.length}</div>}
     </div>
   );
 };

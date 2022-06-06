@@ -44,13 +44,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    public void removeSubscription(Long id) {
+        subscriptionRepository.deleteById(id);
+    }
+
+
+    @Override
     public List<SubscriptionDetailsDTO> getSubscriptionsForUser(Long userId) {
         var subscriptions = subscriptionRepository.getSubscriptionsFromUser(userId);
         List<SubscriptionDetailsDTO> retArr = new ArrayList<>();
         for(var subscription: subscriptions){
             SubscriptionDetailsDTO sb = new SubscriptionDetailsDTO();
             sb.setReservationId(subscription.getReservationId());
-            sb.setReservationName(reservationEntityRepository.getName(subscription.getId()));
+            sb.setReservationName(reservationEntityRepository.getName(subscription.getReservationId()));
+            sb.setId(subscription.getId());
             retArr.add(sb);
         }
         return retArr;

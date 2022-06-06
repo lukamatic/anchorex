@@ -12,4 +12,7 @@ public interface SubscriptionService {
     List<SubscriptionDetailsDTO> getSubscriptionsForUser(Long userId);
 
     void createSubscription(SubscriptionDTO subscriptionDTO);
+
+
+    void removeSubscription(Long id);
 }

@@ -37,5 +37,9 @@ public class SubscriptionController {
         subscriptionService.createSubscription(subscriptionDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-}
+    @DeleteMapping(path="/{id}")
+    public ResponseEntity<Void> removeSubscription(@PathVariable Long id){
+        subscriptionService.removeSubscription(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    }

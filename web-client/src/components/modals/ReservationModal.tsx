@@ -6,6 +6,8 @@ import { useToasts } from 'react-toast-notifications';
 import AuthContext from '../../context/auth-context';
 import CheckCircleIcon from '../../icons/CheckCircleIcon';
 import CheckCircleIconEmpty from '../../icons/CheckCircleIconEmpty';
+import CloseBookmarkIcon from '../../icons/CloseBookmarkIcon';
+import OpenBookmarkIcon from '../../icons/OpenBookmarkIcon';
 import { createSubscriptionAsync, getQuickActionsAsync, getUserSubscriptions } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
@@ -254,8 +256,14 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 									{/*header*/}
 									<div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
 										<h3 className='text-3xl font-semibold'>{reservation?.name}</h3>
-										<div className='flex flex-row items-center'>
-											{subscribed ? <div>Subscribed :)</div> : <button onClick={subscribe}>Subscribe</button>}
+										<div className='flex flex-row items-end'>
+											{subscribed ? (
+												<CloseBookmarkIcon className='text-blue-300' />
+											) : (
+												<button className='text-blue-300 text-sm' onClick={subscribe}>
+													<OpenBookmarkIcon className='color-red-100' />
+												</button>
+											)}
 											<button className='p-1 ml-auto bg-transparent border-0 text-black  float-right text-3xl leading-none font-semibold outline-none focus:outline-none' onClick={onRequestClose}>
 												<span className='bg-transparent text-black  h-6 w-6 text-2xl block outline-none focus:outline-none'>×</span>
 											</button>

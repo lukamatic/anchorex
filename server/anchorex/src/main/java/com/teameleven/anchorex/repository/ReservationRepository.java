@@ -1,6 +1,8 @@
 package com.teameleven.anchorex.repository;
 
 import com.teameleven.anchorex.domain.Reservation;
+import com.teameleven.anchorex.dto.FreePeriodDatesDTO;
+import com.teameleven.anchorex.dto.FreePeriodInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -44,4 +46,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query(value = "SELECT r FROM Reservation r where r.ownerId=?1")
     Collection<Reservation> getAllReservationsByOwnerId(Long ownerId);
+
+    @Query(value = "SELECT r.reservationEntity.id FROM Reservation r where r.id=?1")
+    Long findOneById(Long reservationId);
+
+    @Query(value = "SELECT r FROM Reservation r where r.id=?1")
+    Reservation findReservationForFreePeriod(Long reservationId);
 }

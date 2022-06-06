@@ -19,6 +19,16 @@ public class LodgeDisplayDTO {
     private LocationDTO location;
     private Double averageRating;
 
+    public Long getReservationEntityId() {
+        return reservationEntityId;
+    }
+
+    public void setReservationEntityId(Long reservationEntityId) {
+        this.reservationEntityId = reservationEntityId;
+    }
+
+    private Long reservationEntityId;
+
     private Set<ReservationEntityImageDto> images;
 
     public Set<ReservationEntityImageDto> getImages() {

@@ -7,7 +7,6 @@ import LeftArrow from '../../icons/LeftArrow';
 import { getAllHistoryReservationsForUser, getAllLodgesAsync, getAllReservationsForUser, getComplaintsFromUserAsync } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import ComplaintModal from '../modals/ComplaintModal';
-import ReservationHistoryItem from './ReservationHistoryItem';
 
 const UserComplaintsScreen = () => {
 	const history = useHistory();

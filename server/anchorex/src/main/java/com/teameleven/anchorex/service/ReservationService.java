@@ -47,4 +47,14 @@ public interface ReservationService {
     Collection<Reservation> getAllReservationsByOwnerId(Long ownerId);
 
     void createComplaint(ComplaintDTO complaintDTO);
+
+    Reservation findById(Long reservationId);
+
+    Long findOneById(Long reservationId);
+
+    void delete(Reservation reservation);
+
+    FreePeriodDatesDTO findReservationForFreePeriod(Long reservationId);
+
+    void deleteReservationById(Long reservationId);
 }

@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.FishingLesson;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.dto.fishingLesson.UpdateFishingLessonDto;
@@ -32,4 +33,8 @@ public interface FishingLessonService {
     void removeImage(Long imageId);
 
     List<FishingLesson> getAllLessons();
+
+    List<FishingLesson> getFreeLessons(BookingItemsRequestDTO freePeriod);
+
+    FishingLesson getById(Long reservationEntityId);
 }

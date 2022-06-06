@@ -17,9 +17,9 @@ const HomeScreen = () => {
 	const [fishingLessons, setFishingLessons] = useState<any[]>([]);
 
 	useEffect(() => {
-		loadLodges();
-		loadShips();
-		loadFishingLessons();
+		// loadLodges();
+		// loadShips();
+		// loadFishingLessons();
 	}, []);
 
 	const loadLodges = async () => {
@@ -146,7 +146,7 @@ const HomeScreen = () => {
 				<div className='flex flex-col justify-around flex-1 md:flex-row z-10'>{buttons.map(homeButton)}</div>
 				{authorized && <div className='flex flex-col justify-around flex-1 md:flex-row mt-4'>{authorizedButtons.map(authorizedButton)}</div>}
 			</div>
-			<div className='max-w-7xl self-center w-full' style={{ zIndex: 1 }}>
+			{/* <div className='max-w-7xl self-center w-full' style={{ zIndex: 1 }}>
 				{buttons.map((section, i) => {
 					const emptyList = !section?.data?.length;
 
@@ -194,7 +194,7 @@ const HomeScreen = () => {
 						</div>
 					);
 				})}
-			</div>
+			</div> */}
 		</div>
 	);
 };

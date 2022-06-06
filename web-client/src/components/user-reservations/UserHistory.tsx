@@ -7,7 +7,9 @@ import LeftArrow from '../../icons/LeftArrow';
 import { getAllHistoryReservationsForUser, getAllLodgesAsync, getAllReservationsForUser } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import LoadingSpinner from '../common/LoadingSpinner';
-import ReservationHistoryItem from './ReservationHistoryItem';
+import ReservationHistoryItemLesson from './ReservationHistoryItemLesson';
+import ReservationHistoryItemLodge from './ReservationHistoryItemLodge';
+import ReservationHistoryItemShip from './ReservationHistoryItemShip';
 
 const UserHistory = () => {
 	const history = useHistory();
@@ -49,7 +51,17 @@ const UserHistory = () => {
 						<div className='w-28'></div>
 					</div>
 				</div>
-				<div className='flex flex-col md:flex-row  flex-wrap mt-10'>{reservations.map((reservation: any, index: number) => (reservation.reservationType == 'LODGE' ? <ReservationHistoryItem key={index} reservation={reservation} index={index} /> : null))}</div>
+				<div className='flex flex-col md:flex-row  flex-wrap mt-10'>
+					{reservations.map((reservation: any, index: number) =>
+						reservation.reservationType == 'LODGE' ? (
+							<ReservationHistoryItemLodge key={index} reservation={reservation} index={index} />
+						) : reservation.reservationType == 'SHIP' ? (
+							<ReservationHistoryItemShip key={index} reservation={reservation} index={index} />
+						) : (
+							<ReservationHistoryItemLesson key={index} reservation={reservation} index={index} />
+						)
+					)}
+				</div>
 				<div className='flex flex-col md:flex-row  flex-wrap mt-10'>
 					{!loading && reservations.length === 0 && (
 						<div className='text-center flex-1 flex justify-center items-center'>

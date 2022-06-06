@@ -1,9 +1,10 @@
 import { format } from 'date-fns';
 import { cloneElement, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 import AuthContext from '../../context/auth-context';
 import LeftArrow from '../../icons/LeftArrow';
-import { getAllLodgesAsync, getAllReservationsForUser } from '../../server/service';
+import { cancelReservation, getAllLodgesAsync, getAllReservationsForUser } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import LoadingSpinner from '../common/LoadingSpinner';
 
@@ -13,6 +14,7 @@ const UserReservationsPage = () => {
 	const authorized = !!user.loggedIn;
 	const [reservations, setReservations] = useState<any[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const { addToast } = useToasts();
 
 	useEffect(() => {
 		loadReservations();
@@ -27,6 +29,17 @@ const UserReservationsPage = () => {
 	};
 	const goBack = () => {
 		history.goBack();
+	};
+
+	const cancelReservationForUser = async (id: number) => {
+		const resp = await cancelReservation(id);
+		if (resp.status == HttpStatusCode.OK) {
+			loadReservations();
+			addToast('Action was successful! ', {
+				appearance: 'success',
+				autoDismiss: true,
+			});
+		}
 	};
 
 	return (
@@ -44,22 +57,21 @@ const UserReservationsPage = () => {
 				</div>
 				<div className='flex flex-col md:flex-row  flex-wrap mt-10'>
 					{reservations?.map((reservation: any, index: number) => {
-						const lodgeInfo = reservation?.lodgeInfo;
-						const location = lodgeInfo?.location;
+						const location = reservation?.location;
 						const numberOfDays = new Date(reservation.endDate).getDate() - new Date(reservation.startDate).getDate() + 1;
 						return (
 							<div className='w-1/3 px-4 py-2' key={reservation.id}>
 								<div className='p-3 rounded-lg w-full bg-white mt-2 shadow-md  h-full flex flex-col'>
 									<div className='flex flex-col flex-1'>
-										<p className='text-gray-700 text-lg text-left '>{lodgeInfo?.name}</p>
-										<p className='text-gray-400 text-xs text-left flex-1'>{lodgeInfo?.description}</p>
+										<p className='text-gray-700 text-lg text-left '>{reservation?.reservationName}</p>
+										<p className='text-gray-400 text-xs text-left flex-1'>{reservation?.description}</p>
 										<p className='text-gray-500 text-xs text-left'>
 											Address: {location?.address}, {location?.city}
 										</p>
-										<p className='text-gray-500 text-xs text-left'>Avg.score: {lodgeInfo.averageRating}</p>
+										<p className='text-gray-500 text-xs text-left'>Avg.score: {reservation.averageRating}</p>
 										<div className='p-2 rounded-md border-2 border-solid border-blue-200 my-5 w-full'>
 											<p className='text-gray-500 mb-0'>Services: </p>
-											<p className='text-gray-300 mb-0 text-sm border-b border-solid border-blue-200 w-full pb-2'>Select from list below</p>
+											<p className='text-gray-300 mb-0 text-sm border-b border-solid border-blue-200 w-full pb-2'></p>
 											{reservation.services?.map((service: any, index: number) => {
 												const isSelected = false;
 
@@ -85,6 +97,12 @@ const UserReservationsPage = () => {
 												className='px-3 py-2 bg-yellow-200 rounded-md 
 													shadow-md hover:shadow-lg self-end w-full mt-4 transform 
 													hover:scale-105 transition-transform duration-120 font-semibold text-gray-600'
+												onClick={() => {
+													console.log(reservation);
+													// return;
+
+													cancelReservationForUser(reservation.id);
+												}}
 											>
 												Cancel reservation
 											</button>

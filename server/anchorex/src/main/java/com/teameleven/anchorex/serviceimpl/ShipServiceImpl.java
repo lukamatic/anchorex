@@ -116,7 +116,7 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public List<Ship> getFreeLodges(BookingItemsRequestDTO requestPeriod) {
+    public List<Ship> getFreeShips(BookingItemsRequestDTO requestPeriod) {
         List<Ship> allLodges = shipRepository.findAll();
         List<Ship> retList = new ArrayList<>();
         for(Ship ship: allLodges){

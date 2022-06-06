@@ -15,4 +15,6 @@ public interface FreePeriodService  {
     boolean checkIfPeriodIsFree(Date startDate, Date endDate, Long id);
 
     List<FreePeriod> getAllFreePeriods();
+
+    void save(FreePeriod freePeriod);
 }

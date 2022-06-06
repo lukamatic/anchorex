@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
 import searchDto, { emptyFilterDto, filterDto } from '../../dtos/search.dto';
 import LeftArrow from '../../icons/LeftArrow';
-import { getAllFishingLessonsAsync, getAllFreePeriodsAsync, getAllLodgesAsync, getAllReservations, getAllShipsAsync, getLoyaltyInfoAsync, getPossibleLodges, httpResponse, searchDataAsync } from '../../server/service';
+import { getAllFishingLessonsAsync, getAllFreePeriodsAsync, getAllLodgesAsync, getAllReservations, getAllShipsAsync, getLoyaltyInfoAsync, getPossibleLessons, getPossibleLodges, getPossibleShips, httpResponse, searchDataAsync } from '../../server/service';
 import { onlyUnique } from '../../utils/commonOps';
 import { addDays } from '../../utils/dateUtils';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
@@ -13,28 +13,14 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import SelectDropdown from '../common/SelectDropdown';
 import ReservationModal from '../modals/ReservationModal';
 import FilterContainer from './FilterContainer';
+import FilterContainerLessons from './FilterContainerLessons';
+import FilterContainerShips from './FilterContainerShips';
 import ListItem from './ListItem';
 
 const titleDict: any = {
 	fishingLessons: 'Fishing lessons',
 	ships: 'Ships',
 	lodges: 'Lodges',
-};
-
-const authorizedFetchFunctions = {
-	ships: getAllLodgesAsync,
-	lodge: getAllLodgesAsync,
-	fishingLessons: getAllFreePeriodsAsync,
-};
-
-const unauthorizedFetchFunctions: {
-	ships: () => Promise<httpResponse>;
-	lodges: () => Promise<httpResponse>;
-	fishingLessons: () => Promise<httpResponse>;
-} = {
-	ships: getAllShipsAsync,
-	lodges: getAllLodgesAsync,
-	fishingLessons: getAllFishingLessonsAsync,
 };
 
 const ListScreen = () => {
@@ -54,11 +40,14 @@ const ListScreen = () => {
 		locations: [],
 		currentFilterModel: emptyFilterDto,
 		currentSortModel: null,
-		sortOptions: ['Name 🔼', 'Name 🔽'],
+		sortOptions: ['Name 🔼', 'Name 🔽', 'City 🔼', 'City 🔽', 'Address 🔼', 'Address 🔽'],
 		selectedSortOption: 'Name 🔽',
 		numberOfSingleBedrooms: [0, 1],
 		numberOfDoubleBedrooms: [0, 1],
 		numberOfFourBedrooms: [0, 1],
+		cancellationPercentages: [0, 1],
+		maxSpeeds: [0, 1],
+		engineCounts: [0, 1],
 		freePeriods: [],
 		reservations: [],
 		numberOfPeople: 2,
@@ -69,6 +58,9 @@ const ListScreen = () => {
 	});
 
 	const {
+		cancellationPercentages,
+		maxSpeeds,
+		engineCounts,
 		list,
 		allItems,
 		searchText,
@@ -99,28 +91,51 @@ const ListScreen = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 
-	const initLoad = async () => {
-		console.log(`Autorizovan je: ${authorized}`);
-
-		if (authorized) {
-			loadDataAsync(type);
-			loadUserLoyaltyInfo();
-		} else loadDataUnauthorized();
-	};
-
-	const loadDataUnauthorized = async () => {
-		console.log('Type: ', type);
-
-		const resp = await unauthorizedFetchFunctions[type]();
+	const getAllLodges = async () => {
+		const resp = await getAllLodgesAsync();
 		if (resp.status == HttpStatusCode.OK) {
+			const filteredLocations = resp.data.map((e: any) => e?.location?.city).filter(onlyUnique);
+			const numberOfSingleBedrooms = resp.data.map((e: any) => e.singleBedroomNumber);
+			const numberOfDoubleBedrooms = resp.data.map((e: any) => e.doubleBedroomNumber);
+			const numberOfFourBedrooms = resp.data.map((e: any) => e.fourBedroomNumber);
+
 			doSort(selectedSortOption, resp.data);
 			setState({
 				// list: resp.data,
 				allItems: [...resp.data],
 				totalSize: resp.data.length,
 				initialLoading: false,
+				locations: filteredLocations,
+				numberOfSingleBedrooms: getMinMax(numberOfSingleBedrooms),
+				numberOfDoubleBedrooms: getMinMax(numberOfDoubleBedrooms),
+				numberOfFourBedrooms: getMinMax(numberOfFourBedrooms),
+				numberOfCountedPeople: numberOfPeople,
 			});
 		}
+	};
+
+	const getAllShips = async () => {};
+	const getAllFishingLessons = async () => {};
+
+	const unauthorizedFetchFunctions: {
+		ships: () => void;
+		lodges: () => void;
+		fishingLessons: () => void;
+	} = {
+		ships: getAllShips,
+		lodges: getAllLodges,
+		fishingLessons: getAllFishingLessons,
+	};
+
+	const initLoad = async () => {
+		if (authorized) {
+			loadDataAsync();
+			loadUserLoyaltyInfo();
+		} else loadDataUnauthorized();
+	};
+
+	const loadDataUnauthorized = async () => {
+		unauthorizedFetchFunctions[type]();
 	};
 
 	const loadUserLoyaltyInfo = async () => {
@@ -158,9 +173,14 @@ const ListScreen = () => {
 
 			filteredList = filteredList.filter((e: any) => locations.includes(e.location.city));
 		}
-		filteredList = filteredList.filter((e: any) => filterModel.numberOfSingleRooms[0] <= e.singleBedroomNumber && e.singleBedroomNumber <= filterModel.numberOfSingleRooms[1]);
-		filteredList = filteredList.filter((e: any) => filterModel.numberOfDoubleRooms[0] <= e.singleBedroomNumber && e.doubleBedroomNumber <= filterModel.numberOfDoubleRooms[1]);
-		filteredList = filteredList.filter((e: any) => filterModel.numberOfFourRooms[0] <= e.singleBedroomNumber && e.fourBedroomNumber <= filterModel.numberOfFourRooms[1]);
+		if (type == 'lodges') {
+			filteredList = filteredList.filter((e: any) => filterModel?.numberOfSingleRooms[0] <= e.singleBedroomNumber && e.singleBedroomNumber <= filterModel.numberOfSingleRooms[1]);
+			filteredList = filteredList.filter((e: any) => filterModel?.numberOfDoubleRooms[0] <= e.singleBedroomNumber && e.doubleBedroomNumber <= filterModel.numberOfDoubleRooms[1]);
+			filteredList = filteredList.filter((e: any) => filterModel?.numberOfFourRooms[0] <= e.singleBedroomNumber && e.fourBedroomNumber <= filterModel.numberOfFourRooms[1]);
+		} else if (type == 'ships') {
+			filteredList = filteredList.filter((e: any) => filterModel?.selectedMaxSpeed[0] <= e.maxSpeed && e.maxSpeed <= filterModel.selectedMaxSpeed[1]);
+			filteredList = filteredList.filter((e: any) => filterModel?.selectedEngineCount[0] <= e.engineCount && e.engineCount <= filterModel.selectedEngineCount[1]);
+		}
 		return filteredList;
 	};
 
@@ -171,11 +191,6 @@ const ListScreen = () => {
 	};
 
 	const applySearch = () => {
-		// const text = searchText.toLocaleLowerCase();
-		// let filteredList = [...allItems]; //returnFilteredList();
-		// filteredList = filteredList.filter((e: any) => e?.name?.toLowerCase()?.includes(text));
-		// doSort(selectedSortOption, filteredList);
-		// setState({ list: filteredList });
 		loadDataAsync();
 	};
 
@@ -183,7 +198,37 @@ const ListScreen = () => {
 		return [Math.min(...array), Math.max(...array)];
 	};
 
-	const loadDataAsync = async (t?: string) => {
+	const loadDataAsync = async () => {
+		authorizedFetchFunctions[type]();
+	};
+
+	const doSort = (e: string, array: any[]) => {
+		if (e.includes('Name')) {
+			const order = e.includes('🔼') ? 1 : -1;
+			const items = array.sort((a: any, b: any) => (a.name > b.name ? order * -1 : order));
+			setState({ list: items });
+		} else if (e.includes('City')) {
+			const order = e.includes('🔼') ? 1 : -1;
+			const items = array.sort((a: any, b: any) => (a?.location?.city > b?.location?.city ? order * -1 : order));
+			setState({ list: items });
+		} else if (e.includes('Address')) {
+			const order = e.includes('🔼') ? 1 : -1;
+			const items = array.sort((a: any, b: any) => (a?.location?.address > b?.location?.address ? order * -1 : order));
+			setState({ list: items });
+		}
+	};
+
+	const numberOfDays = new Date(checkOutDate - checkInDate).getDate();
+
+	const closeModal = () => {
+		setState({ modalOpened: false });
+	};
+	const successBook = () => {
+		loadDataAsync();
+		setState({ modalOpened: false });
+	};
+
+	const getAuthLodgesAsync = async () => {
 		setState({
 			initialLoading: true,
 		});
@@ -199,6 +244,7 @@ const ListScreen = () => {
 			const numberOfSingleBedrooms = resp.data.map((e: any) => e.singleBedroomNumber);
 			const numberOfDoubleBedrooms = resp.data.map((e: any) => e.doubleBedroomNumber);
 			const numberOfFourBedrooms = resp.data.map((e: any) => e.fourBedroomNumber);
+			console.log(resp.data);
 
 			doSort(selectedSortOption, resp.data);
 			setState({
@@ -220,21 +266,80 @@ const ListScreen = () => {
 		}
 		return [];
 	};
+	const getAuthFishingLessonsAsync = async () => {
+		setState({
+			initialLoading: true,
+		});
+		const data = {
+			startDate: checkInDate,
+			endDate: checkOutDate,
+			numberOfPeople: numberOfPeople,
+		};
+		const resp = await getPossibleLessons(data);
 
-	const doSort = (e: string, array: any[]) => {
-		const order = e.includes('🔼') ? 1 : -1;
-		const items = array.sort((a: any, b: any) => (a.name > b.name ? order * -1 : order));
-		setState({ list: items });
+		if (resp.status === HttpStatusCode.OK) {
+			const filteredLocations = resp.data.map((e: any) => e?.location?.city).filter(onlyUnique);
+			const cancellationPercentages = resp.data.map((e: any) => e.cancellationPercentage);
+
+			doSort(selectedSortOption, resp.data);
+			setState({
+				// list: resp.data,
+				allItems: [...resp.data],
+				totalSize: resp.data.length,
+				initialLoading: false,
+				locations: filteredLocations,
+				cancellationPercentages: getMinMax(cancellationPercentages),
+
+				numberOfCountedPeople: numberOfPeople,
+			});
+			return resp.data;
+		} else {
+			setState({
+				initialLoading: false,
+			});
+		}
+		return [];
+	};
+	const getAuthShipsAsync = async () => {
+		setState({
+			initialLoading: true,
+		});
+		const data = {
+			startDate: checkInDate,
+			endDate: checkOutDate,
+			numberOfPeople: numberOfPeople,
+		};
+		const resp = await getPossibleShips(data);
+
+		if (resp.status === HttpStatusCode.OK) {
+			const filteredLocations = resp.data.map((e: any) => e?.location?.city).filter(onlyUnique);
+			const engineCount = resp.data.map((e: any) => e.engineCount);
+			const maxSpeeds = resp.data.map((e: any) => e.maxSpeed);
+
+			doSort(selectedSortOption, resp.data);
+			setState({
+				// list: resp.data,
+				allItems: [...resp.data],
+				totalSize: resp.data.length,
+				initialLoading: false,
+				locations: filteredLocations,
+				engineCounts: getMinMax(engineCount),
+				maxSpeeds: getMinMax(maxSpeeds),
+				numberOfCountedPeople: numberOfPeople,
+			});
+			return resp.data;
+		} else {
+			setState({
+				initialLoading: false,
+			});
+		}
+		return [];
 	};
 
-	const numberOfDays = new Date(checkOutDate - checkInDate).getDate();
-
-	const closeModal = () => {
-		setState({ modalOpened: false });
-	};
-	const successBook = () => {
-		loadDataAsync();
-		setState({ modalOpened: false });
+	const authorizedFetchFunctions: { ships: () => void; lodges: () => void; fishingLessons: () => void } = {
+		ships: getAuthShipsAsync,
+		lodges: getAuthLodgesAsync,
+		fishingLessons: getAuthFishingLessonsAsync,
 	};
 
 	return (
@@ -252,13 +357,10 @@ const ListScreen = () => {
 						</div>
 					</div>
 					<div className='flex flex-row flex-1 mt-4 overflow-y-auto'>
-						{authorized && (
-							<div className='mr-3 '>
+						<div className='mr-3 '>
+							{authorized && (
 								<div className='bg-blue-400 px-5 pb-7 pt-3 rounded-md mt-5 shadow-lg'>
 									<h1 className='text-xl text-white mb-2 font-bold'>Pick a period</h1>
-									{/* <div className='mb-2'>
-								<LiveSearch value={searchText} callback={asyncSearch} />
-							</div> */}
 									<div>
 										<p className='text-white'>Check-in date</p>
 										<DatePicker placeholder='Select date' value={checkInDate} minDate={new Date()} onValueChange={changeCheckInDate} />
@@ -292,9 +394,12 @@ const ListScreen = () => {
 										Search
 									</button>
 								</div>
-								<FilterContainer locations={locations} onApply={applyFilter} numberOfSingleBedrooms={numberOfSingleBedrooms} numberOfDoubleBedrooms={numberOfDoubleBedrooms} numberOfFourBedrooms={numberOfFourBedrooms} />
-							</div>
-						)}
+							)}
+							{type == 'lodges' && <FilterContainer locations={locations} onApply={applyFilter} numberOfSingleBedrooms={numberOfSingleBedrooms} numberOfDoubleBedrooms={numberOfDoubleBedrooms} numberOfFourBedrooms={numberOfFourBedrooms} />}
+							{type == 'fishingLessons' && <FilterContainerLessons locations={locations} onApply={applyFilter} cancellationPercentage={cancellationPercentages} />}
+							{type == 'ships' && <FilterContainerShips locations={locations} onApply={applyFilter} maxSpeed={maxSpeeds} engineCount={engineCounts} />}
+						</div>
+
 						<div className='flex flex-col flex-1 '>
 							<div className='flex flex-row justify-between '>
 								<div className='flex-1'>{/* TODO: Badges / Applied filters */}</div>
@@ -313,7 +418,7 @@ const ListScreen = () => {
 									/>
 								</div>
 							</div>
-							<div className='flex flex-row flex-wrap'>{list.length > 0 && list?.map((e: any) => ListItem(e, numberOfDays, numberOfCountedPeople, openModal, loyaltyProgram))}</div>
+							<div className='flex flex-row flex-wrap'>{list.length > 0 && list?.map((e: any) => ListItem(e, numberOfDays, numberOfCountedPeople, openModal, loyaltyProgram, type))}</div>
 							{totalSize <= 0 && !initialLoading && (
 								<div className='text-center flex-1 flex justify-center items-center'>
 									<div className='text-gray-400 '>{!searchText ? 'This list is currently empty...' : 'Search list is currently empty... Try another text'}</div>
@@ -328,7 +433,7 @@ const ListScreen = () => {
 					</div>
 				</div>
 			</div>
-			<ReservationModal isOpen={modalOpened} onRequestClose={closeModal} reservation={selectedReservation} successBook={successBook} />
+			{modalOpened && <ReservationModal isOpen={modalOpened} onRequestClose={closeModal} reservation={selectedReservation} successBook={successBook} />}
 		</>
 	);
 };

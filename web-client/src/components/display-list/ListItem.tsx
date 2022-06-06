@@ -1,6 +1,6 @@
-function ListItem(item: any, numberOfDays: number = 2, numberOfPeopleBooking: number = 2, openModal: (item: any) => void, loyaltyProgram: any) {
+function ListItem(item: any, numberOfDays: number = 2, numberOfPeopleBooking: number = 2, openModal: (item: any) => void, loyaltyProgram: any, type: 'ships' | 'lodges' | 'fishingLessons') {
 	const location = item?.location;
-	const numberOfPeople = item.doubleBedroomNumber * 2 + item?.fourBedroomNumber * 4 + item?.singleBedroomNumber;
+	const numberOfPeople = type == 'lodges' ? item.doubleBedroomNumber * 2 + item?.fourBedroomNumber * 4 + item?.singleBedroomNumber : type == 'ships' ? item.capacity : item.capacity;
 	const discount = (loyaltyProgram?.discount ?? 0) / 100;
 	const regularPrice = item.services
 		.filter((e: any) => e.type === 'REGULAR')

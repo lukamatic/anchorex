@@ -1,15 +1,12 @@
 package com.teameleven.anchorex.controller;
 
-import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
-import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDisplayDTO;
-import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ReservationService;
@@ -74,7 +71,7 @@ public class ShipController {
 
     @PostMapping(path="/possibleReservations")
     public ResponseEntity<List<ShipDisplayDTO>> getPossibleReservations(@RequestBody BookingItemsRequestDTO freePeriod){
-        List<Ship> ships = shipService.getFreeLodges(freePeriod);
+        List<Ship> ships = shipService.getFreeShips(freePeriod);
         List<ShipDisplayDTO> retDto = new ArrayList<>();
         for(var ship: ships){
             ShipDisplayDTO shipDto = ShipMapper.shipToShipDisplayDTO(ship);

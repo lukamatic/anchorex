@@ -89,6 +89,7 @@ public class FishingLessonMapper {
         dto.setCapacity(lesson.getCapacity());
         dto.setFishingKit(lesson.getFishingKit());
         Set<ServiceDTO> services = new HashSet<>();
+        dto.setCancellationPercentage(lesson.getCancellationPercentage());
         dto.setAverageRating(lesson.getAverageRating());
         for(Service service: lesson.getServices()){
             ServiceDTO serviceDTO = new ServiceDTO();

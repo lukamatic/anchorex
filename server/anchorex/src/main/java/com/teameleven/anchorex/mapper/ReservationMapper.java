@@ -2,10 +2,13 @@ package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Reservation;
 import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.domain.User;
+import com.teameleven.anchorex.dto.LocationDTO;
 import com.teameleven.anchorex.dto.ReservationDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
+import com.teameleven.anchorex.enums.ReservationEntityType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,9 +51,12 @@ public class ReservationMapper {
         reservationDTO.setServices(services);
         reservationDTO.setMaxPersonNumber(reservation.getMaxPersonNumber());
         reservationDTO.setCaptain(reservation.isCaptain());
-        reservationDTO.setUserId(reservation.getUser().getId());
+        User user = reservation.getUser();
+        if(user != null)
+            reservationDTO.setUserId(user.getId());
         reservationDTO.setId(reservation.getId());
         reservationDTO.setOwnerId(reservation.getOwnerId());
+
         return reservationDTO;
     }
 
@@ -70,12 +76,23 @@ public class ReservationMapper {
             serviceDTO.setType(service.getType());
             services.add(serviceDTO);
         }
+        reservationDTO.setId(reservation.getId());
         reservationDTO.setServices(services);
         reservationDTO.setMaxPersonNumber(reservation.getMaxPersonNumber());
         reservationDTO.setCaptain(reservation.isCaptain());
         reservationDTO.setUserId(reservation.getUser().getId());
         reservationDTO.setReservationType(reservation.getReservationEntity().getReservationEntityType());
         reservationDTO.setReservationName(reservation.getReservationEntity().getName());
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setAddress(reservation.getReservationEntity().getLocation().getAddress());
+        locationDTO.setCity(reservation.getReservationEntity().getLocation().getCity());
+        locationDTO.setCountry(reservation.getReservationEntity().getLocation().getCountry());
+        locationDTO.setLongitude(reservation.getReservationEntity().getLocation().getLongitude());
+        locationDTO.setLatitude(reservation.getReservationEntity().getLocation().getLatitude());
+        reservationDTO.setLocation(locationDTO);
+        reservationDTO.setDescription(reservation.getReservationEntity().getDescription());
+        reservationDTO.setAverageRating(reservation.getReservationEntity().getAverageRating());
+
         return reservationDTO;
     }
 }

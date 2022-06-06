@@ -112,7 +112,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<ClientReservationDTO> reservationDTOS = new ArrayList<>();
         var reservations = reservationRepository.getEntityReservations(id);
         for (Reservation reservation : reservations) {
-            if (reservation.getUser().getId() == null)
+            if (reservation.getUser() == null)
                 reservationDTOS.add(ReservationMapper.reservationToClientReservationDTO(reservation));
         }
         return reservationDTOS;
@@ -274,6 +274,37 @@ public class ReservationServiceImpl implements ReservationService {
         complaint.setUser(userRepository.findOneById(complaintDTO.getUserId()));
         complaint.setStatus(ComplaintStatus.PENDING);
         complaintRepository.save(complaint);
+    }
+
+    @Override
+    public Reservation findById(Long reservationId) {
+        return reservationRepository.getOne(reservationId);
+    }
+
+    @Override
+    public Long findOneById(Long reservationId) {
+        return reservationRepository.findOneById(reservationId);
+    }
+
+
+
+    @Override
+    public void delete(Reservation reservation) {
+        reservationRepository.delete(reservation);
+    }
+
+    @Override
+    public FreePeriodDatesDTO findReservationForFreePeriod(Long reservationId) {
+        var data = reservationRepository.findReservationForFreePeriod(reservationId);
+        FreePeriodDatesDTO ret = new FreePeriodDatesDTO();
+        ret.setStartDate(data.getStartDate());
+        ret.setEndDate(data.getEndDate());
+        return ret;
+    }
+
+    @Override
+    public void deleteReservationById(Long reservationId) {
+        reservationRepository.deleteById(reservationId);
     }
 
 }

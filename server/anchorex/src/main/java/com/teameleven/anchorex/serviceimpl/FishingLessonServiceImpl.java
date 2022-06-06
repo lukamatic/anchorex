@@ -2,6 +2,7 @@ package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.FishingLesson;
 import com.teameleven.anchorex.domain.ReservationEntityImage;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
@@ -11,6 +12,7 @@ import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.ReservationEntityImageRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.service.FishingLessonService;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ImageService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,15 +32,17 @@ public class FishingLessonServiceImpl implements FishingLessonService {
     private final LocationRepository locationRepository;
     private final ServiceRepository serviceRepository;
     private final ReservationEntityImageRepository reservationEntityImageRepository;
+    private final FreePeriodService freePeriodService;
 
     public FishingLessonServiceImpl(ImageService imageService, FishingLessonRepository fishingLessonRepository,
                                     LocationRepository locationRepository, ServiceRepository serviceRepository,
-                                    ReservationEntityImageRepository reservationEntityImageRepository) {
+                                    ReservationEntityImageRepository reservationEntityImageRepository, FreePeriodService freePeriodService) {
         this.imageService = imageService;
         this.fishingLessonRepository = fishingLessonRepository;
         this.locationRepository = locationRepository;
         this.serviceRepository = serviceRepository;
         this.reservationEntityImageRepository = reservationEntityImageRepository;
+        this.freePeriodService = freePeriodService;
     }
 
     @Override
@@ -129,5 +134,25 @@ public class FishingLessonServiceImpl implements FishingLessonService {
     @Override
     public List<FishingLesson> getAllLessons() {
         return fishingLessonRepository.findAll();
+    }
+
+    @Override
+    public List<FishingLesson> getFreeLessons(BookingItemsRequestDTO requestPeriod) {
+        List<FishingLesson> allLessons = fishingLessonRepository.findAll();
+        List<FishingLesson> retList = new ArrayList<>();
+        for(var lesson: allLessons){
+            int numberOfAcceptablePeople = lesson.getCapacity();
+            if( numberOfAcceptablePeople >= requestPeriod.getNumberOfPeople()){
+                if(freePeriodService.checkIfPeriodIsFree(requestPeriod.getStartDate(), requestPeriod.getEndDate(), lesson.getId()) ){
+                    retList.add(lesson);
+                }
+            }
+        }
+        return retList;
+    }
+
+    @Override
+    public FishingLesson getById(Long reservationEntityId) {
+        return fishingLessonRepository.getOne(reservationEntityId);
     }
 }

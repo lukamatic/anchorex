@@ -72,6 +72,7 @@ public class LodgeMapper {
             imageDto.setUrl(image.getUrl());
             images.add(imageDto);
         }
+
         dto.setImages(images);
         dto.setServices(services);
 

@@ -147,6 +147,11 @@ public class FreePeriodServiceImpl implements FreePeriodService {
         return freePeriods;
     }
 
+    @Override
+    public void save(FreePeriod freePeriod) {
+        freePeriodRepository.save(freePeriod);
+    }
+
     private void removeFreePeriodFromReservationDates(FreePeriod freePeriod, Date startDate, Date endDate){
         freePeriodRepository.delete(freePeriod);
         if(freePeriod.getStartDate().before(startDate) && freePeriod.getEndDate().after(endDate)){

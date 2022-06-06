@@ -343,6 +343,52 @@ export const getPossibleLodges = async (data: any): Promise<httpResponse> => {
 			};
 		});
 };
+export const getPossibleShips = async (data: any): Promise<httpResponse> => {
+	const options: any = {
+		method: 'POST',
+		url: `/api/ship/possibleReservations`,
+		data: data,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+export const getPossibleLessons = async (data: any): Promise<httpResponse> => {
+	const options: any = {
+		method: 'POST',
+		url: `/api/fishingLessons/possibleReservations`,
+		data: data,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
 export const makeRevisionAsync = async (data: any): Promise<httpResponse> => {
 	const options: any = {
 		method: 'POST',
@@ -439,6 +485,28 @@ export const cancelSubscriptionAsync = async (id: any): Promise<httpResponse> =>
 	const options: any = {
 		method: 'DELETE',
 		url: `/api/subscription/${id}`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+export const cancelReservation = async (id: any): Promise<httpResponse> => {
+	const options: any = {
+		method: 'DELETE',
+		url: `/api/reservation/${id}`,
 		headers: {
 			Accept: 'application/json',
 			'Content-type': 'application/json',

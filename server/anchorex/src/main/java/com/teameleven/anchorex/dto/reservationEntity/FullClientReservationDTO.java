@@ -1,8 +1,12 @@
 package com.teameleven.anchorex.dto.reservationentity;
 
 import com.teameleven.anchorex.domain.Revision;
+import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ReservationEntityImageDto;
 import com.teameleven.anchorex.dto.ServiceDTO;
+import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDisplayDto;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
+import com.teameleven.anchorex.dto.reservationEntity.ShipDisplayDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
 import com.teameleven.anchorex.enums.RevisionStatus;
 
@@ -10,7 +14,17 @@ import java.util.Date;
 import java.util.Set;
 
 public class FullClientReservationDTO {
+    private Long id;
     private Date startDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private Date endDate;
     private Integer maxPersonNumber;
     private double discount;
@@ -58,14 +72,62 @@ public class FullClientReservationDTO {
         this.revision = revision;
     }
 
-    private com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO lodgeInfo;
 
-    public LodgeDisplayDTO getLodgeInfo() {
-        return lodgeInfo;
+    private String name;
+    private String description;
+
+    private Set<ReservationEntityImageDto> images;
+    private LocationDTO location;
+    private Double averageRating;
+    private ReservationEntityType type;
+
+
+    public String getName() {
+        return name;
     }
 
-    public void setLodgeInfo(LodgeDisplayDTO lodgeInfo) {
-        this.lodgeInfo = lodgeInfo;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<ReservationEntityImageDto> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<ReservationEntityImageDto> images) {
+        this.images = images;
+    }
+
+    public LocationDTO getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationDTO location) {
+        this.location = location;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public ReservationEntityType getType() {
+        return type;
+    }
+
+    public void setType(ReservationEntityType type) {
+        this.type = type;
     }
 
     public String getUserFullname() {

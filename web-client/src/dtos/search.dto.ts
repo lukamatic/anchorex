@@ -20,6 +20,9 @@ export interface filterDto {
 	numberOfSingleRooms: [number, number];
 	numberOfDoubleRooms: [number, number];
 	numberOfFourRooms: [number, number];
+	selectedEngineCount: [number, number];
+	selectedMaxSpeed: [number, number];
+	cancellationPercentage: [number, number];
 }
 
 export const emptyFilterDto = {
@@ -31,6 +34,9 @@ export const emptyFilterDto = {
 	numberOfSingleRooms: [0, 100],
 	numberOfDoubleRooms: [0, 100],
 	numberOfFourRooms: [0, 100],
+	selectedEngineCount: [0, 100],
+	selectedMaxSpeed: [0, 100],
+	cancellationPercentage: [0, 100],
 };
 export interface sortDto {
 	field: string;

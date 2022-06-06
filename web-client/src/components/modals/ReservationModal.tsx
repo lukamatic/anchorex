@@ -29,6 +29,8 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 		loyaltyProgram: {},
 	});
 
+	const userIsBanned = authContext.userDetails.penaltyCount === 3;
+
 	const { reservation, loading, additionalCost, selectedAdditionalServices, quickActions, subscribed, loyaltyProgram } = state;
 
 	useEffect(() => {
@@ -49,7 +51,7 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 				quickActions: [],
 			});
 		}
-	}, [reservation.id, isOpen, authorized]);
+	}, [rawReservation.id, isOpen]);
 
 	const sumArr = (arr: number[]) => arr.reduce((a: number, b: number) => a + b, 0);
 
@@ -143,9 +145,9 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 				return (
 					<div
 						key={index}
-						className={`${authorized ? 'cursor-pointer' : ''} flex flex-col mt-2 bg-blue-100 rounded-sm p-2`}
+						className={`${authorized ? 'cursor-pointer' : ''} ${userIsBanned ? 'cursor-not-allowed' : ''} flex flex-col mt-2 bg-blue-100 rounded-sm p-2`}
 						onClick={() => {
-							if (authorized) takeQuickReservation(action);
+							if (authorized && !userIsBanned) takeQuickReservation(action);
 						}}
 					>
 						<div className='flex flex-row justify-between items-end'>
@@ -335,9 +337,9 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 											</label>
 										)}
 										{regularPrice && (
-											<label htmlFor='' className='text-gray-600 text-xl'>
+											<label htmlFor='' className={`text-gray-600 text-xl ${!authorized ? 'py-4' : ''} `}>
 												Price:
-												<span className={`  ${hasDiscount ? 'text-gray-400 line-through' : 'text-gray-500 font-bold '}`}> ${price}</span>
+												<span className={` ${hasDiscount ? 'text-gray-400 line-through' : 'text-gray-500 font-bold '}`}> ${price}</span>
 												{hasDiscount && <span className='text-gray-500 font-bold'> ${price * (1 - discount)}</span>}
 											</label>
 										)}
@@ -350,10 +352,11 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 												</div>
 											) : (
 												<button
-													className='px-3 py-2 bg-yellow-200 rounded-md 
+													className={`px-3 py-2 bg-yellow-200 rounded-md ${userIsBanned ? 'cursor-not-allowed' : ''}
 														shadow-md hover:shadow-lg self-end transform 
-														hover:scale-105 transition-transform duration-120 font-semibold text-gray-600'
+														hover:scale-105 transition-transform duration-120 font-semibold text-gray-600`}
 													onClick={bookReservation}
+													disabled={userIsBanned}
 												>
 													BOOK
 												</button>

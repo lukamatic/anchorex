@@ -2,7 +2,9 @@ package com.teameleven.anchorex.controller;
 
 import com.teameleven.anchorex.domain.FishingLesson;
 import com.teameleven.anchorex.domain.Lodge;
+import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.domain.Test;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
@@ -12,6 +14,7 @@ import com.teameleven.anchorex.dto.test.TestDto;
 import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.LodgeMapper;
+import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.FishingLessonService;
 import com.teameleven.anchorex.service.FreePeriodService;
@@ -62,6 +65,18 @@ public class FishingLessonController {
             lessons.add(lessonDto);
         }
         return new ResponseEntity<>(lessons, HttpStatus.OK);
+    }
+
+    @PostMapping(path="/possibleReservations")
+    public ResponseEntity<List<FishingLessonDisplayDto>> getPossibleLessonReservations(@RequestBody BookingItemsRequestDTO freePeriod){
+        List<FishingLesson> lessons = fishingLessonService.getFreeLessons(freePeriod);
+        List<FishingLessonDisplayDto> retDto = new ArrayList<>();
+        for(var lesson: lessons){
+            FishingLessonDisplayDto dto = FishingLessonMapper.lessonToLessonDisplayDto(lesson);
+            retDto.add(dto);
+        }
+
+        return new ResponseEntity<>(retDto, HttpStatus.OK);
     }
 
     @GetMapping(path="/all", produces = MediaType.APPLICATION_JSON_VALUE)

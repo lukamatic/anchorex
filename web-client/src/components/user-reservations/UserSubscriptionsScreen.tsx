@@ -8,7 +8,6 @@ import LeftArrow from '../../icons/LeftArrow';
 import { cancelSubscriptionAsync, getAllHistoryReservationsForUser, getAllLodgesAsync, getAllReservationsForUser, getComplaintsFromUserAsync, getUserSubscriptions } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import ComplaintModal from '../modals/ComplaintModal';
-import ReservationHistoryItem from './ReservationHistoryItem';
 
 const UserSubscriptionScreen = () => {
 	const { addToast } = useToasts();

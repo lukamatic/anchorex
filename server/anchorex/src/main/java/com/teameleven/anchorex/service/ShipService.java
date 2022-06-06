@@ -25,5 +25,5 @@ public interface ShipService {
 
     void deleteService(Long id);
 
-    List<Ship> getFreeLodges(BookingItemsRequestDTO freePeriod);
+    List<Ship> getFreeShips(BookingItemsRequestDTO freePeriod);
 }

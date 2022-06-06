@@ -5,10 +5,14 @@ import com.teameleven.anchorex.dto.*;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
 import com.teameleven.anchorex.enums.ReservationEntityType;
+import com.teameleven.anchorex.mapper.FishingLessonMapper;
 import com.teameleven.anchorex.mapper.LodgeMapper;
+import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.repository.RevisionRepository;
 import com.teameleven.anchorex.service.*;
+import com.teameleven.anchorex.serviceimpl.FishingLessonServiceImpl;
 import com.teameleven.anchorex.serviceimpl.LoyaltyServiceImpl;
+import com.teameleven.anchorex.serviceimpl.ShipServiceImpl;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +43,10 @@ public class ReservationController {
     private UserService userService;
     @Autowired
     private LodgeService lodgeService;
+    @Autowired
+    private ShipService shipService;
+    @Autowired
+    private FishingLessonService fishingLessonService;
 
     @Autowired
     private RevisionRepository revisionRepository;
@@ -108,6 +116,24 @@ public class ReservationController {
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
+    @DeleteMapping(path = "/{reservationId}")
+    public ResponseEntity<Void> createPersonalReservation(@PathVariable Long reservationId) {
+        FreePeriodDatesDTO reservation = reservationService.findReservationForFreePeriod(reservationId);
+        Long id = reservationService.findOneById(reservationId);
+        ReservationEntity reservationEntity = new ReservationEntity();
+        reservationEntity.setId(id);
+
+        FreePeriod freePeriod = new FreePeriod();
+        freePeriod.setReservationEntity(reservationEntity);
+        freePeriod.setStartDate(reservation.getStartDate());
+        freePeriod.setEndDate(reservation.getEndDate());
+
+        freePeriodService.save(freePeriod);
+        reservationService.deleteReservationById(reservationId);
+
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+
     @PutMapping(path = "/takeQuickAction", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateLodge(@RequestBody ReservationDTO reservationDTO) {
         LoyaltyProgram loyaltyProgram = loyaltyProgramService.get();
@@ -161,8 +187,8 @@ public class ReservationController {
             if (reservationDTO.getEndDate().after(rn)) {
                 reservationDTO.setUserFullname(userService.findOneById(reservationDTO.getUserId()).getFirstName()
                         + " " + userService.findOneById(reservationDTO.getUserId()).getLastName());
-                reservationDTO.setLodgeInfo(LodgeMapper
-                        .lodgeToLodgeDisplayDTO(lodgeService.getLodgeById(reservationDTO.getReservationEntityId())));
+//                reservationDTO.setLodgeInfo(LodgeMapper
+//                        .lodgeToLodgeDisplayDTO(lodgeService.getLodgeById(reservationDTO.getReservationEntityId())));
                 retData.add(reservationDTO);
             }
         }
@@ -179,8 +205,13 @@ public class ReservationController {
             if (reservationDTO.getEndDate().before(rn)) {
                 reservationDTO.setUserFullname(userService.findOneById(reservationDTO.getUserId()).getFirstName()
                         + " " + userService.findOneById(reservationDTO.getUserId()).getLastName());
-                if(reservationDTO.getReservationType() == ReservationEntityType.LODGE)
-                    reservationDTO.setLodgeInfo(LodgeMapper.lodgeToLodgeDisplayDTO(lodgeService.getLodgeById(reservationDTO.getReservationEntityId())));
+
+//                if(reservationDTO.getReservationType() == ReservationEntityType.LODGE)
+//                    reservationDTO.setLodgeInfo(LodgeMapper.lodgeToLodgeDisplayDTO(lodgeService.getLodgeById(reservationDTO.getReservationEntityId())));
+//                else if(reservationDTO.getReservationType() == ReservationEntityType.SHIP)
+//                    reservationDTO.setShipDisplayDTO(ShipMapper.shipToShipDisplayDTO(shipService.getShipById(reservationDTO.getReservationEntityId())));
+//                else if(reservationDTO.getReservationType() == ReservationEntityType.FISHING_LESSON)
+//                    reservationDTO.setFishingLessonDisplayDto(FishingLessonMapper.lessonToLessonDisplayDto(fishingLessonService.getById(reservationDTO.getReservationEntityId())));
                 var revision = revisionRepository.getReservationRevisionFromUser(
                         reservationDTO.getReservationEntityId(), reservationDTO.getUserId());
                 if (revision != null)

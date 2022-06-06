@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.service;
 
 import com.teameleven.anchorex.domain.Ship;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.ShipDTO;
@@ -23,4 +24,6 @@ public interface ShipService {
     void addService(ServiceDTO service, Long id);
 
     void deleteService(Long id);
+
+    List<Ship> getFreeLodges(BookingItemsRequestDTO freePeriod);
 }

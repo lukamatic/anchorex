@@ -1,6 +1,8 @@
 package com.teameleven.anchorex.controller;
 
+import com.teameleven.anchorex.domain.Lodge;
 import com.teameleven.anchorex.domain.Ship;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.FreePeriodDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,6 +57,31 @@ public class ShipController {
     public ResponseEntity<List<ShipDTO>> getShips(@PathVariable Long id){
         var ships = shipService.getShips(id);
         return new ResponseEntity<>(ships, HttpStatus.OK);
+    }
+
+
+    @GetMapping()
+    public ResponseEntity<List<ShipDisplayDTO>> getAllShips(){
+        var ships = shipService.getAll();
+        List<ShipDisplayDTO> retDto = new ArrayList<>();
+        for(var ship: ships){
+            ShipDisplayDTO shipDto = ShipMapper.shipToShipDisplayDTO(ship);
+            retDto.add(shipDto);
+        }
+
+        return new ResponseEntity<>(retDto, HttpStatus.OK);
+    }
+
+    @PostMapping(path="/possibleReservations")
+    public ResponseEntity<List<ShipDisplayDTO>> getPossibleReservations(@RequestBody BookingItemsRequestDTO freePeriod){
+        List<Ship> ships = shipService.getFreeLodges(freePeriod);
+        List<ShipDisplayDTO> retDto = new ArrayList<>();
+        for(var ship: ships){
+            ShipDisplayDTO shipDto = ShipMapper.shipToShipDisplayDTO(ship);
+            retDto.add(shipDto);
+        }
+
+        return new ResponseEntity<>(retDto, HttpStatus.OK);
     }
 
     @DeleteMapping(path="/deleteShip/{id}")

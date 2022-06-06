@@ -8,7 +8,7 @@ import CheckCircleIcon from '../../icons/CheckCircleIcon';
 import CheckCircleIconEmpty from '../../icons/CheckCircleIconEmpty';
 import CloseBookmarkIcon from '../../icons/CloseBookmarkIcon';
 import OpenBookmarkIcon from '../../icons/OpenBookmarkIcon';
-import { createSubscriptionAsync, getQuickActionsAsync, getUserSubscriptions } from '../../server/service';
+import { createSubscriptionAsync, getLoyaltyInfoAsync, getQuickActionsAsync, getUserSubscriptions } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -18,6 +18,7 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 
 	const { isOpen, onRequestClose, reservation: rawReservation, successBook } = props;
 	const authContext = useContext(AuthContext);
+	const authorized = !!authContext.user.loggedIn;
 	const [state, setState] = useReducer((oldState: any, newState: any) => ({ ...oldState, ...newState }), {
 		reservation: rawReservation,
 		loading: false,
@@ -25,9 +26,10 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 		selectedAdditionalServices: [],
 		quickActions: [],
 		subscribed: false,
+		loyaltyProgram: {},
 	});
 
-	const { reservation, loading, additionalCost, selectedAdditionalServices, quickActions, subscribed } = state;
+	const { reservation, loading, additionalCost, selectedAdditionalServices, quickActions, subscribed, loyaltyProgram } = state;
 
 	useEffect(() => {
 		if (isOpen) {
@@ -35,8 +37,11 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 				reservation: rawReservation,
 				loading: false,
 			});
-			loadSubscriptions();
-			loadQuickActions();
+			if (authorized) {
+				loadQuickActions();
+				loadUserLoyaltyInfo();
+				loadSubscriptions();
+			}
 		} else {
 			setState({
 				additionalCost: 0,
@@ -44,7 +49,7 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 				quickActions: [],
 			});
 		}
-	}, [reservation.id, isOpen]);
+	}, [reservation.id, isOpen, authorized]);
 
 	const sumArr = (arr: number[]) => arr.reduce((a: number, b: number) => a + b, 0);
 
@@ -54,6 +59,15 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 			setState({ quickActions: resp.data });
 		}
 	};
+
+	const loadUserLoyaltyInfo = async () => {
+		const resp = await getLoyaltyInfoAsync();
+		if (resp.status === HttpStatusCode.OK) {
+			console.log(resp.data);
+			setState({ loyaltyProgram: resp.data });
+		}
+	};
+
 	const loadSubscriptions = async () => {
 		const resp = await getUserSubscriptions(reservation.id);
 		if (resp.status == HttpStatusCode.OK) {
@@ -99,18 +113,23 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 			{additionalServices?.map((service: any, index: number) => {
 				const isSelected = selectedServicesIds.includes(service.id);
 				const selectThisService = () => {
-					selectAdditionalService(service);
+					if (authorized) selectAdditionalService(service);
 				};
 
 				return (
-					<div key={index} className={`cursor-pointer flex flex-row items-center mt-2 ${isSelected ? '' : ''}`} onClick={selectThisService}>
-						{isSelected ? <CheckCircleIcon /> : <CheckCircleIconEmpty />}
+					<div key={index} className={`${authorized ? 'cursor-pointer' : ''} flex flex-row items-center mt-2 ${isSelected ? '' : ''}`} onClick={selectThisService}>
+						{authorized && <>{isSelected ? <CheckCircleIcon /> : <CheckCircleIconEmpty />}</>}
 
 						<span className='ml-2 text-gray-400 flex-1'>{service.info}</span>
 						<span className='ml-2 text-gray-300 text-xs'>${service.price * numberOfPeopleToBook * numberOfDays}</span>
 					</div>
 				);
 			})}
+			{additionalServices?.length === 0 && (
+				<div className='text-center flex-1 flex justify-center items-center py-10'>
+					<div className='text-gray-300 '>{'No additional services'}</div>
+				</div>
+			)}
 		</div>
 	);
 	const quickActionsContainer = () => (
@@ -124,9 +143,9 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 				return (
 					<div
 						key={index}
-						className={`cursor-pointer flex flex-col mt-2 bg-blue-100 rounded-sm p-2`}
+						className={`${authorized ? 'cursor-pointer' : ''} flex flex-col mt-2 bg-blue-100 rounded-sm p-2`}
 						onClick={() => {
-							takeQuickReservation(action);
+							if (authorized) takeQuickReservation(action);
 						}}
 					>
 						<div className='flex flex-row justify-between items-end'>
@@ -183,15 +202,17 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 				}
 			});
 	};
+	const discount = (loyaltyProgram?.discount ?? 0) / 100;
+	const hasDiscount = discount > 0;
+	const price = numberOfDays * numberOfPeopleToBook * (regularPrice + additionalCost);
 
 	const bookReservation = async () => {
-		const price = numberOfDays * numberOfPeopleToBook * (regularPrice + additionalCost);
 		const data = {
 			startDate: checkInDate,
 			endDate: checkOutDate,
 			maxPersonNumber: numberOfPeopleToBook,
 			discount: 0,
-			price,
+			price: hasDiscount ? price * (1 - discount) : price,
 			services: [...reservation?.services?.filter((e: any) => e.type === 'REGULAR'), ...selectedAdditionalServices],
 			reservationEntityId: reservation.id,
 			userId: authContext.user.id,
@@ -248,21 +269,32 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 		<>
 			{isOpen ? (
 				<>
-					<div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
+					<div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none' style={{ backgroundColor: '#0003' }}>
 						<div className='relative w-full my-2 mx-auto max-w-4xl'>
 							{/*content*/}
 							<div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none '>
-								<div className='px-8 py-8'>
+								<div className=' overflow-x-auto overflow-y-hidden -mt-24 mb-2 mx-5 flex flex-row'>
+									{reservation?.images?.map((image: any, index: number) => (
+										<div className='rounded-lg overflow-hidden mx-2 h-80' style={{ minWidth: '60%' }}>
+											<img src={image.url} key={index} alt='Item' className='object-contain  w-full' />
+										</div>
+									))}
+								</div>
+								<div className='px-8 py-8 pt-0'>
 									{/*header*/}
 									<div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
 										<h3 className='text-3xl font-semibold'>{reservation?.name}</h3>
 										<div className='flex flex-row items-end'>
-											{subscribed ? (
-												<CloseBookmarkIcon className='text-blue-300' />
-											) : (
-												<button className='text-blue-300 text-sm' onClick={subscribe}>
-													<OpenBookmarkIcon className='color-red-100' />
-												</button>
+											{authorized && (
+												<div>
+													{subscribed ? (
+														<CloseBookmarkIcon className='text-blue-300' />
+													) : (
+														<button className='text-blue-300 text-sm' onClick={subscribe}>
+															<OpenBookmarkIcon className='color-red-100' />
+														</button>
+													)}
+												</div>
 											)}
 											<button className='p-1 ml-auto bg-transparent border-0 text-black  float-right text-3xl leading-none font-semibold outline-none focus:outline-none' onClick={onRequestClose}>
 												<span className='bg-transparent text-black  h-6 w-6 text-2xl block outline-none focus:outline-none'>×</span>
@@ -291,9 +323,10 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 										{reservation?.rulesOfConduct?.split('#')?.splice(1, 100)?.join(',')}
 									</label>
 								</div>
+
 								<div className='flex flex-row justify-between bg-blue-300 rounded-md items-center pl-4'>
 									<div className='flex flex-col'>
-										{!!checkInDate && (
+										{!!checkInDate && authorized && (
 											<label htmlFor='' className='text-gray-600 text-xl'>
 												Period:{' '}
 												<span className='text-gray-500 font-bold'>
@@ -304,26 +337,29 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 										{regularPrice && (
 											<label htmlFor='' className='text-gray-600 text-xl'>
 												Price:
-												<span className='text-gray-500 font-bold'> ${numberOfDays * numberOfPeopleToBook * (regularPrice + additionalCost)}</span>
+												<span className={`  ${hasDiscount ? 'text-gray-400 line-through' : 'text-gray-500 font-bold '}`}> ${price}</span>
+												{hasDiscount && <span className='text-gray-500 font-bold'> ${price * (1 - discount)}</span>}
 											</label>
 										)}
 									</div>
-									<div className='p-4'>
-										{loading ? (
-											<div className='flex justify-center items-center mb-3'>
-												<LoadingSpinner />
-											</div>
-										) : (
-											<button
-												className='px-3 py-2 bg-yellow-200 rounded-md 
-                        shadow-md hover:shadow-lg self-end transform 
-                        hover:scale-105 transition-transform duration-120 font-semibold text-gray-600'
-												onClick={bookReservation}
-											>
-												BOOK
-											</button>
-										)}
-									</div>
+									{authorized && (
+										<div className='p-4'>
+											{loading ? (
+												<div className='flex justify-center items-center mb-3'>
+													<LoadingSpinner />
+												</div>
+											) : (
+												<button
+													className='px-3 py-2 bg-yellow-200 rounded-md 
+														shadow-md hover:shadow-lg self-end transform 
+														hover:scale-105 transition-transform duration-120 font-semibold text-gray-600'
+													onClick={bookReservation}
+												>
+													BOOK
+												</button>
+											)}
+										</div>
+									)}
 								</div>
 							</div>
 						</div>

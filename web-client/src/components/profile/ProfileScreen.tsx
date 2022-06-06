@@ -133,7 +133,7 @@ const ProfileScreen = () => {
 								</div>
 								<div>
 									<p className='text-xl text-gray-400'>Discount</p>
-									<p className='text-md text-gray-500 text-bold'>{loyaltyData.discount * 100}%</p>
+									<p className='text-md text-gray-500 text-bold'>{loyaltyData.discount}%</p>
 								</div>
 							</div>
 							<div className='flex-1'></div>

@@ -3,6 +3,7 @@ package com.teameleven.anchorex.serviceimpl;
 import com.teameleven.anchorex.domain.Location;
 import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.domain.Ship;
+import com.teameleven.anchorex.dto.BookingItemsRequestDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
 import com.teameleven.anchorex.dto.LocationDTO;
 import com.teameleven.anchorex.dto.ServiceDTO;
@@ -14,8 +15,10 @@ import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.repository.LocationRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.repository.ShipRepository;
+import com.teameleven.anchorex.service.FreePeriodService;
 import com.teameleven.anchorex.service.ShipService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,11 +27,13 @@ public class ShipServiceImpl implements ShipService {
     private final ShipRepository shipRepository;
     private final LocationRepository locationRepository;
     private final ServiceRepository serviceRepository;
+    private final FreePeriodService freePeriodService;
 
-    public ShipServiceImpl(ShipRepository shipRepository, LocationRepository locationRepository, ServiceRepository serviceRepository) {
+    public ShipServiceImpl(ShipRepository shipRepository, LocationRepository locationRepository, ServiceRepository serviceRepository, FreePeriodService freePeriodService) {
         this.shipRepository = shipRepository;
         this.locationRepository = locationRepository;
         this.serviceRepository = serviceRepository;
+        this.freePeriodService = freePeriodService;
     }
 
     @Override
@@ -108,5 +113,20 @@ public class ShipServiceImpl implements ShipService {
             service.setType(ServiceType.REGULAR);
             serviceRepository.save(service);
         }
+    }
+
+    @Override
+    public List<Ship> getFreeLodges(BookingItemsRequestDTO requestPeriod) {
+        List<Ship> allLodges = shipRepository.findAll();
+        List<Ship> retList = new ArrayList<>();
+        for(Ship ship: allLodges){
+            int numberOfAcceptablePeople = ship.getCapacity();
+            if( numberOfAcceptablePeople >= requestPeriod.getNumberOfPeople()){
+                if(freePeriodService.checkIfPeriodIsFree(requestPeriod.getStartDate(), requestPeriod.getEndDate(), ship.getId()) ){
+                    retList.add(ship);
+                }
+            }
+        }
+        return retList;
     }
 }

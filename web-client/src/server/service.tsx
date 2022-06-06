@@ -4,7 +4,7 @@ import { UserPasswordDto } from '../dtos/user';
 import { LocalStorageItem } from '../utils/local-storage/local-storage-item.enum';
 import localStorageUtil from '../utils/local-storage/local-storage-util';
 
-interface httpResponse {
+export interface httpResponse {
 	status: number;
 	data?: any;
 	message?: any;
@@ -149,6 +149,49 @@ export const getAllLodgesAsync = async (): Promise<httpResponse> => {
 	const options: any = {
 		method: 'GET',
 		url: `/api/lodge`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+export const getAllShipsAsync = async (): Promise<httpResponse> => {
+	const options: any = {
+		method: 'GET',
+		url: `/api/ship`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+	};
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+export const getAllFishingLessonsAsync = async (): Promise<httpResponse> => {
+	const options: any = {
+		method: 'GET',
+		url: `/api/fishingLessons/getAll`,
 		headers: {
 			Accept: 'application/json',
 			'Content-type': 'application/json',

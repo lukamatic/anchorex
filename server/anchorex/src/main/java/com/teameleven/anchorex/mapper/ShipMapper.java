@@ -1,9 +1,11 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.Lodge;
+import com.teameleven.anchorex.domain.ReservationEntityImage;
 import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ReservationEntityImageDto;
 import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
@@ -76,6 +78,16 @@ public class ShipMapper {
             serviceDTO.setType(service.getType());
             services.add(serviceDTO);
         }
+        Set<ReservationEntityImageDto> images = new HashSet<>();
+        for(ReservationEntityImage image: ship.getImages()){
+            ReservationEntityImageDto imageDto = new ReservationEntityImageDto();
+            imageDto.setId(image.getId());
+            imageDto.setUrl(image.getUrl());
+            images.add(imageDto);
+        }
+        dto.setImages(images);
+
+        dto.setAverageRating(ship.getAverageRating());
         dto.setServices(services);
 
         LocationDTO locationDTO = new LocationDTO();

@@ -11,6 +11,7 @@ import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
 import com.teameleven.anchorex.dto.test.TestDto;
 import com.teameleven.anchorex.dto.test.UpdateTestDto;
 import com.teameleven.anchorex.mapper.FishingLessonMapper;
+import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.mapper.TestMapper;
 import com.teameleven.anchorex.service.FishingLessonService;
 import com.teameleven.anchorex.service.FreePeriodService;
@@ -27,7 +28,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -48,6 +51,17 @@ public class FishingLessonController {
         var savedFishingLesson = fishingLessonService.create(createFishingLessonDto);
         var fishingLessonDisplayDto = FishingLessonMapper.toDisplayDto(savedFishingLesson);
         return new ResponseEntity<>(fishingLessonDisplayDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/getAll")
+    public ResponseEntity<List<FishingLessonDisplayDto>> getAllLessons(){
+        var allLessons = fishingLessonService.getAllLessons();
+        List<FishingLessonDisplayDto> lessons = new ArrayList<>();
+        for(var lesson: allLessons){
+            FishingLessonDisplayDto lessonDto = FishingLessonMapper.lessonToLessonDisplayDto(lesson);
+            lessons.add(lessonDto);
+        }
+        return new ResponseEntity<>(lessons, HttpStatus.OK);
     }
 
     @GetMapping(path="/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -133,8 +147,10 @@ public class FishingLessonController {
         if (!Objects.equals(fishingLesson.ownerId, user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can't create free period for this fishingLesson.");
         }
-
         freePeriodService.addFreePeriod(freePeriod, fishingLesson);
         return new ResponseEntity<>(freePeriod, HttpStatus.CREATED);
     }
+
+
+
 }

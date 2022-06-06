@@ -50,6 +50,7 @@ public class UserByToken {
             }
 
             var userDto = UserMapper.UserToUserDto(user);
+            userDto.setPenaltyCount(user.getPenaltyCount());
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>( HttpStatus.UNAUTHORIZED);

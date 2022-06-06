@@ -11,6 +11,15 @@ public class UserDto {
     private String country;
     private String phoneNumber;
     private String biography;
+    private  Integer penaltyCount;
+
+    public Integer getPenaltyCount() {
+        return penaltyCount;
+    }
+
+    public void setPenaltyCount(Integer penaltyCount) {
+        this.penaltyCount = penaltyCount;
+    }
 
     public UserDto(Long id, String role, String email, String firstName, String lastName, String address, String city, String country, String phoneNumber, String biography) {
         this.id = id;

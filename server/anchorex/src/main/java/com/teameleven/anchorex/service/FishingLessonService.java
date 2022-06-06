@@ -7,6 +7,7 @@ import com.teameleven.anchorex.dto.fishingLesson.UpdateFishingLessonDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface FishingLessonService {
 
@@ -29,4 +30,6 @@ public interface FishingLessonService {
     void addImages(Long id, MultipartFile[] files);
 
     void removeImage(Long imageId);
+
+    List<FishingLesson> getAllLessons();
 }

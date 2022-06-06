@@ -34,4 +34,5 @@ public class LoyaltyServiceImpl implements LoyaltyProgramService {
 
         return this.loyaltyProgramRepository.save(loyaltyProgram);
     }
+
 }

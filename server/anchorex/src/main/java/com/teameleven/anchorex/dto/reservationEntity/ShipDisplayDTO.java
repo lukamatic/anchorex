@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.dto.reservationEntity;
 
 import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ReservationEntityImageDto;
 import com.teameleven.anchorex.dto.ServiceDTO;
 
 import java.util.Set;
@@ -12,16 +13,36 @@ public class ShipDisplayDTO {
     private String description;
     private String rulesOfConduct;
     private Set<ServiceDTO> services;
+    private Set<ReservationEntityImageDto> images;
     private LocationDTO location;
     private String shipType;
     private double length;
     private Integer engineCount;
+
+    public Set<ReservationEntityImageDto> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<ReservationEntityImageDto> images) {
+        this.images = images;
+    }
+
     private double enginePower;
     private double maxSpeed;
     private String navigationKit;
     private Integer capacity;
     private String fishingKit;
     private double cancellationPercentage;
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    private double averageRating;
 
     public ShipDisplayDTO(){
         super();

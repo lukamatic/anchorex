@@ -25,4 +25,23 @@ public class FishingLessonDisplayDto {
     private int capacity;
     private double cancellationPercentage;
     private String fishingKit;
+
+    public FishingLessonDisplayDto(){
+        super();
+    }
+
+    public FishingLessonDisplayDto(Long id, Long ownerId, String name, String description, double averageRating, String rulesOfConduct, Set<ServiceDTO> services, LocationDTO location, Set<ReservationEntityImageDto> images, int capacity, double cancellationPercentage, String fishingKit) {
+        this.id = id;
+        this.ownerId = ownerId;
+        this.name = name;
+        this.description = description;
+        this.averageRating = averageRating;
+        this.rulesOfConduct = rulesOfConduct;
+        this.services = services;
+        this.location = location;
+        this.images = images;
+        this.capacity = capacity;
+        this.cancellationPercentage = cancellationPercentage;
+        this.fishingKit = fishingKit;
+    }
 }

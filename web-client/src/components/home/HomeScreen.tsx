@@ -1,7 +1,7 @@
 import { cloneElement, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import AuthContext from '../../context/auth-context';
-import { getAllLodgesAsync } from '../../server/service';
+import { getAllFishingLessonsAsync, getAllLodgesAsync, getAllShipsAsync } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import CoachingIcon from './button-icons/CoachingIcon';
 import FishingIcon from './button-icons/FishingIcon';
@@ -13,9 +13,13 @@ const HomeScreen = () => {
 	const { user, userDetails } = useContext(AuthContext);
 	const authorized = !!user.loggedIn;
 	const [lodges, setLodges] = useState<any[]>([]);
+	const [ships, setShips] = useState<any[]>([]);
+	const [fishingLessons, setFishingLessons] = useState<any[]>([]);
 
 	useEffect(() => {
 		loadLodges();
+		loadShips();
+		loadFishingLessons();
 	}, []);
 
 	const loadLodges = async () => {
@@ -24,8 +28,18 @@ const HomeScreen = () => {
 			setLodges(resp.data.splice(0, 3));
 		}
 	};
-
-	const images = [require('./../../images/ent1.jpg'), require('./../../images/ext1.jpg'), require('./../../images/ext2.jpg')];
+	const loadShips = async () => {
+		const resp = await getAllShipsAsync();
+		if (resp.status === HttpStatusCode.OK) {
+			setShips(resp.data.splice(0, 3));
+		}
+	};
+	const loadFishingLessons = async () => {
+		const resp = await getAllFishingLessonsAsync();
+		if (resp.status === HttpStatusCode.OK) {
+			setFishingLessons(resp.data.splice(0, 3));
+		}
+	};
 
 	const buttons = [
 		{
@@ -33,20 +47,14 @@ const HomeScreen = () => {
 			description: 'fishing lessons description....',
 			logo: <FishingIcon height={70} />,
 			path: 'fishingLessons',
-			data: [
-				{ name: 'Lesson 1', description: 'Description....', images: [require('./../../images/ent1.jpg')] },
-				{ name: 'Lesson 2', description: 'Description....', images: [require('./../../images/ent2.jpg')] },
-				{ name: 'Lesson 3', description: 'Description....', images: [require('./../../images/ent3.jpg')] },
-				// { name: 'Lesson 4', description: 'Description....', images: [require('./../../images/ext1.jpg')] },
-				// { name: 'Lesson 5', description: 'Description....', images: [require('./../../images/ext2.jpg')] },
-			],
+			data: fishingLessons,
 		},
 		{
 			title: 'Ships',
 			description: 'Ships description....',
 			path: 'ships',
 			logo: <CoachingIcon height={80} />,
-			data: [{ name: 'Lesson 1', description: 'Description....', images: [require('./../../images/ent1.jpg')] }],
+			data: ships,
 		},
 		{
 			title: 'Lodges',
@@ -75,7 +83,9 @@ const HomeScreen = () => {
 			},
 		},
 		{
-			title: 'Penalties',
+			title: `Penalties: ${userDetails.penaltyCount}`,
+			disabled: true,
+			numberOfPenalties: userDetails.penaltyCount,
 			callback: () => {},
 		},
 		{
@@ -85,7 +95,7 @@ const HomeScreen = () => {
 			},
 		},
 		{
-			title: 'Promotions',
+			title: 'Subscriptions',
 			callback: () => {
 				history.push('/subscriptions');
 			},
@@ -107,14 +117,18 @@ const HomeScreen = () => {
 		</button>
 	);
 	const authorizedButton = (type: any, index: number) => (
-		<button key={index} onClick={type.callback} className='bg-white w-full h-14 rounded-lg shadow-md hover:shadow-lg my-2 md:w-1/6 flex items-center justify-center transition-transform duration-120 transform hover:scale-110'>
+		<button
+			key={index}
+			onClick={type.callback}
+			className={`bg-white w-full h-14 rounded-lg shadow-md  my-2 md:w-1/6 flex items-center justify-center ${type.disabled ? `cursor-default ${type.numberOfPenalties >= 3 ? 'bg-red-200' : ''}` : 'transition-transform hover:shadow-lg duration-120 transform hover:scale-11'}`}
+		>
 			<div className='justify-center w-full flex flex-col flex-1'>
 				<span className='font-gray-700 text-xl text-center  w-full'>{type.title}</span>
 			</div>
 		</button>
 	);
 	return (
-		<div className='w-full flex bg-blue-50 flex-1 flex-col'>
+		<div className='w-full flex bg-blue-50 flex-1 flex-col bg home-screen-bg'>
 			<div className='px-12 pt-12  pb-5'>
 				<div className=''></div>
 				{authorized && (
@@ -132,7 +146,7 @@ const HomeScreen = () => {
 				<div className='flex flex-col justify-around flex-1 md:flex-row z-10'>{buttons.map(homeButton)}</div>
 				{authorized && <div className='flex flex-col justify-around flex-1 md:flex-row mt-4'>{authorizedButtons.map(authorizedButton)}</div>}
 			</div>
-			{/* <div className='max-w-7xl self-center w-full'>
+			<div className='max-w-7xl self-center w-full' style={{ zIndex: 1 }}>
 				{buttons.map((section, i) => {
 					const emptyList = !section?.data?.length;
 
@@ -144,12 +158,13 @@ const HomeScreen = () => {
 							</div>
 							<div className='flex flex-col md:flex-row  flex-wrap '>
 								{section?.data?.map((item, i) => {
+									const image = item?.images?.length > 0 ? item?.images[0]?.url : null;
+									console.log(image);
+
 									return (
 										<div className='w-1/3 px-4 py-2' key={i}>
 											<button className='p-3 rounded-lg w-full bg-white mt-24 shadow-md hover:shadow-2xl transition-transform duration-75 transform hover:scale-105'>
-												<div className=' overflow-hidden rounded-lg -mt-24  shadow-lg mb-2'>
-													<img src={images[i]?.default} alt='Item' className='object-cover h-52 w-full' />
-												</div>
+												<div className=' overflow-hidden rounded-lg -mt-24  shadow-lg mb-2'>{!!image && <img src={image} alt='Item' className='object-cover h-52 w-full' />}</div>
 												<div>
 													<p className='text-gray-700 text-lg text-left'>{item.name}</p>
 													<p className='text-gray-500 text-xs text-left'>{item.description}</p>
@@ -179,7 +194,7 @@ const HomeScreen = () => {
 						</div>
 					);
 				})}
-			</div> */}
+			</div>
 		</div>
 	);
 };

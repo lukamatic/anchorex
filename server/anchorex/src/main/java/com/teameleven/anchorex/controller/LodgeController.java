@@ -53,7 +53,7 @@ public class LodgeController {
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping(path="")
     public ResponseEntity<List<LodgeDisplayDTO>> getAllLodges(){
         var lodges = lodgeService.getAllLodges();
         List<LodgeDisplayDTO> retDto = new ArrayList<>();

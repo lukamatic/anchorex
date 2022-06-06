@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class FishingLessonServiceImpl implements FishingLessonService {
@@ -123,5 +124,10 @@ public class FishingLessonServiceImpl implements FishingLessonService {
     @Override
     public void removeImage(Long imageId) {
         reservationEntityImageRepository.deleteById(imageId);
+    }
+
+    @Override
+    public List<FishingLesson> getAllLessons() {
+        return fishingLessonRepository.findAll();
     }
 }

@@ -1,8 +1,9 @@
-import { useEffect, useReducer } from 'react';
+import { useContext, useEffect, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import AuthContext from '../../context/auth-context';
 import searchDto, { emptyFilterDto, filterDto } from '../../dtos/search.dto';
 import LeftArrow from '../../icons/LeftArrow';
-import { getAllFreePeriodsAsync, getAllLodgesAsync, getAllReservations, getPossibleLodges, searchDataAsync } from '../../server/service';
+import { getAllFishingLessonsAsync, getAllFreePeriodsAsync, getAllLodgesAsync, getAllReservations, getAllShipsAsync, getLoyaltyInfoAsync, getPossibleLodges, httpResponse, searchDataAsync } from '../../server/service';
 import { onlyUnique } from '../../utils/commonOps';
 import { addDays } from '../../utils/dateUtils';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
@@ -20,9 +21,27 @@ const titleDict: any = {
 	lodges: 'Lodges',
 };
 
+const authorizedFetchFunctions = {
+	ships: getAllLodgesAsync,
+	lodge: getAllLodgesAsync,
+	fishingLessons: getAllFreePeriodsAsync,
+};
+
+const unauthorizedFetchFunctions: {
+	ships: () => Promise<httpResponse>;
+	lodges: () => Promise<httpResponse>;
+	fishingLessons: () => Promise<httpResponse>;
+} = {
+	ships: getAllShipsAsync,
+	lodges: getAllLodgesAsync,
+	fishingLessons: getAllFishingLessonsAsync,
+};
+
 const ListScreen = () => {
 	const history = useHistory();
-	const { type }: { type: string } = useParams();
+	const authContext = useContext(AuthContext);
+	const authorized = !!authContext.user.loggedIn;
+	const { type }: { type: 'ships' | 'lodges' | 'fishingLessons' } = useParams();
 	const [state, setState] = useReducer((oldState: any, newState: any) => ({ ...oldState, ...newState }), {
 		list: [],
 		allItems: [],
@@ -31,7 +50,7 @@ const ListScreen = () => {
 		loadingMore: false,
 		totalSize: -1,
 		checkInDate: new Date(),
-		checkOutDate: addDays(new Date(), 10),
+		checkOutDate: addDays(new Date(), authorized ? 10 : 1),
 		locations: [],
 		currentFilterModel: emptyFilterDto,
 		currentSortModel: null,
@@ -45,6 +64,8 @@ const ListScreen = () => {
 		numberOfPeople: 2,
 		modalOpened: false,
 		selectedReservation: {},
+		loyaltyProgram: {},
+		numberOfCountedPeople: 2,
 	});
 
 	const {
@@ -68,6 +89,8 @@ const ListScreen = () => {
 		numberOfPeople,
 		modalOpened,
 		selectedReservation,
+		loyaltyProgram,
+		numberOfCountedPeople,
 	} = state;
 
 	useEffect(() => {
@@ -77,7 +100,35 @@ const ListScreen = () => {
 	}, [type]);
 
 	const initLoad = async () => {
-		loadDataAsync(type);
+		console.log(`Autorizovan je: ${authorized}`);
+
+		if (authorized) {
+			loadDataAsync(type);
+			loadUserLoyaltyInfo();
+		} else loadDataUnauthorized();
+	};
+
+	const loadDataUnauthorized = async () => {
+		console.log('Type: ', type);
+
+		const resp = await unauthorizedFetchFunctions[type]();
+		if (resp.status == HttpStatusCode.OK) {
+			doSort(selectedSortOption, resp.data);
+			setState({
+				// list: resp.data,
+				allItems: [...resp.data],
+				totalSize: resp.data.length,
+				initialLoading: false,
+			});
+		}
+	};
+
+	const loadUserLoyaltyInfo = async () => {
+		const resp = await getLoyaltyInfoAsync();
+		if (resp.status === HttpStatusCode.OK) {
+			console.log(resp.data);
+			setState({ loyaltyProgram: resp.data });
+		}
 	};
 
 	const goBack = () => {
@@ -87,7 +138,7 @@ const ListScreen = () => {
 	const title = titleDict[type];
 
 	const openModal = (reservation: any) => {
-		setState({ modalOpened: true, selectedReservation: { ...reservation, checkInDate, checkOutDate, numberOfPeople } });
+		setState({ modalOpened: true, selectedReservation: { ...reservation, checkInDate, checkOutDate, numberOfPeople: numberOfCountedPeople } });
 	};
 
 	const asyncSearch = (text: string) => {
@@ -159,6 +210,7 @@ const ListScreen = () => {
 				numberOfSingleBedrooms: getMinMax(numberOfSingleBedrooms),
 				numberOfDoubleBedrooms: getMinMax(numberOfDoubleBedrooms),
 				numberOfFourBedrooms: getMinMax(numberOfFourBedrooms),
+				numberOfCountedPeople: numberOfPeople,
 			});
 			return resp.data;
 		} else {
@@ -200,48 +252,49 @@ const ListScreen = () => {
 						</div>
 					</div>
 					<div className='flex flex-row flex-1 mt-4 overflow-y-auto'>
-						<div className='mr-3 '>
-							<div className='bg-blue-400 px-5 pb-7 pt-3 rounded-md mt-5 shadow-lg'>
-								<h1 className='text-xl text-white mb-2 font-bold'>Pick a period</h1>
-								{/* <div className='mb-2'>
+						{authorized && (
+							<div className='mr-3 '>
+								<div className='bg-blue-400 px-5 pb-7 pt-3 rounded-md mt-5 shadow-lg'>
+									<h1 className='text-xl text-white mb-2 font-bold'>Pick a period</h1>
+									{/* <div className='mb-2'>
 								<LiveSearch value={searchText} callback={asyncSearch} />
 							</div> */}
-								<div>
-									<p className='text-white'>Check-in date</p>
-									<DatePicker placeholder='Select date' value={checkInDate} minDate={new Date()} onValueChange={changeCheckInDate} />
-								</div>
-								<div>
-									<p className='text-white'>Check-out date</p>
-									<DatePicker placeholder='Select date' value={checkOutDate} minDate={addDays(checkInDate, 1)} onValueChange={changeCheckOutDate} />
-								</div>
-								<div className='flex-1 flex flex-col'>
-									<label htmlFor='' className='text-white'>
-										Number of people
-									</label>
-									<input
-										type='number'
-										className='w-full bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-										placeholder='Number of people'
-										value={numberOfPeople}
-										min={0}
-										max={100}
-										onChange={(e: any) => {
-											setState({ numberOfPeople: parseInt(e.target.value) });
-										}}
-									/>
-								</div>
-								<button
-									className='px-3 py-2 bg-yellow-200 rounded-md shadow-md hover:shadow-lg 
+									<div>
+										<p className='text-white'>Check-in date</p>
+										<DatePicker placeholder='Select date' value={checkInDate} minDate={new Date()} onValueChange={changeCheckInDate} />
+									</div>
+									<div>
+										<p className='text-white'>Check-out date</p>
+										<DatePicker placeholder='Select date' value={checkOutDate} minDate={addDays(checkInDate, 1)} onValueChange={changeCheckOutDate} />
+									</div>
+									<div className='flex-1 flex flex-col'>
+										<label htmlFor='' className='text-white'>
+											Number of people
+										</label>
+										<input
+											type='number'
+											className='w-full bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+											placeholder='Number of people'
+											value={numberOfPeople}
+											min={0}
+											max={100}
+											onChange={(e: any) => {
+												setState({ numberOfPeople: parseInt(e.target.value) });
+											}}
+										/>
+									</div>
+									<button
+										className='px-3 py-2 bg-yellow-200 rounded-md shadow-md hover:shadow-lg 
 								self-end w-full mt-4 transform hover:scale-105 transition-transform duration-120 
 								font-semibold text-gray-600'
-									onClick={applySearch}
-								>
-									Search
-								</button>
+										onClick={applySearch}
+									>
+										Search
+									</button>
+								</div>
+								<FilterContainer locations={locations} onApply={applyFilter} numberOfSingleBedrooms={numberOfSingleBedrooms} numberOfDoubleBedrooms={numberOfDoubleBedrooms} numberOfFourBedrooms={numberOfFourBedrooms} />
 							</div>
-							<FilterContainer locations={locations} onApply={applyFilter} numberOfSingleBedrooms={numberOfSingleBedrooms} numberOfDoubleBedrooms={numberOfDoubleBedrooms} numberOfFourBedrooms={numberOfFourBedrooms} />
-						</div>
-
+						)}
 						<div className='flex flex-col flex-1 '>
 							<div className='flex flex-row justify-between '>
 								<div className='flex-1'>{/* TODO: Badges / Applied filters */}</div>
@@ -260,7 +313,7 @@ const ListScreen = () => {
 									/>
 								</div>
 							</div>
-							<div className='flex flex-row flex-wrap'>{list.length > 0 && list?.map((e: any) => ListItem(e, numberOfDays, numberOfPeople, openModal))}</div>
+							<div className='flex flex-row flex-wrap'>{list.length > 0 && list?.map((e: any) => ListItem(e, numberOfDays, numberOfCountedPeople, openModal, loyaltyProgram))}</div>
 							{totalSize <= 0 && !initialLoading && (
 								<div className='text-center flex-1 flex justify-center items-center'>
 									<div className='text-gray-400 '>{!searchText ? 'This list is currently empty...' : 'Search list is currently empty... Try another text'}</div>

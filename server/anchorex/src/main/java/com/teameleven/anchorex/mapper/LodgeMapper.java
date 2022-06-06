@@ -2,7 +2,9 @@ package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.FishingLesson;
 import com.teameleven.anchorex.domain.Lodge;
+import com.teameleven.anchorex.domain.ReservationEntityImage;
 import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.dto.ReservationEntityImageDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
 import com.teameleven.anchorex.dto.reservationEntity.LodgeDisplayDTO;
 import com.teameleven.anchorex.dto.reservationEntity.CreateLodgeDTO;
@@ -63,6 +65,14 @@ public class LodgeMapper {
             serviceDTO.setType(service.getType());
             services.add(serviceDTO);
         }
+        Set<ReservationEntityImageDto> images = new HashSet<>();
+        for(ReservationEntityImage image: lodge.getImages()){
+            ReservationEntityImageDto imageDto = new ReservationEntityImageDto();
+            imageDto.setId(image.getId());
+            imageDto.setUrl(image.getUrl());
+            images.add(imageDto);
+        }
+        dto.setImages(images);
         dto.setServices(services);
 
         LocationDTO locationDTO = new LocationDTO();

@@ -17,6 +17,7 @@ public class LoyaltyProgram {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+
     @Column
     public Integer reservationPoints;
 

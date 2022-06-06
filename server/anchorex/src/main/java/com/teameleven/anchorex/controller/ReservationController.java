@@ -1,9 +1,6 @@
 package com.teameleven.anchorex.controller;
 
-import com.teameleven.anchorex.domain.Complaint;
-import com.teameleven.anchorex.domain.Lodge;
-import com.teameleven.anchorex.domain.Reservation;
-import com.teameleven.anchorex.domain.ReservationReport;
+import com.teameleven.anchorex.domain.*;
 import com.teameleven.anchorex.dto.*;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
@@ -11,6 +8,7 @@ import com.teameleven.anchorex.enums.ReservationEntityType;
 import com.teameleven.anchorex.mapper.LodgeMapper;
 import com.teameleven.anchorex.repository.RevisionRepository;
 import com.teameleven.anchorex.service.*;
+import com.teameleven.anchorex.serviceimpl.LoyaltyServiceImpl;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,15 +45,18 @@ public class ReservationController {
 
     @Autowired
     private ComplaintService complaintService;
+    @Autowired
+    private LoyaltyProgramService loyaltyProgramService;
 
     public ReservationController(ReservationService reservationService, FreePeriodService freePeriodService,
-            UserService userService, LodgeService lodgeService, RevisionRepository revisionRepository,ComplaintService complaintService) {
+            UserService userService, LodgeService lodgeService, RevisionRepository revisionRepository,ComplaintService complaintService,LoyaltyProgramService loyaltyProgramService) {
         this.reservationService = reservationService;
         this.freePeriodService = freePeriodService;
         this.userService = userService;
         this.lodgeService = lodgeService;
         this.revisionRepository = revisionRepository;
         this.complaintService = complaintService;
+        this.loyaltyProgramService = loyaltyProgramService;
     }
 
     @PostMapping(path = "/createReservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,12 +93,31 @@ public class ReservationController {
                 reservationDTO.getReservationEntityId())) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
+        if(reservationDTO.getUserId() != null){
+            LoyaltyProgram loyaltyProgram = loyaltyProgramService.get();
+            User user = userService.findOneById(reservationDTO.getUserId());
+            user.setPoints(user.getPoints() + loyaltyProgram.getReservationPoints());
+            try{
+                userService.update(user);
+            }catch (Exception e){
+                //
+            }
+        }
+
         var reservation = reservationService.createPersonalReservation(reservationDTO);
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/takeQuickAction", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateLodge(@RequestBody ReservationDTO reservationDTO) {
+        LoyaltyProgram loyaltyProgram = loyaltyProgramService.get();
+        User user = userService.findOneById(reservationDTO.getUserId());
+        user.setPoints(user.getPoints() + loyaltyProgram.getReservationPoints());
+        try{
+            userService.update(user);
+        }catch (Exception e){
+            //
+        }
 
         reservationService.updateReservation(reservationDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);

@@ -1,7 +1,11 @@
 package com.teameleven.anchorex.mapper;
 
 import com.teameleven.anchorex.domain.FishingLesson;
+import com.teameleven.anchorex.domain.ReservationEntityImage;
+import com.teameleven.anchorex.domain.Service;
+import com.teameleven.anchorex.dto.LocationDTO;
 import com.teameleven.anchorex.dto.ReservationEntityImageDto;
+import com.teameleven.anchorex.dto.ServiceDTO;
 import com.teameleven.anchorex.dto.fishingLesson.CreateFishingLessonDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDisplayDto;
 import com.teameleven.anchorex.dto.fishingLesson.FishingLessonDto;
@@ -73,5 +77,44 @@ public class FishingLessonMapper {
                 .location(LocationMapper.toDto(model.getLocation()))
                 .images(ReservationEntityImageMapper.toDtos(model.getImages()))
                 .build();
+    }
+
+    public static FishingLessonDisplayDto lessonToLessonDisplayDto(FishingLesson lesson) {
+        FishingLessonDisplayDto dto = new FishingLessonDisplayDto();
+        dto.setId(lesson.getId());
+        dto.setName(lesson.getName());
+        dto.setOwnerId(lesson.getOwnerId());
+        dto.setDescription(lesson.getDescription());
+        dto.setRulesOfConduct(lesson.getRulesOfConduct());
+        dto.setCapacity(lesson.getCapacity());
+        dto.setFishingKit(lesson.getFishingKit());
+        Set<ServiceDTO> services = new HashSet<>();
+        dto.setAverageRating(lesson.getAverageRating());
+        for(Service service: lesson.getServices()){
+            ServiceDTO serviceDTO = new ServiceDTO();
+            serviceDTO.setId(service.getId());
+            serviceDTO.setInfo(service.getInfo());
+            serviceDTO.setPrice(service.getPrice());
+            serviceDTO.setType(service.getType());
+            services.add(serviceDTO);
+        }
+        Set<ReservationEntityImageDto> images = new HashSet<>();
+        for(ReservationEntityImage image: lesson.getImages()){
+            ReservationEntityImageDto imageDto = new ReservationEntityImageDto();
+            imageDto.setId(image.getId());
+            imageDto.setUrl(image.getUrl());
+            images.add(imageDto);
+        }
+        dto.setImages(images);
+        dto.setServices(services);
+
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setAddress(lesson.getLocation().getAddress());
+        locationDTO.setCity(lesson.getLocation().getCity());
+        locationDTO.setCountry(lesson.getLocation().getCountry());
+        locationDTO.setLongitude(lesson.getLocation().getLongitude());
+        locationDTO.setLatitude(lesson.getLocation().getLatitude());
+        dto.setLocation(locationDTO);
+        return dto;
     }
 }

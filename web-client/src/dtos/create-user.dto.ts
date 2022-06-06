@@ -13,6 +13,7 @@ export default interface CreateUserDto {
 	biography?: string;
 	signupExplanation?: string;
 	id?: number;
+	penaltyCount?: number;
 }
 export const emptyCreateUserDto: CreateUserDto = {
 	role: UserRole.UNDEFINED,
@@ -27,4 +28,5 @@ export const emptyCreateUserDto: CreateUserDto = {
 	biography: '',
 	signupExplanation: '',
 	id: -1,
+	penaltyCount: 0,
 };

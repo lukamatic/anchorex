@@ -1,6 +1,6 @@
 package com.teameleven.anchorex.domain;
 
-import com.teameleven.anchorex.enums.ReviewStatus;
+import com.teameleven.anchorex.enums.RevisionStatus;
 
 import javax.persistence.*;
 
@@ -28,15 +28,7 @@ public class Revision {
     }
 
     @Column
-    private ReviewStatus status;
-
-    public ReviewStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ReviewStatus status) {
-        this.status = status;
-    }
+    private RevisionStatus status;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name= "reservation_entity_id")
@@ -78,11 +70,19 @@ public class Revision {
         this.reservationEntity = reservationEntity;
     }
 
+    public RevisionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RevisionStatus status) {
+        this.status = status;
+    }
+
     public Revision(Long id, String comment, int rating, ReservationEntity reservationEntity) {
         this.id = id;
         this.comment = comment;
         this.rating = rating;
         this.reservationEntity = reservationEntity;
-        this.status = ReviewStatus.PENDING;
+        this.status = RevisionStatus.PENDING;
     }
 }

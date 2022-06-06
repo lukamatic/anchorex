@@ -16,4 +16,8 @@ public interface ReservationEntityRepository extends JpaRepository<ReservationEn
     @Query("SELECT e FROM ReservationEntity e WHERE e.id = ?1 ")
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     ReservationEntity getLocked(Long id) throws PessimisticLockingFailureException;
+  
+    @Query(value = "SELECT e.name FROM ReservationEntity e where e.id=?1")
+    String getName(Long id);
+
 }

@@ -30,6 +30,10 @@ public class Reservation {
     @JoinColumn(name= "reservation_entity_id")
     private ReservationEntity reservationEntity;
 
+
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.EAGER)
+    public Set<Complaint> complaints = new HashSet<>();
+
     @Column
     private Long ownerId;
     @Column
@@ -134,6 +138,14 @@ public class Reservation {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Set<Complaint> getCompliants() {
+        return complaints;
+    }
+
+    public void setCompliants(Set<Complaint> complaints) {
+        this.complaints = complaints;
     }
 
     public User getUser() {

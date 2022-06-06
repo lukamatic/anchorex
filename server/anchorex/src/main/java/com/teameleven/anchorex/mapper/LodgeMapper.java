@@ -72,6 +72,9 @@ public class LodgeMapper {
         locationDTO.setLongitude(lodge.getLocation().getLongitude());
         locationDTO.setLatitude(lodge.getLocation().getLatitude());
         dto.setLocation(locationDTO);
+
+        dto.setImages(ReservationEntityImageMapper.toDtos(lodge.getImages()));
+
         return dto;
     }
 

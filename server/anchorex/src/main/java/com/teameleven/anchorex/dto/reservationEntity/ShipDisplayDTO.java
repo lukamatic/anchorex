@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.dto.reservationEntity;
 
 import com.teameleven.anchorex.dto.LocationDTO;
+import com.teameleven.anchorex.dto.ReservationEntityImageDto;
 import com.teameleven.anchorex.dto.ServiceDTO;
 
 import java.util.Set;
@@ -21,6 +22,7 @@ public class ShipDisplayDTO {
     private String navigationKit;
     private Integer capacity;
     private String fishingKit;
+    private Set<ReservationEntityImageDto> images;
     private double cancellationPercentage;
 
     public ShipDisplayDTO(){
@@ -153,5 +155,13 @@ public class ShipDisplayDTO {
 
     public void setCancellationPercentage(double cancellationPercentage) {
         this.cancellationPercentage = cancellationPercentage;
+    }
+
+    public Set<ReservationEntityImageDto> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<ReservationEntityImageDto> images) {
+        this.images = images;
     }
 }

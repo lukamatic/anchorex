@@ -66,6 +66,10 @@ public class User implements UserDetails {
 	@Column
 	private boolean deleted;
 
+	@Version
+	@Column(name="version", nullable = false)
+	private Integer version;
+
 	@Transient
 	@OneToOne(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public ReservationReport report;

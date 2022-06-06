@@ -43,6 +43,7 @@ import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
 import MyCalendar from './MyCalendar';
+import ShipDisplayImages from './display-ship/ShipDisplayImages';
 import DeleteAccount from './DeleteAccount';
 import AccountDeletionRequests from './account-deletion-requests/AccountDeletionRequests';
 import LoyaltyProgramSettings from './LoyaltyProgramSettings';
@@ -50,6 +51,7 @@ import AdminRevisions from './admin-revisions/AdminRevisions';
 import UserComplaintsScreen from './user-reservations/UserComplaints';
 import UserReservationsPage from './user-reservations/UserReservationsPage';
 import UserSubscriptionScreen from './user-reservations/UserSubscriptionsScreen';
+
 
 const MyRouter = () => (
   <Router>
@@ -92,6 +94,10 @@ const MyRouter = () => (
       <Route path='/lodgeImages/:id'>
         <LodgeDisplayImages />
       </Route>
+      
+      <Route path ='/shipImages/:id'>
+				<ShipDisplayImages/>
+			</Route>
       <Route path='/lodgePriceList/:id'>
         <LodgeDisplayPricelist />
       </Route>

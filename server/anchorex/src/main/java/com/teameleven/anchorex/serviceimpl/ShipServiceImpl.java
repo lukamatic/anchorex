@@ -1,6 +1,7 @@
 package com.teameleven.anchorex.serviceimpl;
 
 import com.teameleven.anchorex.domain.Location;
+import com.teameleven.anchorex.domain.ReservationEntityImage;
 import com.teameleven.anchorex.domain.Service;
 import com.teameleven.anchorex.domain.Ship;
 import com.teameleven.anchorex.dto.reservationEntity.CreateShipDTO;
@@ -12,9 +13,14 @@ import com.teameleven.anchorex.mapper.LocationMapper;
 import com.teameleven.anchorex.mapper.ServiceMapper;
 import com.teameleven.anchorex.mapper.ShipMapper;
 import com.teameleven.anchorex.repository.LocationRepository;
+import com.teameleven.anchorex.repository.ReservationEntityImageRepository;
 import com.teameleven.anchorex.repository.ServiceRepository;
 import com.teameleven.anchorex.repository.ShipRepository;
+import com.teameleven.anchorex.service.ImageService;
 import com.teameleven.anchorex.service.ShipService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Set;
@@ -24,11 +30,15 @@ public class ShipServiceImpl implements ShipService {
     private final ShipRepository shipRepository;
     private final LocationRepository locationRepository;
     private final ServiceRepository serviceRepository;
+    private final ImageService imageService;
+    private final ReservationEntityImageRepository reservationEntityImageRepository;
 
-    public ShipServiceImpl(ShipRepository shipRepository, LocationRepository locationRepository, ServiceRepository serviceRepository) {
+    public ShipServiceImpl(ShipRepository shipRepository, LocationRepository locationRepository, ServiceRepository serviceRepository, ImageService imageService, ReservationEntityImageRepository reservationEntityImageRepository) {
         this.shipRepository = shipRepository;
         this.locationRepository = locationRepository;
         this.serviceRepository = serviceRepository;
+        this.imageService = imageService;
+        this.reservationEntityImageRepository = reservationEntityImageRepository;
     }
 
     @Override
@@ -81,6 +91,24 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public void deleteService(Long id) {
         serviceRepository.deleteService(id);
+    }
+
+    @Override
+    public void addImages(Long id, MultipartFile[] files) {
+        var shipToUpdate = shipRepository.findById(id).orElse(null);
+
+        if (shipToUpdate == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Fishing lesson with id %d doesn't exist.", id));
+        }
+
+        var urls = this.imageService.uploadImages(files);
+        urls.forEach(url -> shipToUpdate.addImage(ReservationEntityImage.builder().url(url).build()));
+        shipRepository.save(shipToUpdate);
+    }
+
+    @Override
+    public void removeImage(Long imageId) {
+        reservationEntityImageRepository.deleteById(imageId);
     }
 
     private void setLocation(LocationDTO locationDTO, Ship ship){

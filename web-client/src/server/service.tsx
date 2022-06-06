@@ -347,6 +347,51 @@ export const makeComplaintAsync = async (data: any): Promise<httpResponse> => {
 			};
 		});
 };
+export const createSubscriptionAsync = async (data: any): Promise<httpResponse> => {
+	const options: any = {
+		method: 'POST',
+		url: `/api/subscription`,
+		data: data,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
+export const getUserSubscriptions = async (userId: any): Promise<httpResponse> => {
+	const options: any = {
+		method: 'GET',
+		url: `/api/subscription/${userId}`,
+		headers: {
+			Accept: 'application/json',
+			'Content-type': 'application/json',
+			Authorization: 'Bearer ' + localStorage.getItem(LocalStorageItem.ACCESS_TOKEN),
+		},
+	};
+
+	return axios(options)
+		.then((response) => {
+			return { status: response?.status, data: response?.data };
+		})
+		.catch((error) => {
+			return {
+				status: error?.response?.status,
+				message: error?.response?.data,
+			};
+		});
+};
 
 export const getComplaintsFromUserAsync = async (userId: any): Promise<httpResponse> => {
 	const options: any = {

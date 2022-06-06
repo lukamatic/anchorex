@@ -31,7 +31,7 @@ public class Reservation {
     private ReservationEntity reservationEntity;
 
 
-    @OneToMany(mappedBy = "reservation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.EAGER)
     public Set<Complaint> complaints = new HashSet<>();
 
     @Column

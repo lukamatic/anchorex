@@ -6,7 +6,7 @@ import { useToasts } from 'react-toast-notifications';
 import AuthContext from '../../context/auth-context';
 import CheckCircleIcon from '../../icons/CheckCircleIcon';
 import CheckCircleIconEmpty from '../../icons/CheckCircleIconEmpty';
-import { getQuickActionsAsync } from '../../server/service';
+import { createSubscriptionAsync, getQuickActionsAsync, getUserSubscriptions } from '../../server/service';
 import { HttpStatusCode } from '../../utils/http-status-code.enum';
 import { LocalStorageItem } from '../../utils/local-storage/local-storage-item.enum';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -22,9 +22,10 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 		additionalCost: 0,
 		selectedAdditionalServices: [],
 		quickActions: [],
+		subscribed: false,
 	});
 
-	const { reservation, loading, additionalCost, selectedAdditionalServices, quickActions } = state;
+	const { reservation, loading, additionalCost, selectedAdditionalServices, quickActions, subscribed } = state;
 
 	useEffect(() => {
 		if (isOpen) {
@@ -32,6 +33,7 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 				reservation: rawReservation,
 				loading: false,
 			});
+			loadSubscriptions();
 			loadQuickActions();
 		} else {
 			setState({
@@ -48,6 +50,16 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 		const resp = await getQuickActionsAsync(reservation.id);
 		if (resp.status == HttpStatusCode.OK) {
 			setState({ quickActions: resp.data });
+		}
+	};
+	const loadSubscriptions = async () => {
+		const resp = await getUserSubscriptions(reservation.id);
+		if (resp.status == HttpStatusCode.OK) {
+			const subscriptions = resp.data;
+			const subscribed = subscriptions.map((e: any) => e.reservationId).includes(reservation.id);
+			console.log(`Subscribed: ${subscribed}`);
+
+			setState({ subscribed });
 		}
 	};
 
@@ -212,6 +224,24 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 			});
 	};
 
+	const subscribe = async () => {
+		const data = {
+			userId: authContext.user.id,
+			reservationId: reservation.id,
+		};
+
+		console.log(data);
+
+		const resp = await createSubscriptionAsync(data);
+		if (resp.status == HttpStatusCode.CREATED) {
+			addToast('Subscription has been made successfully! ', {
+				appearance: 'success',
+				autoDismiss: true,
+			});
+			setState({ subscribed: true });
+		}
+	};
+
 	return (
 		<>
 			{isOpen ? (
@@ -224,9 +254,12 @@ const ReservationModal = (props: { isOpen: boolean; onRequestClose: () => void; 
 									{/*header*/}
 									<div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
 										<h3 className='text-3xl font-semibold'>{reservation?.name}</h3>
-										<button className='p-1 ml-auto bg-transparent border-0 text-black  float-right text-3xl leading-none font-semibold outline-none focus:outline-none' onClick={onRequestClose}>
-											<span className='bg-transparent text-black  h-6 w-6 text-2xl block outline-none focus:outline-none'>×</span>
-										</button>
+										<div className='flex flex-row items-center'>
+											{subscribed ? <div>Subscribed :)</div> : <button onClick={subscribe}>Subscribe</button>}
+											<button className='p-1 ml-auto bg-transparent border-0 text-black  float-right text-3xl leading-none font-semibold outline-none focus:outline-none' onClick={onRequestClose}>
+												<span className='bg-transparent text-black  h-6 w-6 text-2xl block outline-none focus:outline-none'>×</span>
+											</button>
+										</div>
 									</div>
 									<div className='flex flex-row'>
 										<div className='flex flex-col flex-1'>

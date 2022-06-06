@@ -338,7 +338,7 @@ const ShipCalendar = () => {
               new Date(reservation.startDate) <= new Date() &&
               new Date() <= new Date(reservation.endDate)
             ) {
-              console.log('asxvzv');
+              
               setUserID(reservation.userId);
               setShowModal(true);
             }
@@ -377,6 +377,7 @@ const ShipCalendar = () => {
               title: `${reservation.userFullName || 'Action'} - ${
                 reservation.reservationEntityName
               }`,
+              userId: reservation.userId
             };
             calendarEvents.push(event);
           });
@@ -421,6 +422,8 @@ const ShipCalendar = () => {
         <PersonalReservationModal
           entityId={params.id}
           setShowModal={setShowModal}
+          entity="ship"
+          userId={userId}
         />
       )}
       {showReportModal && (
@@ -657,6 +660,8 @@ const ShipCalendar = () => {
                   new Date() > new Date(event.from) &&
                   new Date() < new Date(event.to)
                 ) {
+                  console.log(event)
+                  setUserID(event.userId)
                   setShowReservationModal(true);
                 } else if (new Date() > new Date(event.to)) {
                   setShowReportModal(true);

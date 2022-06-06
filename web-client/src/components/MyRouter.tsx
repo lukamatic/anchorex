@@ -52,6 +52,7 @@ import UserComplaintsScreen from './user-reservations/UserComplaints';
 import UserReservationsPage from './user-reservations/UserReservationsPage';
 import UserSubscriptionScreen from './user-reservations/UserSubscriptionsScreen';
 import AdminComplaints from './admin-complaints/AdminComplaints';
+import UserProfileScreen from './userprofile/UserProfileScreen';
 
 const MyRouter = () => (
   <Router>
@@ -256,6 +257,10 @@ const MyRouter = () => (
       </Route>
       <Route path='/subscriptions'>
         <UserSubscriptionScreen />
+      </Route>
+
+      <Route path='/userProfile/:id'>
+        <UserProfileScreen />
       </Route>
     </Switch>
   </Router>

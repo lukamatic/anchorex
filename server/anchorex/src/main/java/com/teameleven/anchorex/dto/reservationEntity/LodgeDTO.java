@@ -3,6 +3,7 @@ package com.teameleven.anchorex.dto.reservationEntity;
 public class LodgeDTO {
     private Long id;
     private String name;
+    private double averageRating;
 
     public LodgeDTO() {
         super();
@@ -11,6 +12,14 @@ public class LodgeDTO {
     public LodgeDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
     }
 
     public Long getId() {

@@ -1,7 +1,7 @@
 package com.teameleven.anchorex.enums;
 
-public enum ReviewStatus {
+public enum RevisionStatus {
     PENDING,
     APPROVED,
-    DECLINED
+    REJECTED
 }

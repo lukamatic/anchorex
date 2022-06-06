@@ -5,8 +5,6 @@ import com.teameleven.anchorex.domain.ReservationReport;
 
 import com.teameleven.anchorex.domain.Revision;
 
-import com.teameleven.anchorex.domain.User;
-
 import com.teameleven.anchorex.domain.enumerations.ReservationReportStatus;
 
 import com.teameleven.anchorex.dto.DateRangeDTO;
@@ -15,8 +13,7 @@ import com.teameleven.anchorex.dto.ReservationReportDTO;
 import com.teameleven.anchorex.dto.RevisionDTO;
 import com.teameleven.anchorex.dto.reservationentity.ClientReservationDTO;
 import com.teameleven.anchorex.dto.reservationentity.FullClientReservationDTO;
-import com.teameleven.anchorex.enums.ReviewStatus;
-import com.teameleven.anchorex.mapper.LodgeMapper;
+import com.teameleven.anchorex.enums.RevisionStatus;
 import com.teameleven.anchorex.mapper.ReportMapper;
 import com.teameleven.anchorex.mapper.ReservationMapper;
 
@@ -24,7 +21,6 @@ import com.teameleven.anchorex.mapper.RevisionMapper;
 
 import com.teameleven.anchorex.repository.*;
 import com.teameleven.anchorex.service.ReservationService;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -263,7 +259,7 @@ public class ReservationServiceImpl implements ReservationService {
     public void crateRevision(RevisionDTO revisionDTO) {
         Revision revision = RevisionMapper.RevisionDtoToRevision(revisionDTO);
         revision.setReservationEntity(reservationEntityRepository.getOne(revisionDTO.getReservationId()));
-        revision.setStatus(ReviewStatus.PENDING);
+        revision.setStatus(RevisionStatus.PENDING);
         revisionRepository.save(revision);
     }
 

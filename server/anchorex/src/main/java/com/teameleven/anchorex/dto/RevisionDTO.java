@@ -1,12 +1,6 @@
 package com.teameleven.anchorex.dto;
 
-import com.teameleven.anchorex.domain.Reservation;
-import com.teameleven.anchorex.domain.ReservationEntity;
-import com.teameleven.anchorex.domain.Service;
-import com.teameleven.anchorex.enums.ReviewStatus;
-
-import java.util.Date;
-import java.util.Set;
+import com.teameleven.anchorex.enums.RevisionStatus;
 
 public class RevisionDTO {
 
@@ -15,7 +9,7 @@ public class RevisionDTO {
     private Long userId;
     private String comment;
     private Integer rating;
-    private ReviewStatus status;
+    private RevisionStatus status;
 
     public RevisionDTO(){
         super();
@@ -61,11 +55,11 @@ public class RevisionDTO {
         this.rating = rating;
     }
 
-    public ReviewStatus getStatus() {
+    public RevisionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ReviewStatus status) {
+    public void setStatus(RevisionStatus status) {
         this.status = status;
     }
 }

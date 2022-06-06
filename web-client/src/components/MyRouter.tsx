@@ -38,10 +38,7 @@ import AdminShips from './admin-entities/AdminShips';
 import FishingLessonAction from './display-fishing-lesson/FishingLessonAction';
 import InstructorCalendar from './display-fishing-lesson/InstructorCalendar';
 import ChangePasswordScreen from './profile/ChangePasswordScreen';
-
-import UserReservationsPage from './user-reservations/UserReservationsPage';
 import UserHistory from './user-reservations/UserHistory';
-
 import ProfileScreen from './profile/ProfileScreen';
 import AdminUsers from './admin-entities/AdminUsers';
 import AdminReports from './admin-reports/AdminReports';
@@ -49,6 +46,7 @@ import MyCalendar from './MyCalendar';
 import DeleteAccount from './DeleteAccount';
 import AccountDeletionRequests from './account-deletion-requests/AccountDeletionRequests';
 import LoyaltyProgramSettings from './LoyaltyProgramSettings';
+import AdminRevisions from './admin-revisions/AdminRevisions';
 
 const MyRouter = () => (
   <Router>
@@ -177,6 +175,9 @@ const MyRouter = () => (
       </Route>
       <Route path='/adminReports'>
         <AdminReports />
+      </Route>
+      <Route path='/adminRevisions'>
+        <AdminRevisions />
       </Route>
 
       <Route path='/lodgeCalendar/:id'>
